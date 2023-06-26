@@ -12,6 +12,7 @@ book:
         - intro.qmd
         - mcrl.qmd
         - asymp.qmd
+        - het.qmd
     - part: ts-part.qmd
       chapters:
         - summary.qmd
@@ -25,7 +26,7 @@ format:
   html:
     theme: litera
     number-depth: 2
-    html-math-method: mathjax
+    html-math-method: katex
 
 editor: visual
 
