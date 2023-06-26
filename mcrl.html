@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.427">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ec1027-guide - 2&nbsp; El modelo clásico de regresión lineal</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./asymp.html" rel="next">
+<link href="./intro.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cs-part.html">Regresión con datos de corte transversal</a></li><li class="breadcrumb-item"><a href="./mcrl.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">ec1027-guide</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./cs-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de corte transversal</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mcrl.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./asymp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./ts-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de series temporales</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#supuestos" id="toc-supuestos" class="nav-link active" data-scroll-target="#supuestos"><span class="header-section-number">2.1</span> Supuestos</a>
+  <ul class="collapse">
+  <li><a href="#rlm.1-linealidad-en-los-parámetros" id="toc-rlm.1-linealidad-en-los-parámetros" class="nav-link" data-scroll-target="#rlm.1-linealidad-en-los-parámetros">RLM.1: Linealidad en los parámetros</a></li>
+  <li><a href="#rlm.2-muestreo-aleatorio" id="toc-rlm.2-muestreo-aleatorio" class="nav-link" data-scroll-target="#rlm.2-muestreo-aleatorio">RLM.2: Muestreo aleatorio</a></li>
+  <li><a href="#rlm.3-no-hay-colinealidad-perfecta" id="toc-rlm.3-no-hay-colinealidad-perfecta" class="nav-link" data-scroll-target="#rlm.3-no-hay-colinealidad-perfecta">RLM.3: No hay colinealidad perfecta</a></li>
+  <li><a href="#rlm.4-media-condicional-nula" id="toc-rlm.4-media-condicional-nula" class="nav-link" data-scroll-target="#rlm.4-media-condicional-nula">RLM.4: Media condicional nula</a></li>
+  <li><a href="#rlm.5-homoscedasticidad" id="toc-rlm.5-homoscedasticidad" class="nav-link" data-scroll-target="#rlm.5-homoscedasticidad">RLM.5: Homoscedasticidad</a></li>
+  <li><a href="#rlm.6-normalidad" id="toc-rlm.6-normalidad" class="nav-link" data-scroll-target="#rlm.6-normalidad">RLM.6: Normalidad</a></li>
+  </ul></li>
+  <li><a href="#estimación" id="toc-estimación" class="nav-link" data-scroll-target="#estimación"><span class="header-section-number">2.2</span> Estimación</a>
+  <ul class="collapse">
+  <li><a href="#función-de-regresión-muestral" id="toc-función-de-regresión-muestral" class="nav-link" data-scroll-target="#función-de-regresión-muestral">Función de regresión muestral</a></li>
+  <li><a href="#residuos" id="toc-residuos" class="nav-link" data-scroll-target="#residuos">Residuos</a></li>
+  <li><a href="#estimación-por-mco" id="toc-estimación-por-mco" class="nav-link" data-scroll-target="#estimación-por-mco">Estimación por MCO</a></li>
+  <li><a href="#ecuaciones-normales" id="toc-ecuaciones-normales" class="nav-link" data-scroll-target="#ecuaciones-normales">Ecuaciones normales</a></li>
+  <li><a href="#sumas-de-cuadrados" id="toc-sumas-de-cuadrados" class="nav-link" data-scroll-target="#sumas-de-cuadrados">Sumas de cuadrados</a></li>
+  <li><a href="#bondad-del-ajuste" id="toc-bondad-del-ajuste" class="nav-link" data-scroll-target="#bondad-del-ajuste">Bondad del ajuste</a></li>
+  </ul></li>
+  <li><a href="#propiedades-del-estimador-de-mco" id="toc-propiedades-del-estimador-de-mco" class="nav-link" data-scroll-target="#propiedades-del-estimador-de-mco"><span class="header-section-number">2.3</span> Propiedades del estimador de MCO</a>
+  <ul class="collapse">
+  <li><a href="#propiedades-de-muestras-pequeñas" id="toc-propiedades-de-muestras-pequeñas" class="nav-link" data-scroll-target="#propiedades-de-muestras-pequeñas">Propiedades de muestras pequeñas</a></li>
+  <li><a href="#insesgadez" id="toc-insesgadez" class="nav-link" data-scroll-target="#insesgadez">Insesgadez</a></li>
+  <li><a href="#omisión-de-variables-relevantes" id="toc-omisión-de-variables-relevantes" class="nav-link" data-scroll-target="#omisión-de-variables-relevantes">Omisión de variables relevantes</a></li>
+  <li><a href="#sesgo" id="toc-sesgo" class="nav-link" data-scroll-target="#sesgo">Sesgo</a></li>
+  <li><a href="#sesgo-de-variable-omitida" id="toc-sesgo-de-variable-omitida" class="nav-link" data-scroll-target="#sesgo-de-variable-omitida">Sesgo de variable omitida</a></li>
+  <li><a href="#varianza-del-estimador-mco" id="toc-varianza-del-estimador-mco" class="nav-link" data-scroll-target="#varianza-del-estimador-mco">Varianza del estimador MCO</a></li>
+  <li><a href="#eficiencia" id="toc-eficiencia" class="nav-link" data-scroll-target="#eficiencia">Eficiencia</a></li>
+  <li><a href="#distribución-muestral" id="toc-distribución-muestral" class="nav-link" data-scroll-target="#distribución-muestral">Distribución muestral</a></li>
+  </ul></li>
+  <li><a href="#contraste-de-hipótesis-sobre-un-parámetro" id="toc-contraste-de-hipótesis-sobre-un-parámetro" class="nav-link" data-scroll-target="#contraste-de-hipótesis-sobre-un-parámetro"><span class="header-section-number">2.4</span> Contraste de hipótesis sobre un parámetro</a>
+  <ul class="collapse">
+  <li><a href="#hipótesis-nula-e-hipótesis-alternativa" id="toc-hipótesis-nula-e-hipótesis-alternativa" class="nav-link" data-scroll-target="#hipótesis-nula-e-hipótesis-alternativa">Hipótesis nula e hipótesis alternativa</a></li>
+  <li><a href="#contrastes-acerca-de-un-parámetro" id="toc-contrastes-acerca-de-un-parámetro" class="nav-link" data-scroll-target="#contrastes-acerca-de-un-parámetro">Contrastes acerca de un parámetro</a></li>
+  <li><a href="#estadístico-de-contraste" id="toc-estadístico-de-contraste" class="nav-link" data-scroll-target="#estadístico-de-contraste">Estadístico de contraste</a></li>
+  <li><a href="#distribución-bajo-la-hipótesis-nula" id="toc-distribución-bajo-la-hipótesis-nula" class="nav-link" data-scroll-target="#distribución-bajo-la-hipótesis-nula">Distribución bajo la hipótesis nula</a></li>
+  <li><a href="#la-hipótesis-alternativa" id="toc-la-hipótesis-alternativa" class="nav-link" data-scroll-target="#la-hipótesis-alternativa">La hipótesis alternativa</a></li>
+  <li><a href="#la-región-de-rechazo" id="toc-la-región-de-rechazo" class="nav-link" data-scroll-target="#la-región-de-rechazo">La región de rechazo</a></li>
+  <li><a href="#nivel-de-significación" id="toc-nivel-de-significación" class="nav-link" data-scroll-target="#nivel-de-significación">Nivel de significación</a></li>
+  <li><a href="#valores-críticos" id="toc-valores-críticos" class="nav-link" data-scroll-target="#valores-críticos">Valores críticos</a></li>
+  <li><a href="#valores-críticos-de-un-contraste-de-dos-colas" id="toc-valores-críticos-de-un-contraste-de-dos-colas" class="nav-link" data-scroll-target="#valores-críticos-de-un-contraste-de-dos-colas">Valores críticos de un contraste de dos colas</a></li>
+  <li><a href="#regla-de-decisión" id="toc-regla-de-decisión" class="nav-link" data-scroll-target="#regla-de-decisión">Regla de decisión</a></li>
+  <li><a href="#no-rechazo" id="toc-no-rechazo" class="nav-link" data-scroll-target="#no-rechazo">No rechazo</a></li>
+  <li><a href="#valor-p" id="toc-valor-p" class="nav-link" data-scroll-target="#valor-p">Valor-<span class="math inline">\(p\)</span></a></li>
+  <li><a href="#valor-p-de-un-contraste-de-dos-colas" id="toc-valor-p-de-un-contraste-de-dos-colas" class="nav-link" data-scroll-target="#valor-p-de-un-contraste-de-dos-colas">Valor-<span class="math inline">\(p\)</span> de un contraste de dos colas</a></li>
+  <li><a href="#regla-de-decisión-con-el-valor-p" id="toc-regla-de-decisión-con-el-valor-p" class="nav-link" data-scroll-target="#regla-de-decisión-con-el-valor-p">Regla de decisión con el valor-<span class="math inline">\(p\)</span></a></li>
+  <li><a href="#interpretación-del-valor-p" id="toc-interpretación-del-valor-p" class="nav-link" data-scroll-target="#interpretación-del-valor-p">Interpretación del valor-<span class="math inline">\(p\)</span></a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
+  <li><a href="#contrastes-de-significación-individual" id="toc-contrastes-de-significación-individual" class="nav-link" data-scroll-target="#contrastes-de-significación-individual">Contrastes de significación individual</a></li>
+  <li><a href="#contrastes-de-una-cola-i" id="toc-contrastes-de-una-cola-i" class="nav-link" data-scroll-target="#contrastes-de-una-cola-i">Contrastes de una cola (I)</a></li>
+  <li><a href="#contrastes-de-una-cola-y-ii" id="toc-contrastes-de-una-cola-y-ii" class="nav-link" data-scroll-target="#contrastes-de-una-cola-y-ii">Contrastes de una cola (y II)</a></li>
+  <li><a href="#contrastes-de-una-cola-y-valores-p" id="toc-contrastes-de-una-cola-y-valores-p" class="nav-link" data-scroll-target="#contrastes-de-una-cola-y-valores-p">Contrastes de una cola y valores-<span class="math inline">\(p\)</span></a></li>
+  </ul></li>
+  <li><a href="#intervalos-de-confianza" id="toc-intervalos-de-confianza" class="nav-link" data-scroll-target="#intervalos-de-confianza"><span class="header-section-number">2.5</span> Intervalos de confianza</a>
+  <ul class="collapse">
+  <li><a href="#intervalos-de-confianza-1" id="toc-intervalos-de-confianza-1" class="nav-link" data-scroll-target="#intervalos-de-confianza-1">Intervalos de confianza</a></li>
+  <li><a href="#estimación-por-intervalos" id="toc-estimación-por-intervalos" class="nav-link" data-scroll-target="#estimación-por-intervalos">Estimación por intervalos</a></li>
+  <li><a href="#contraste-de-hipótesis" id="toc-contraste-de-hipótesis" class="nav-link" data-scroll-target="#contraste-de-hipótesis">Contraste de hipótesis</a></li>
+  <li><a href="#cálculo" id="toc-cálculo" class="nav-link" data-scroll-target="#cálculo">Cálculo</a></li>
+  <li><a href="#simetría" id="toc-simetría" class="nav-link" data-scroll-target="#simetría">Simetría</a></li>
+  </ul></li>
+  <li><a href="#contrastes-de-hipótesis-lineales-sobre-los-parámetros" id="toc-contrastes-de-hipótesis-lineales-sobre-los-parámetros" class="nav-link" data-scroll-target="#contrastes-de-hipótesis-lineales-sobre-los-parámetros"><span class="header-section-number">2.6</span> Contrastes de hipótesis lineales sobre los parámetros</a>
+  <ul class="collapse">
+  <li><a href="#hipótesis-lineales-sobre-los-parámetros" id="toc-hipótesis-lineales-sobre-los-parámetros" class="nav-link" data-scroll-target="#hipótesis-lineales-sobre-los-parámetros">Hipótesis lineales sobre los parámetros</a></li>
+  <li><a href="#restricciones-de-exclusión" id="toc-restricciones-de-exclusión" class="nav-link" data-scroll-target="#restricciones-de-exclusión">Restricciones de exclusión</a></li>
+  <li><a href="#modelo-no-restringido" id="toc-modelo-no-restringido" class="nav-link" data-scroll-target="#modelo-no-restringido">Modelo no restringido</a></li>
+  <li><a href="#modelo-restringido" id="toc-modelo-restringido" class="nav-link" data-scroll-target="#modelo-restringido">Modelo restringido</a></li>
+  <li><a href="#bondad-del-ajuste-1" id="toc-bondad-del-ajuste-1" class="nav-link" data-scroll-target="#bondad-del-ajuste-1">Bondad del ajuste</a></li>
+  <li><a href="#estadístico-de-contraste-1" id="toc-estadístico-de-contraste-1" class="nav-link" data-scroll-target="#estadístico-de-contraste-1">Estadístico de contraste</a></li>
+  <li><a href="#distribución-bajo-la-hipótesis-nula-1" id="toc-distribución-bajo-la-hipótesis-nula-1" class="nav-link" data-scroll-target="#distribución-bajo-la-hipótesis-nula-1">Distribución bajo la hipótesis nula</a></li>
+  <li><a href="#región-de-rechazo" id="toc-región-de-rechazo" class="nav-link" data-scroll-target="#región-de-rechazo">Región de rechazo</a></li>
+  <li><a href="#la-regla-de-decisión" id="toc-la-regla-de-decisión" class="nav-link" data-scroll-target="#la-regla-de-decisión">La regla de decisión</a></li>
+  <li><a href="#el-contraste-f-y-el-r2" id="toc-el-contraste-f-y-el-r2" class="nav-link" data-scroll-target="#el-contraste-f-y-el-r2">El contraste <span class="math inline">\(F\)</span> y el <span class="math inline">\(R^2\)</span></a></li>
+  <li><a href="#significación-de-la-regresión" id="toc-significación-de-la-regresión" class="nav-link" data-scroll-target="#significación-de-la-regresión">Significación de la regresión</a></li>
+  <li><a href="#restricciones-lineales-generales" id="toc-restricciones-lineales-generales" class="nav-link" data-scroll-target="#restricciones-lineales-generales">Restricciones lineales generales</a></li>
+  </ul></li>
+  <li><a href="#comment-predicción" id="toc-comment-predicción" class="nav-link" data-scroll-target="#comment-predicción"><span class="header-section-number">2.7</span> COMMENT Predicción</a>
+  <ul class="collapse">
+  <li><a href="#predicción-puntual" id="toc-predicción-puntual" class="nav-link" data-scroll-target="#predicción-puntual">Predicción puntual</a></li>
+  <li><a href="#intervalos-de-predicción" id="toc-intervalos-de-predicción" class="nav-link" data-scroll-target="#intervalos-de-predicción">Intervalos de predicción</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="supuestos" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="supuestos"><span class="header-section-number">2.1</span> Supuestos</h2>
+<ul>
+<li><p><strong>RLM.1</strong>: Linealidad en los parámetros.</p></li>
+<li><p><strong>RLM.2</strong>: Muestreo aleatorio.</p></li>
+<li><p><strong>RLM.3</strong>: Ausencia de multicolinealidad perfecta.</p></li>
+<li><p><strong>RLM.4</strong>: Media condicional nula.</p></li>
+<li><p><strong>RLM.5</strong>: Homoscedasticidad.</p></li>
+<li><p><strong>RLM.6</strong>: Normalidad.</p></li>
+</ul>
+<section id="rlm.1-linealidad-en-los-parámetros" class="level3">
+<h3 class="anchored" data-anchor-id="rlm.1-linealidad-en-los-parámetros">RLM.1: Linealidad en los parámetros</h3>
+<p>El <strong>modelo poblacional</strong> puede expresarse como: <span class="math display">\[
+  y = \beta_{0} + \beta_{1} x_{1} + \dots + \beta_{k} x_{k} + u
+\]</span> donde:</p>
+<ul>
+<li><p><span class="math inline">\(y\)</span> es la <strong>variable dependiente</strong>,</p></li>
+<li><p><span class="math inline">\(\beta_0, \beta_1, \dots, \beta_k\)</span> son los <strong>parámetros</strong> desconocidos,</p></li>
+<li><p><span class="math inline">\(x_1, x_2, \dots, x_k\)</span> son las <strong>variables explicativas</strong> y</p></li>
+<li><p><span class="math inline">\(u\)</span> es un <strong>término de error</strong> no observable.</p></li>
+</ul>
+</section>
+<section id="rlm.2-muestreo-aleatorio" class="level3">
+<h3 class="anchored" data-anchor-id="rlm.2-muestreo-aleatorio">RLM.2: Muestreo aleatorio</h3>
+<p>Disponemos de una <strong>muestra aleatoria</strong> de <span class="math inline">\(n\)</span> observaciones: <span class="math display">\[
+  \{(x_{1i}, x_{2i}, \dots, x_{ki}, y_{i}); i = 1, 2, \dots, n \}
+\]</span></p>
+</section>
+<section id="rlm.3-no-hay-colinealidad-perfecta" class="level3">
+<h3 class="anchored" data-anchor-id="rlm.3-no-hay-colinealidad-perfecta">RLM.3: No hay colinealidad perfecta</h3>
+<p>En la muestra se cumplen <strong>todas</strong> las condiciones:</p>
+<ul>
+<li><p>El número de observaciones, <span class="math inline">\(n\)</span>, es mayor que el de parámetros, <span class="math inline">\(k + 1\)</span>.</p></li>
+<li><p>Ninguna de las variables explicativas es constante.</p></li>
+<li><p>No existen <strong>relaciones lineales exactas</strong> entre las explicativas.</p></li>
+</ul>
+</section>
+<section id="rlm.4-media-condicional-nula" class="level3">
+<h3 class="anchored" data-anchor-id="rlm.4-media-condicional-nula">RLM.4: Media condicional nula</h3>
+<p>El valor esperado del término de error para cualquier combinación de valores que tomen las variables explicativas es 0: <span class="math display">\[
+  \mathop{\mathrm{E}}(u | x_{1}, x_{2}, \dots, x_{k}) = 0
+\]</span></p>
+</section>
+<section id="rlm.5-homoscedasticidad" class="level3">
+<h3 class="anchored" data-anchor-id="rlm.5-homoscedasticidad">RLM.5: Homoscedasticidad</h3>
+<p>La varianza del término de error no depende de los valores que tomen las explicativas: <span class="math display">\[
+  \mathop{\mathrm{var}}(u | x_{1}, x_{2}, \dots, x_{k}) = \sigma^{2}
+\]</span></p>
+</section>
+<section id="rlm.6-normalidad" class="level3">
+<h3 class="anchored" data-anchor-id="rlm.6-normalidad">RLM.6: Normalidad</h3>
+<p>El término de error es <strong>independiente</strong> de las variables explicativas y su distribución es <strong>normal</strong> con media <span class="math inline">\(0\)</span> y varianza <span class="math inline">\(\sigma^2\)</span>: <span class="math display">\[
+  u \sim \mathop{\mathrm{Normal}}(0, \sigma^{2})
+\]</span></p>
+</section>
+</section>
+<section id="estimación" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="estimación"><span class="header-section-number">2.2</span> Estimación</h2>
+<section id="función-de-regresión-muestral" class="level3">
+<h3 class="anchored" data-anchor-id="función-de-regresión-muestral">Función de regresión muestral</h3>
+<p><strong>Función de regresión muestral</strong>: <span class="math display">\[
+  \hat{y}= \hat{\beta}_{0} + \hat{\beta}_{1} x_{1} + \dots + \hat{\beta}_{k} x_{k}
+\]</span> donde:</p>
+<ul>
+<li><p><span class="math inline">\(\hat{y}\)</span> son las <strong>predicciones</strong>,</p></li>
+<li><p><span class="math inline">\(\hat{\beta}_0, \hat{\beta}_1, \dots, \hat{\beta}_k\)</span> son las <strong>estimaciones</strong> de los parámetros.</p></li>
+</ul>
+</section>
+<section id="residuos" class="level3">
+<h3 class="anchored" data-anchor-id="residuos">Residuos</h3>
+<p><strong>Residuos</strong>: <span class="math display">\[
+   \hat{u}= y - \hat{y}
+\]</span></p>
+<p>La función de regresión muestral también puede expresarse como: <span class="math display">\[
+  y = \hat{\beta}_{0} + \hat{\beta}_{1} x_{1} + \dots + \hat{\beta}_{k} x_{k} + \hat{u}
+\]</span></p>
+</section>
+<section id="estimación-por-mco" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-por-mco">Estimación por MCO</h3>
+<p>El estimador de <strong>mínimos cuadrados ordinarios</strong>, MCO, minimiza la suma del cuadrado de los residuos: <span class="math display">\[
+  \min_{\{\hat{\beta}_{0}, \dots, \hat{\beta}_{k}\}} \sum_{i = 1}^n \hat{u}_i^{2}
+\]</span></p>
+</section>
+<section id="ecuaciones-normales" class="level3">
+<h3 class="anchored" data-anchor-id="ecuaciones-normales">Ecuaciones normales</h3>
+<p>El estimador MCO se obtiene resolviendo las <strong>ecuaciones normales</strong>: <span class="math display">\[
+\begin{gather*}
+  \sum_{i = 1}^n \hat{u}_{i} = 0 \\
+  \sum_{i = 1}^n \hat{u}_{i} x_{ji} = 0 \quad (j = 1, 2, \dots, k)
+\end{gather*}
+\]</span></p>
+</section>
+<section id="sumas-de-cuadrados" class="level3">
+<h3 class="anchored" data-anchor-id="sumas-de-cuadrados">Sumas de cuadrados</h3>
+<p>Suma de cuadrados total: <span class="math display">\[
+   \mathop{\mathrm{SCT}}= \sum_{1=1}^n (y_i - \bar{y})^{2}
+\]</span></p>
+<p>Suma de cuadrados explicada: <span class="math display">\[
+   \mathop{\mathrm{SCE}}= \sum_{1=1}^n (\hat{y}_i - \bar{y})^{2}
+\]</span></p>
+<p>Suma de cuadrados de los residuos: <span class="math display">\[
+  \mathop{\mathrm{SCR}}= \sum_{1=1}^n \hat{u}_i^{2}
+\]</span></p>
+<p>La estimación por MCO garantiza que: <span class="math display">\[
+  \mathop{\mathrm{SCT}}= \mathop{\mathrm{SCE}}+ \mathop{\mathrm{SCR}}
+\]</span></p>
+</section>
+<section id="bondad-del-ajuste" class="level3">
+<h3 class="anchored" data-anchor-id="bondad-del-ajuste">Bondad del ajuste</h3>
+<ul>
+<li><p>Error típico de la regresión: <span class="math display">\[
+  \hat{\sigma}= \sqrt{\frac{\mathop{\mathrm{SCR}}}{n - k - 1}}
+\]</span></p></li>
+<li><p>Coeficiente de determinación: <span class="math display">\[
+  R^2= 1 - \frac{\mathop{\mathrm{SCR}}}{\mathop{\mathrm{SCT}}}
+\]</span></p></li>
+<li><p><span class="math inline">\(R^2\)</span> ajustado: <span class="math display">\[
+  \bar{R}^2= 1 - \frac{\mathop{\mathrm{SCR}}/(n - k - 1)}{\mathop{\mathrm{SCT}}/(n - 1)}
+\]</span></p></li>
+</ul>
+</section>
+</section>
+<section id="propiedades-del-estimador-de-mco" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="propiedades-del-estimador-de-mco"><span class="header-section-number">2.3</span> Propiedades del estimador de MCO</h2>
+<section id="propiedades-de-muestras-pequeñas" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades-de-muestras-pequeñas">Propiedades de muestras pequeñas</h3>
+<ul>
+<li><p>Se refieren al método de estimación, MCO, no a las estimaciones obtenidas con una muestra particular.</p></li>
+<li><p>Dependen del cumplimiento de los supuestos del modelo de regresión lineal clásico.</p></li>
+<li><p>No dependen del tamaño muestral: son válidas para cualquier <span class="math inline">\(n\)</span>.</p></li>
+</ul>
+</section>
+<section id="insesgadez" class="level3">
+<h3 class="anchored" data-anchor-id="insesgadez">Insesgadez</h3>
+<p><strong>Insesgadez</strong>: El valor esperado de las estimaciones coincide con los parámetros poblacionales: <span class="math display">\[
+  \mathop{\mathrm{E}}(\hat{\beta}_{j})  = \beta_{j} \quad (j = 0, 1, \dots, k).
+\]</span></p>
+<p>El estimador de MCO es insesgado si se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong>.</p>
+</section>
+<section id="omisión-de-variables-relevantes" class="level3">
+<h3 class="anchored" data-anchor-id="omisión-de-variables-relevantes">Omisión de variables relevantes</h3>
+<ul>
+<li><p>Ejemplo: modelo que cumple los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong>: <span class="math display">\[
+  y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + u
+\]</span></p></li>
+<li><p>Realizamos la regresión de <span class="math inline">\(y\)</span> sobre <span class="math inline">\(x_1\)</span> omitiendo la variable <span class="math inline">\(x_2\)</span>.</p></li>
+<li><p>¿Qué ocurre si especificamos un modelo donde falta una de las explicativas?</p></li>
+</ul>
+</section>
+<section id="sesgo" class="level3">
+<h3 class="anchored" data-anchor-id="sesgo">Sesgo</h3>
+<ul>
+<li><p>Cuando se omite <span class="math inline">\(x_2\)</span>: <span class="math display">\[
+  \mathop{\mathrm{E}}(\hat{\beta}_{1}) = \beta_{1} + \beta_2 \delta_{12}
+\]</span> donde <span class="math inline">\(\delta_{12}\)</span> es la pendiente de la regresión de <span class="math inline">\(x_1\)</span> sobre <span class="math inline">\(x_2\)</span>.</p></li>
+<li><p><strong>Sesgo</strong> por omisión de <span class="math inline">\(x_2\)</span>: <span class="math display">\[
+  \operatorname{Sesgo}(\hat{\beta}_{1}) = \mathop{\mathrm{E}}(\hat{\beta}_{1}) - \beta_{1} = \beta_2 \delta_{12}
+\]</span></p></li>
+</ul>
+</section>
+<section id="sesgo-de-variable-omitida" class="level3">
+<h3 class="anchored" data-anchor-id="sesgo-de-variable-omitida">Sesgo de variable omitida</h3>
+<p>El estimador de MCO presenta sesgo cuando se cumplen <strong>las dos</strong> condiciones:</p>
+<ul>
+<li><p><span class="math inline">\(\beta_2 \neq 0\)</span>: las variables omitidas son <strong>relevantes</strong>.</p></li>
+<li><p><span class="math inline">\(\delta_{12} \neq 0\)</span>: las variables omitidas están correlacionadas con alguna de las variables incluidas en la regresión.</p></li>
+</ul>
+</section>
+<section id="varianza-del-estimador-mco" class="level3">
+<h3 class="anchored" data-anchor-id="varianza-del-estimador-mco">Varianza del estimador MCO</h3>
+<p>Si se cumplen los <strong>supuestos de Gauss-Markov</strong> (<strong>RLM.1</strong> a <strong>RLM.5</strong>): <span class="math display">\[
+  \mathop{\mathrm{var}}(\hat{\beta}_{j} | \boldsymbol{x}) = \frac{\sigma^{2}}{\mathop{\mathrm{SCT}}_{j}(1 - R^2_{j})}
+  \quad (j = 1, 2, \dots, k)
+\]</span> donde:</p>
+<ul>
+<li><p><span class="math inline">\(\mathop{\mathrm{SCT}}_j = \sum_{i=1}^n(x_{ij} - \bar{x}_j)^2\)</span></p></li>
+<li><p><span class="math inline">\(R^2_j\)</span> es el coeficiente de determinación de una regresión de <span class="math inline">\(x_j\)</span> sobre el resto de explicativas.</p></li>
+</ul>
+</section>
+<section id="eficiencia" class="level3">
+<h3 class="anchored" data-anchor-id="eficiencia">Eficiencia</h3>
+<p><strong>Teorema de Gauss-Markov</strong>: Si se cumplen los supuestos de Gauss-Markov, el estimador MCO es el <strong>estimador lineal insesgado óptimo</strong>.</p>
+<ul>
+<li><p>Un <strong>estimador lineal</strong> es una función lineal de los valores de la variable dependiente: <span class="math display">\[
+   \hat{\beta}_j = \sum_{i=1}^n w_{ij} y_i
+\]</span></p></li>
+<li><p>Dentro de un grupo de estimadores, el <strong>estimador óptimo</strong> es el que tiene menor varianza muestral.</p></li>
+</ul>
+</section>
+<section id="distribución-muestral" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-muestral">Distribución muestral</h3>
+<p>Bajo los supuestos del modelo clásico de regresión lineal (<strong>RLM.1</strong> a <strong>RLM.6</strong>): <span class="math display">\[
+  \hat{\beta}_{j} | \boldsymbol{x} \sim \mathop{\mathrm{Normal}}\big(\beta_j, \mathop{\mathrm{var}}(\hat{\beta}_j | \boldsymbol{x})\big)
+  \quad (j = 0, 1, \dots, k)
+\]</span></p>
+</section>
+</section>
+<section id="contraste-de-hipótesis-sobre-un-parámetro" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="contraste-de-hipótesis-sobre-un-parámetro"><span class="header-section-number">2.4</span> Contraste de hipótesis sobre un parámetro</h2>
+<section id="hipótesis-nula-e-hipótesis-alternativa" class="level3">
+<h3 class="anchored" data-anchor-id="hipótesis-nula-e-hipótesis-alternativa">Hipótesis nula e hipótesis alternativa</h3>
+<ul>
+<li><p><strong>Hipótesis nula</strong>, <span class="math inline">\(H_0\)</span>: la hipótesis para la que queremos determinar si hay o no suficiente evidencia en contra.</p></li>
+<li><p><strong>Hipótesis alternativa</strong>, <span class="math inline">\(H_1\)</span>: la hipótesis que aceptaremos si rechazamos la hipótesis nula.</p></li>
+</ul>
+</section>
+<section id="contrastes-acerca-de-un-parámetro" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-acerca-de-un-parámetro">Contrastes acerca de un parámetro</h3>
+<ul>
+<li><p>Modelo poblacional: <span class="math display">\[
+  y = \beta_{0} + \beta_{1} x_{1} + \dots + \beta_{j} x_{j} + \dots +
+  \beta_{k} x_{k} + u.
+\]</span></p></li>
+<li><p>Hipótesis nula: el valor del parámetro <span class="math inline">\(\beta_j\)</span> es igual a <span class="math inline">\(b_j\)</span>, <span class="math display">\[
+  H_{0}\!: \beta_{j} = b_{j}.
+\]</span></p></li>
+</ul>
+</section>
+<section id="estadístico-de-contraste" class="level3">
+<h3 class="anchored" data-anchor-id="estadístico-de-contraste">Estadístico de contraste</h3>
+<p>El <strong>estadístico <span class="math inline">\(\boldsymbol{t}\)</span></strong> para la <span class="math inline">\(H_0\!: \beta_j = b_j\)</span> es: <span class="math display">\[
+  t = \frac{\hat{\beta}_{j} - b_{j}}{\mathop{\mathrm{et}}(\hat{\beta}_{j})},
+\]</span> donde <span class="math inline">\(\mathop{\mathrm{et}}(\hat{\beta}_{j})\)</span> es el error típico del estimador del parámetro <span class="math inline">\(\beta_j\)</span>.</p>
+</section>
+<section id="distribución-bajo-la-hipótesis-nula" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-bajo-la-hipótesis-nula">Distribución bajo la hipótesis nula</h3>
+<p>+MATS: figcol fig-02_1027-tdens-*.pdf 0.5</p>
+<p>Si se cumplen los supuestos del modelo clásico de regresión lineal, <strong>cuando la hipótesis nula es cierta</strong> el estadístico <span class="math inline">\(t\)</span> se distribuye como una variable aleatoria <span class="math inline">\(t\)</span> con <span class="math inline">\(n - k - 1\)</span> grados de libertad: <span class="math display">\[
+  t \sim t_{n-k-1}.
+\]</span></p>
+</section>
+<section id="la-hipótesis-alternativa" class="level3">
+<h3 class="anchored" data-anchor-id="la-hipótesis-alternativa">La hipótesis alternativa</h3>
+<p>La hipótesis alternativa es, usualmente, la negación de la hipótesis nula: <span class="math display">\[
+  H_{1}\!: \beta_{j} \neq b_{j}.
+\]</span></p>
+</section>
+<section id="la-región-de-rechazo" class="level3">
+<h3 class="anchored" data-anchor-id="la-región-de-rechazo">La región de rechazo</h3>
+<p>+MATS: figcol fig-02_1027-ttest-rejection-area-*.pdf 0.5</p>
+<p>La hipótesis alternativa determina la <strong>región de rechazo</strong>: valores grandes en valor absoluto del estadístico <span class="math inline">\(t\)</span> son evidencia en contra de la hipótesis nula.</p>
+</section>
+<section id="nivel-de-significación" class="level3">
+<h3 class="anchored" data-anchor-id="nivel-de-significación">Nivel de significación</h3>
+<ul>
+<li><p>El <strong>nivel de significación</strong> determina el tamaño de la región de rechazo.</p></li>
+<li><p>Es la probabilidad de rechazar la hipótesis nula cuando ésta es cierta: <span class="math display">\[
+  \alpha = \Pr(\text{rechazar $H_{0}$}\,|\,\text{$H_{0}$ es cierta}).
+\]</span></p></li>
+</ul>
+</section>
+<section id="valores-críticos" class="level3">
+<h3 class="anchored" data-anchor-id="valores-críticos">Valores críticos</h3>
+<ul>
+<li><p>Los <strong>valores críticos</strong> delimitan la región de rechazo.</p></li>
+<li><p>Se determinan a partir de la distribución bajo la hipótesis nula y del nivel de significación.</p></li>
+</ul>
+</section>
+<section id="valores-críticos-de-un-contraste-de-dos-colas" class="level3">
+<h3 class="anchored" data-anchor-id="valores-críticos-de-un-contraste-de-dos-colas">Valores críticos de un contraste de dos colas</h3>
+<p>+MATS: figcol fig-02_1027-ttest-two-tails-*.pdf 0.5</p>
+<p>En un contraste de <span class="math inline">\(H_0\!: \beta_j = b_j\)</span> frente a <span class="math inline">\(H_1\!: \beta_j \neq b_j\)</span>, el valor crítico <span class="math inline">\(c_{\alpha}\)</span> cumple: <span class="math display">\[
+  \Pr(|t_{n - k - 1}| &gt; c_{\alpha/2}) = \alpha.
+\]</span></p>
+</section>
+<section id="regla-de-decisión" class="level3">
+<h3 class="anchored" data-anchor-id="regla-de-decisión">Regla de decisión</h3>
+<p>+MATS: figcol fig-02_1027-ttest-h0-rejected-*.pdf 0.5</p>
+<p><strong>Regla de decisión</strong>: se rechaza <span class="math inline">\(H_0\)</span> (en favor de <span class="math inline">\(H_1\)</span>) a un nivel de significación <span class="math inline">\(\alpha\)</span> cuando el estadístico <span class="math inline">\(t\)</span> cae en la región de rechazo: <span class="math display">\[
+  |t| &gt; c_{\alpha/2}.
+\]</span></p>
+</section>
+<section id="no-rechazo" class="level3">
+<h3 class="anchored" data-anchor-id="no-rechazo">No rechazo</h3>
+<p>+MATS: figcol fig-02_1027-ttest-h0-not-rejected-*.pdf 0.5</p>
+<p>Decimos que <strong>no se rechaza</strong> la <span class="math inline">\(H_0\)</span> cuando el estadístico <span class="math inline">\(t\)</span> se sitúa fuera de la región de rechazo. Evitamos expresiones como “<strong>aceptar la hipótesis nula</strong>”.</p>
+</section>
+<section id="valor-p" class="level3">
+<h3 class="anchored" data-anchor-id="valor-p">Valor-<span class="math inline">\(p\)</span></h3>
+<p>El <strong>valor-<span class="math inline">\(\boldsymbol{p}\)</span></strong> es la probabilidad, cuando <span class="math inline">\(H_0\)</span> es cierta, de observar un valor del estadístico de contraste al menos tan grande como el que se ha obtenido.</p>
+</section>
+<section id="valor-p-de-un-contraste-de-dos-colas" class="level3">
+<h3 class="anchored" data-anchor-id="valor-p-de-un-contraste-de-dos-colas">Valor-<span class="math inline">\(p\)</span> de un contraste de dos colas</h3>
+<p>+MATS: figcol fig-02_1027-ttest-p-value-*.pdf 0.5</p>
+<p>El valor-<span class="math inline">\(p\)</span> se corresponde con el área de las dos colas delimitadas por el estadístico de contraste: <span class="math display">\[
+  \text{valor-}p = \Pr(|t_{n-k-1}| &gt; |t|).
+\]</span></p>
+</section>
+<section id="regla-de-decisión-con-el-valor-p" class="level3">
+<h3 class="anchored" data-anchor-id="regla-de-decisión-con-el-valor-p">Regla de decisión con el valor-<span class="math inline">\(p\)</span></h3>
+<p><strong>Regla de decisión</strong>: se rechaza <span class="math inline">\(H_0\)</span> a un nivel de significación <span class="math inline">\(\alpha\)</span> cuando el valor-<span class="math inline">\(p\)</span> es menor que el nivel de significación <span class="math inline">\(\alpha\)</span>: <span class="math display">\[
+  \text{valor-}p &lt; \alpha.
+\]</span></p>
+</section>
+<section id="interpretación-del-valor-p" class="level3">
+<h3 class="anchored" data-anchor-id="interpretación-del-valor-p">Interpretación del valor-<span class="math inline">\(p\)</span></h3>
+<ul>
+<li><p>El valor-<span class="math inline">\(p\)</span> <strong>no</strong> es la probabilidad de que <span class="math inline">\(H_0\)</span> sea cierta.</p></li>
+<li><p>Mide la intensidad de la evidencia en contra de <span class="math inline">\(H_0\)</span>: cuanto más pequeño es el valor-<span class="math inline">\(p\)</span>, menos soportan los datos la <span class="math inline">\(H_0\)</span>.</p></li>
+</ul>
+</section>
+<section id="resumen" class="level3">
+<h3 class="anchored" data-anchor-id="resumen">Resumen</h3>
+<ul>
+<li><p>Contraste de <span class="math inline">\(H_0\!: \beta_j = b_j\)</span> frente a <span class="math inline">\(H_{1}\!: \beta_{j} \neq b_{j}\)</span>.</p></li>
+<li><p>Estadístico de contraste: <span class="math display">\[
+  t = \frac{\hat{\beta}_{j} - b_{j}}{\mathop{\mathrm{et}}(\hat{\beta}_{j})}.
+\]</span></p></li>
+<li><p>Se rechaza <span class="math inline">\(H_0\)</span> a un nivel de significación <span class="math inline">\(\alpha\)</span> si:</p>
+<ul>
+<li><p><span class="math inline">\(|t| &gt; c_{\alpha/2}\)</span>, donde <span class="math inline">\(c_{\alpha/2}\)</span> se obtiene de la distribución <span class="math inline">\(t_{n - k - 1}\)</span>; o</p></li>
+<li><p><span class="math inline">\(\text{valor-}p &lt; \alpha\)</span>, donde el valor-<span class="math inline">\(p\)</span> se obtiene de la distribución <span class="math inline">\(t_{n - k - 1}\)</span>.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="contrastes-de-significación-individual" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-significación-individual">Contrastes de significación individual</h3>
+<ul>
+<li><p>Es un caso especial del contraste <span class="math inline">\(t\)</span> de dos colas: <span class="math inline">\(H_0\!: \beta_j = 0\)</span> frente a <span class="math inline">\(H_{1}\!: \beta_{j} \neq 0\)</span>.</p></li>
+<li><p>El estadístico de contraste es el <strong>cociente <span class="math inline">\(\boldsymbol{t}\)</span></strong>: <span class="math display">\[
+  t = \frac{\hat{\beta}_{j}}{\mathop{\mathrm{et}}(\hat{\beta}_{j})}.
+\]</span></p></li>
+<li><p>Cuando se rechaza la <span class="math inline">\(H_0\)</span> se suele usar expresiones como <em><span class="math inline">\(x_j\)</span> es <strong>estadísticamente significativa</strong> al nivel <span class="math inline">\(\alpha\)</span></em>.</p></li>
+</ul>
+</section>
+<section id="contrastes-de-una-cola-i" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-una-cola-i">Contrastes de una cola (I)</h3>
+<p>+MATS: figcol fig-02_1027-ttest-one-tail-pos-*.pdf 0.5</p>
+<ul>
+<li><p><span class="math inline">\(H_0\!: \beta_j = b_j\)</span> frente a <span class="math inline">\(H_{1}\!: \beta_{j} &gt; b_{j}\)</span>.</p></li>
+<li><p>Estadístico de contraste: <span class="math display">\[
+  t = (\hat{\beta}_{j} - b_{j})/\mathop{\mathrm{et}}(\hat{\beta}_{j}).
+\]</span></p></li>
+<li><p>Se rechaza <span class="math inline">\(H_0\)</span> si <span class="math inline">\(t &gt; c_{\alpha}\)</span>, donde: <span class="math display">\[
+  \Pr(t_{n-k-1} &gt; c_{\alpha}) = \alpha.
+\]</span></p></li>
+</ul>
+</section>
+<section id="contrastes-de-una-cola-y-ii" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-una-cola-y-ii">Contrastes de una cola (y II)</h3>
+<p>+MATS: figcol fig-02_1027-ttest-one-tail-neg-*.pdf 0.5</p>
+<ul>
+<li><p><span class="math inline">\(H_0\!: \beta_j = b_j\)</span> frente a <span class="math inline">\(H_{1}\!: \beta_{j} &lt; b_{j}\)</span>.</p></li>
+<li><p>Estadístico de contraste: <span class="math display">\[
+  t = (\hat{\beta}_{j} - b_{j})/\mathop{\mathrm{et}}(\hat{\beta}_{j}).
+\]</span></p></li>
+<li><p>Se rechaza <span class="math inline">\(H_0\)</span> si <span class="math inline">\(t &lt; -c_{\alpha}\)</span>, donde: <span class="math display">\[
+  \Pr(t_{n-k-1} &lt; -c_{\alpha}) = \alpha.
+\]</span></p></li>
+</ul>
+</section>
+<section id="contrastes-de-una-cola-y-valores-p" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-una-cola-y-valores-p">Contrastes de una cola y valores-<span class="math inline">\(p\)</span></h3>
+<ul>
+<li><p>Los valores-<span class="math inline">\(p\)</span> que presentan por defecto los programas estadísticos son válidos para contrastes de dos colas.</p></li>
+<li><p>Si el estadístico <span class="math inline">\(t\)</span> está en la misma cola de la región de rechazo, el valor-<span class="math inline">\(p\)</span> será la mitad del que imprime el programa informático.</p></li>
+<li><p>Si el estadístico <span class="math inline">\(t\)</span> está en la cola opuesta a la de la región de rechazo, el valor-<span class="math inline">\(p\)</span> será mayor que <span class="math inline">\(0.5\)</span> y no se rechazará la <span class="math inline">\(H_0\)</span> a ninguno de los niveles de significación habituales.</p></li>
+</ul>
+</section>
+</section>
+<section id="intervalos-de-confianza" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="intervalos-de-confianza"><span class="header-section-number">2.5</span> Intervalos de confianza</h2>
+<section id="intervalos-de-confianza-1" class="level3">
+<h3 class="anchored" data-anchor-id="intervalos-de-confianza-1">Intervalos de confianza</h3>
+<p>Un <strong>intervalo de confianza</strong> para el parámetro <span class="math inline">\(\beta_j\)</span> a un <strong>nivel de confianza</strong> de <span class="math inline">\(1-\alpha\)</span> es un intervalo <span class="math inline">\((\overline{\beta}_j, \underline{\beta}_j)\)</span> que contendrá el valor del parámetro <span class="math inline">\(\beta_j\)</span> con una probabilidad <span class="math inline">\(1-\alpha\)</span>: <span class="math display">\[
+\Pr(\underline{\beta}_j &lt; \beta_j &lt; \overline{\beta}_j) = 1 - \alpha.  
+\]</span></p>
+</section>
+<section id="estimación-por-intervalos" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-por-intervalos">Estimación por intervalos</h3>
+<p><strong>Estimación por intervalos</strong>: en vez de obtener un único valor (<strong>estimación puntual</strong>), calculamos un intervalo de valores para el parámetro <span class="math inline">\(\beta_j\)</span>.</p>
+<p>+MATS: fig fig-02_1027-conf-interval-*.pdf</p>
+</section>
+<section id="contraste-de-hipótesis" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-hipótesis">Contraste de hipótesis</h3>
+<p><strong>Contraste de hipótesis</strong>: Rechazamos <span class="math inline">\(H_0\!: \beta_j = b_j\)</span> frente a <span class="math inline">\(H_1\!: \beta_j \neq b_j\)</span> a un nivel de significación <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(b_j\)</span> no está incluido en el intervalo de confianza <span class="math inline">\((\overline{\beta}_j, \underline{\beta}_j)\)</span> construido a un nivel de confianza <span class="math inline">\(1 - \alpha\)</span>.</p>
+<p>+MATS: fig fig-02_1027-conf-interval-test-*.pdf</p>
+</section>
+<section id="cálculo" class="level3">
+<h3 class="anchored" data-anchor-id="cálculo">Cálculo</h3>
+<p>Si se cumplen los supuestos del modelo clásico de regresión lineal, <strong>RLM.1</strong> a <strong>RLM.6</strong>, los límites de un intervalo a un nivel de confianza <span class="math inline">\(1 - \alpha\)</span> para el parámetro <span class="math inline">\(\beta_j\)</span> son: <span class="math display">\[
+  \hat{\beta}_j \pm c_{\alpha/2} \cdot \mathop{\mathrm{et}}(\hat{\beta}_j),
+\]</span> donde <span class="math inline">\(c_{\alpha/2}\)</span> es el valor crítico de dos colas de una distribución <span class="math inline">\(t_{n-k-1}\)</span> a un nivel de significación <span class="math inline">\(\alpha\)</span>.</p>
+</section>
+<section id="simetría" class="level3">
+<h3 class="anchored" data-anchor-id="simetría">Simetría</h3>
+<p>El intervalo de confianza del parámetro <span class="math inline">\(\beta_j\)</span> es simétrico y su centro es la estimación <span class="math inline">\(\hat{\beta}_j\)</span>.</p>
+<p>+MATS: fig fig-02_1027-conf-interval-estimation-*.pdf</p>
+</section>
+</section>
+<section id="contrastes-de-hipótesis-lineales-sobre-los-parámetros" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="contrastes-de-hipótesis-lineales-sobre-los-parámetros"><span class="header-section-number">2.6</span> Contrastes de hipótesis lineales sobre los parámetros</h2>
+<section id="hipótesis-lineales-sobre-los-parámetros" class="level3">
+<h3 class="anchored" data-anchor-id="hipótesis-lineales-sobre-los-parámetros">Hipótesis lineales sobre los parámetros</h3>
+<ul>
+<li><p>La hipótesis nula se compone de una o más <strong>combinaciones lineales</strong> de los parámetros. Por ejemplo:</p>
+<ul>
+<li><p><span class="math inline">\(H_0\!: \beta_3 = 0, \beta_4 = 1\)</span>.</p></li>
+<li><p><span class="math inline">\(H_0\!: \beta_3 + \beta_4 = 1, \beta_5 = -1\)</span>.</p></li>
+</ul></li>
+<li><p>La hipótesis alternativa es la negación de la nula: al menos una de las igualdades no se cumple.</p></li>
+</ul>
+</section>
+<section id="restricciones-de-exclusión" class="level3">
+<h3 class="anchored" data-anchor-id="restricciones-de-exclusión">Restricciones de exclusión</h3>
+<ul>
+<li><strong>Restricciones de exclusión múltiple</strong>: las pendientes de <span class="math inline">\(q\)</span> regresores son nulas: <span class="math display">\[
+  H_{0}\!: \beta_{1} = \beta_{2} = \dots = \beta_{q} = 0.
+\]</span></li>
+<li>En la hipótesis alternativa al menos una de las pendientes <span class="math inline">\(\beta_{1}, \beta_{2}, \dots, \beta_{q}\)</span> es distinta de <span class="math inline">\(0\)</span>: <span class="math display">\[
+  H_{1}\!: \text{no $H_0$}.
+\]</span></li>
+</ul>
+</section>
+<section id="modelo-no-restringido" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-no-restringido">Modelo no restringido</h3>
+<p><strong>Modelo no restringido</strong>: los parámetros pueden tomar cualquier valor y es válido tanto bajo la <span class="math inline">\(H_0\)</span> como bajo la <span class="math inline">\(H_1\)</span>: <span class="math display">\[
+  y = \beta_{0} + \beta_{1} x_{1} + \dots + \beta_{q} x_{q} +
+  \beta_{q+1} x_{q+1} + \dots +  \beta_{k} x_{k} + u.
+\]</span></p>
+</section>
+<section id="modelo-restringido" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-restringido">Modelo restringido</h3>
+<p><strong>Modelo restringido</strong>: los parámetros <span class="math inline">\(\beta_1, \dots, \beta_q\)</span> son iguales a <span class="math inline">\(0\)</span> y sólo es válido bajo la <span class="math inline">\(H_0\)</span>: <span class="math display">\[
+  y = \beta_{0} + \beta_{q+1} x_{q+1} + \dots +  \beta_{k} x_{k} + u.
+\]</span></p>
+</section>
+<section id="bondad-del-ajuste-1" class="level3">
+<h3 class="anchored" data-anchor-id="bondad-del-ajuste-1">Bondad del ajuste</h3>
+<ul>
+<li><p>Si las restricciones de exclusión son ciertas, no debe haber mucha diferencia entre el ajuste del modelo restringido y el del modelo no restringido.</p></li>
+<li><p>El contraste se basará en la comparación de las sumas de cuadrados de los residuos del modelo restringido, <span class="math inline">\(\mathop{\mathrm{SCR}}_{r}\)</span>, y del modelo no restringido, <span class="math inline">\(\mathop{\mathrm{SCR}}_{nr}\)</span>.</p></li>
+</ul>
+</section>
+<section id="estadístico-de-contraste-1" class="level3">
+<h3 class="anchored" data-anchor-id="estadístico-de-contraste-1">Estadístico de contraste</h3>
+<p>El estadístico de contraste es el <strong>estadístico <span class="math inline">\(\boldsymbol{F}\)</span></strong>: <span class="math display">\[
+  F = \frac{(\mathop{\mathrm{SCR}}_{r}- \mathop{\mathrm{SCR}}_{nr}) / q}{\mathop{\mathrm{SCR}}_{nr}/ (n - k - 1)}.
+\]</span></p>
+</section>
+<section id="distribución-bajo-la-hipótesis-nula-1" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-bajo-la-hipótesis-nula-1">Distribución bajo la hipótesis nula</h3>
+<p>Si se cumplen los supuestos del modelo clásico de regresión lineal, <strong>cuando la hipótesis nula es cierta</strong> el estadístico <span class="math inline">\(F\)</span> se distribuye como una variable aleatoria <span class="math inline">\(F\)</span> con <span class="math inline">\(q\)</span> y <span class="math inline">\(n - k - 1\)</span> grados de libertad: <span class="math display">\[
+  F \sim F_{q, n-k-1}.
+\]</span></p>
+</section>
+<section id="región-de-rechazo" class="level3">
+<h3 class="anchored" data-anchor-id="región-de-rechazo">Región de rechazo</h3>
+<p>+MATS: figcol fig-02_1027-ftest-rejection-area-*.pdf 0.5</p>
+<ul>
+<li><p>Valor crítico a un nivel de significación <span class="math inline">\(\alpha\)</span>: <span class="math display">\[
+  \Pr(F_{q, n-k-1} &gt; c_{\alpha}) = \alpha.
+\]</span></p></li>
+<li><p>Valores del estadístico <span class="math inline">\(F\)</span> mayores que <span class="math inline">\(c_{\alpha}\)</span> representan evidencia en contra de la hipótesis nula.</p></li>
+</ul>
+</section>
+<section id="la-regla-de-decisión" class="level3">
+<h3 class="anchored" data-anchor-id="la-regla-de-decisión">La regla de decisión</h3>
+<p><strong>Regla de decisión</strong>: se rechaza <span class="math inline">\(H_0\)</span> a un nivel de significación <span class="math inline">\(\alpha\)</span> cuando:</p>
+<ul>
+<li><p>El estadístico <span class="math inline">\(F\)</span> cae en la región de rechazo: <span class="math display">\[
+  F &gt; c_{\alpha}.
+\]</span></p></li>
+<li><p>El valor-<span class="math inline">\(p\)</span> es menor que el nivel de significación <span class="math inline">\(\alpha\)</span>. El valor-<span class="math inline">\(p\)</span> es: <span class="math display">\[
+  \text{valor-}p = \Pr(F_{q, n-k-1} &gt; F).
+\]</span></p></li>
+</ul>
+</section>
+<section id="el-contraste-f-y-el-r2" class="level3">
+<h3 class="anchored" data-anchor-id="el-contraste-f-y-el-r2">El contraste <span class="math inline">\(F\)</span> y el <span class="math inline">\(R^2\)</span></h3>
+<p><em>Para contrastar restricciones de exclusión</em> el estadístico <span class="math inline">\(F\)</span> puede calcularse a partir de los coeficientes de determinación del modelo restringido, <span class="math inline">\(R^2_r\)</span>, y del modelo no restringido, <span class="math inline">\(R^2_{nr}\)</span>: <span class="math display">\[
+  F = \frac{(R^2_{nr}- R^2_r) / q}{(1 - R^2_{nr}) / (n - k - 1)}.
+\]</span></p>
+</section>
+<section id="significación-de-la-regresión" class="level3">
+<h3 class="anchored" data-anchor-id="significación-de-la-regresión">Significación de la regresión</h3>
+<ul>
+<li><p><strong>Significación conjunta de la regresión</strong>: contraste de la hipótesis nula de que todas las pendientes son nulas: <span class="math display">\[
+  H_0\!: \beta_1 = \beta_2 = \dots = \beta_k = 0.
+\]</span></p></li>
+<li><p>El estadístico <span class="math inline">\(F\)</span> en términos del coeficiente de determinación es: <span class="math display">\[
+  F = \frac{R^2/ k}{(1 - R^2) / (n - k - 1)}.
+\]</span></p></li>
+</ul>
+</section>
+<section id="restricciones-lineales-generales" class="level3">
+<h3 class="anchored" data-anchor-id="restricciones-lineales-generales">Restricciones lineales generales</h3>
+<ul>
+<li><p>Se pueden usar los estadísticos <span class="math inline">\(F\)</span> basados en las sumas de cuadrados de los residuos para contrastar restricciones lineales generales.</p></li>
+<li><p>Las fórmulas basadas en los coeficientes de determinación <strong>sólo</strong> pueden usarse si los modelos restringido y no restringido tienen la <strong>misma variable dependiente</strong>.</p></li>
+<li><p>Cualquier conjunto de restricciones lineales siempre puede transformarse en restricciones de exclusión mediante una reparametrización del modelo.</p></li>
+</ul>
+</section>
+</section>
+<section id="comment-predicción" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="comment-predicción"><span class="header-section-number">2.7</span> COMMENT Predicción</h2>
+<section id="predicción-puntual" class="level3">
+<h3 class="anchored" data-anchor-id="predicción-puntual">Predicción puntual</h3>
+<ul>
+<li><p>Predicción del valor medio.</p></li>
+<li><p>Predicción del valor.</p></li>
+</ul>
+</section>
+<section id="intervalos-de-predicción" class="level3">
+<h3 class="anchored" data-anchor-id="intervalos-de-predicción">Intervalos de predicción</h3>
+<ul>
+<li><p>Valor medio.</p></li>
+<li><p>Valor de la variable dependiente.</p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./asymp.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
