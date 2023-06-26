@@ -3,13 +3,19 @@ project:
 
 book:
   title: "ec1027-guide"
-  author: "Norah Jones"
+  author: "José C. Pernías"
   date: "6/26/2023"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
+    - part: cs-part.qmd
+      chapters:
+        - intro.qmd
+    - part: ts-part.qmd
+      chapters:
+        - summary.qmd
     - references.qmd
+
+lang: es
 
 bibliography: references.bib
 
