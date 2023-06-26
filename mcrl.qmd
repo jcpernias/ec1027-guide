@@ -1,10 +1,6 @@
 # El modelo clásico de regresión lineal
 
 
-\newcommand{\yhat}{\hat{y}}
-\newcommand{\bhat}{\hat{\beta}}
-\newcommand{\uhat}{\hat{u}}
-
 \DeclareMathOperator{\SCT}{SCT}
 \DeclareMathOperator{\SCE}{SCE}
 \DeclareMathOperator{\SCR}{SCR}
@@ -43,6 +39,7 @@
 
 \newcommand{\Rsqr}{R^2_r}
 \newcommand{\Rsqnr}{R^2_{nr}}
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
 
 
 ## Supuestos
@@ -70,8 +67,7 @@ donde:
 
 - $y$ es la **variable dependiente**,
 
-- $\beta_0, \beta_1, \dots, \beta_k$ son los **parámetros**
-  desconocidos,
+- $\beta_0, \beta_1, \dots, \beta_k$ son los **parámetros**   desconocidos,
 
 - $x_1, x_2, \dots, x_k$ son las **variables explicativas** y
 
@@ -89,8 +85,7 @@ $$
 
 En la muestra se cumplen **todas** las condiciones:
 
-- El número de observaciones, $n$, es mayor que el de parámetros, $k +
-  1$.
+- El número de observaciones, $n$, es mayor que el de parámetros, $k + 1$.
 
 - Ninguna de las variables explicativas es constante.
 
@@ -99,8 +94,7 @@ En la muestra se cumplen **todas** las condiciones:
 
 ### RLM.4: Media condicional nula
 
-El valor esperado del término de error para cualquier combinación de
-valores que tomen las variables explicativas es 0:
+El valor esperado del término de error para cualquier combinación de valores que tomen las variables explicativas es 0:
 $$
   \Exp(u | x_{1}, x_{2}, \dots, x_{k}) = 0
 $$
@@ -116,8 +110,7 @@ $$
 
 ### RLM.6: Normalidad
 
-El término de error es **independiente** de las variables explicativas y
-su distribución es **normal** con media 0 y varianza $\sigma^2$:
+El término de error es **independiente** de las variables explicativas y su distribución es **normal** con media $0$ y varianza $\sigma^2$:
 $$
   u \sim \Normal(0, \sigma^{2})
 $$
@@ -134,7 +127,7 @@ $$
 $$
 donde:
 
-- $\yhat$ son los **predicciones**,
+- $\yhat$ son las **predicciones**,
 
 - $\bhat_0, \bhat_1, \dots, \bhat_k$ son las **estimaciones** de los parámetros.
 
@@ -154,8 +147,7 @@ $$
 
 ### Estimación por MCO
 
-El estimador de **mínimos cuadrados ordinarios**, MCO, minimiza la suma
-del cuadrado de los residuos:
+El estimador de **mínimos cuadrados ordinarios**, MCO, minimiza la suma del cuadrado de los residuos:
 $$
   \min_{\{\bhat_{0}, \dots, \bhat_{k}\}} \sum_{i = 1}^n \uhat_i^{2}
 $$
@@ -217,11 +209,9 @@ $$
 
 ### Propiedades de muestras pequeñas
 
-- Se refieren al método de estimación, MCO, no a las estimaciones
-  obtenidas con una muestra particular.
+- Se refieren al método de estimación, MCO, no a las estimaciones obtenidas con una muestra particular.
 
-- Dependen del cumplimiento de los supuestos del modelo de regresión
-  lineal clásico.
+- Dependen del cumplimiento de los supuestos del modelo de regresión lineal clásico.
 
 - No dependen del tamaño muestral: son válidas para cualquier $n$.
 
@@ -229,14 +219,12 @@ $$
 
 ### Insesgadez
 
-**Insesgadez**: El valor esperado de las estimaciones coincide con los
-parámetros poblacionales:
+**Insesgadez**: El valor esperado de las estimaciones coincide con los parámetros poblacionales:
 $$
   \Exp(\bhat_{j})  = \beta_{j} \quad (j = 0, 1, \dots, k).
 $$
 
-El estimador de MCO es insesgado si se cumplen los supuestos **RLM.1** a
-**RLM.4**.
+El estimador de MCO es insesgado si se cumplen los supuestos **RLM.1** a **RLM.4**.
 
 
 ### Omisión de variables relevantes
@@ -249,8 +237,7 @@ El estimador de MCO es insesgado si se cumplen los supuestos **RLM.1** a
 - Realizamos la regresión de $y$ sobre $x_1$ omitiendo la variable
   $x_2$.
 
-- ¿Qué ocurre si especificamos un modelo donde falta una de las
-  explicativas?
+- ¿Qué ocurre si especificamos un modelo donde falta una de las explicativas?
 
 
 ### Sesgo
@@ -274,8 +261,7 @@ condiciones:
 
 - $\beta_2 \neq 0$: las variables omitidas son **relevantes**.
 
-- $\delta_{12} \neq 0$: las variables omitidas están correlacionadas
-  con alguna de las variables incluidas en la regresión.
+- $\delta_{12} \neq 0$: las variables omitidas están correlacionadas con alguna de las variables incluidas en la regresión.
 
 
 ### Varianza del estimador MCO
@@ -295,9 +281,7 @@ donde:
 
 ### Eficiencia
 
-**Teorema de Gauss-Markov**: Si se cumplen los supuestos de
-Gauss-Markov, el estimador MCO es el **estimador lineal insesgado
-óptimo**.
+**Teorema de Gauss-Markov**: Si se cumplen los supuestos de Gauss-Markov, el estimador MCO es el **estimador lineal insesgado óptimo**.
 
 - Un **estimador lineal** es una función lineal de los valores de la variable dependiente:
   $$
@@ -305,8 +289,7 @@ Gauss-Markov, el estimador MCO es el **estimador lineal insesgado
   $$
 
 
-- Dentro de un grupo de estimadores, el **estimador óptimo** es el que
-  tiene menor varianza muestral.
+- Dentro de un grupo de estimadores, el **estimador óptimo** es el que tiene menor varianza muestral.
 
 
 ### Distribución muestral
@@ -316,4 +299,386 @@ $$
   \bhat_{j} | \boldsymbol{x} \sim \Normal\big(\beta_j, \var(\bhat_j | \boldsymbol{x})\big)
   \quad (j = 0, 1, \dots, k)
 $$
+
+## Contraste de hipótesis sobre un parámetro
+
+
+### Hipótesis nula e hipótesis alternativa
+
+- **Hipótesis nula**, $H_0$: la hipótesis para la que queremos
+  determinar si hay o no suficiente evidencia en contra.
+
+- **Hipótesis alternativa**, $H_1$: la hipótesis que aceptaremos si rechazamos la hipótesis nula.
+
+
+### Contrastes acerca de un parámetro
+
+- Modelo poblacional:
+  $$
+    y = \beta_{0} + \beta_{1} x_{1} + \dots + \beta_{j} x_{j} + \dots +
+    \beta_{k} x_{k} + u.
+  $$
+
+- Hipótesis nula: el valor del parámetro $\beta_j$ es igual a $b_j$,
+  $$
+    H_{0}\!: \beta_{j} = b_{j}.
+  $$
+
+
+### Estadístico de contraste
+
+El **estadístico $\boldsymbol{t}$** para la $H_0\!: \beta_j = b_j$ es:
+$$
+  t = \frac{\bhat_{j} - b_{j}}{\se(\bhat_{j})},
+$$
+donde $\se(\bhat_{j})$ es el error típico del estimador del parámetro
+$\beta_j$.
+
+
+### Distribución bajo la hipótesis nula
+
++MATS: figcol fig-02_1027-tdens-*.pdf 0.5
+
+Si se cumplen los supuestos del modelo clásico de regresión lineal, **cuando la hipótesis nula es cierta** el estadístico $t$ se distribuye como una variable aleatoria $t$ con $n - k - 1$ grados de libertad:
+$$
+  t \sim t_{n-k-1}.
+$$
+
+### La hipótesis alternativa
+
+La hipótesis alternativa es, usualmente, la negación de la hipótesis nula:
+$$
+  H_{1}\!: \beta_{j} \neq b_{j}.
+$$
+
+### La región de rechazo
+
++MATS: figcol fig-02_1027-ttest-rejection-area-*.pdf 0.5
+
+La hipótesis alternativa determina la **región de rechazo**: valores grandes en valor absoluto del estadístico $t$ son evidencia en contra de la hipótesis nula.
+
+
+### Nivel de significación
+
+- El **nivel de significación** determina el tamaño de la región de rechazo.
+
+- Es la probabilidad de rechazar la hipótesis nula cuando ésta es
+  cierta:
+  $$
+    \alpha = \Pr(\text{rechazar $H_{0}$}\,|\,\text{$H_{0}$ es cierta}).
+  $$
+
+### Valores críticos
+
+- Los **valores críticos** delimitan la región de rechazo.
+
+- Se determinan a partir de la distribución bajo la hipótesis nula y del nivel de significación.
+
+
+### Valores críticos de un contraste de dos colas
+
+
++MATS: figcol fig-02_1027-ttest-two-tails-*.pdf 0.5
+
+En un contraste de $H_0\!: \beta_j = b_j$ frente a $H_1\!: \beta_j \neq b_j$, el valor crítico $c_{\alpha}$ cumple:
+$$
+  \Pr(|t_{n - k - 1}| > c_{\alpha/2}) = \alpha.
+$$
+
+### Regla de decisión
+
++MATS: figcol fig-02_1027-ttest-h0-rejected-*.pdf 0.5
+
+**Regla de decisión**: se rechaza $H_0$ (en favor de $H_1$) a un nivel de significación $\alpha$ cuando el estadístico $t$ cae en la región de rechazo:
+$$
+  |t| > c_{\alpha/2}.
+$$
+
+### No rechazo
+
++MATS: figcol fig-02_1027-ttest-h0-not-rejected-*.pdf 0.5
+
+Decimos que **no se rechaza** la $H_0$ cuando el estadístico $t$ se sitúa fuera de la región de rechazo. Evitamos expresiones como
+"**aceptar la hipótesis nula**".
+
+
+### Valor-$p$
+
+El **valor-$\boldsymbol{p}$** es la probabilidad, cuando $H_0$ es cierta, de observar un valor del estadístico de contraste al menos tan grande como el que se ha obtenido.
+
+
+### Valor-$p$ de un contraste de dos colas
+
++MATS: figcol fig-02_1027-ttest-p-value-*.pdf 0.5
+
+El valor-$p$ se corresponde con el área de las dos colas delimitadas por el estadístico de contraste:
+$$
+  \text{valor-}p = \Pr(|t_{n-k-1}| > |t|).
+$$
+
+### Regla de decisión con el valor-$p$
+
+**Regla de decisión**: se rechaza $H_0$ a un nivel de significación $\alpha$ cuando el valor-$p$ es menor que el nivel de significación $\alpha$:
+$$
+  \text{valor-}p < \alpha.
+$$
+
+### Interpretación del valor-$p$
+
+- El valor-$p$ **no** es la probabilidad de que $H_0$ sea cierta.
+
+- Mide la intensidad de la evidencia en contra de $H_0$: cuanto más pequeño es el valor-$p$, menos soportan los datos la $H_0$.
+
+
+### Resumen
+
+- Contraste de $H_0\!: \beta_j = b_j$ frente a $H_{1}\!: \beta_{j} \neq b_{j}$.
+
+- Estadístico de contraste:
+  $$
+    t = \frac{\bhat_{j} - b_{j}}{\se(\bhat_{j})}.
+  $$
+
+- Se rechaza $H_0$ a un nivel de significación $\alpha$ si:
+
+  + $|t| > c_{\alpha/2}$, donde $c_{\alpha/2}$ se obtiene de la distribución $t_{n - k - 1}$; o
+
+  + $\text{valor-}p < \alpha$, donde el valor-$p$ se obtiene de la distribución $t_{n - k - 1}$.
+
+
+### Contrastes de significación individual
+
+- Es un caso especial del contraste $t$ de dos colas: $H_0\!: \beta_j = 0$ frente a $H_{1}\!: \beta_{j} \neq 0$.
+
+- El estadístico de contraste es el **cociente $\boldsymbol{t}$**:
+  $$
+    t = \frac{\bhat_{j}}{\se(\bhat_{j})}.
+  $$
+
+- Cuando se rechaza la $H_0$ se suele usar expresiones como *$x_j$ es **estadísticamente significativa** al nivel $\alpha$*.
+
+
+### Contrastes de una cola (I)
+
++MATS: figcol fig-02_1027-ttest-one-tail-pos-*.pdf 0.5
+
+- $H_0\!: \beta_j = b_j$ frente a $H_{1}\!: \beta_{j}
+  > b_{j}$.
+
+- Estadístico de contraste:
+  $$
+    t = (\bhat_{j} - b_{j})/\se(\bhat_{j}).
+  $$
+
+- Se rechaza $H_0$ si $t > c_{\alpha}$, donde:
+  $$
+    \Pr(t_{n-k-1} > c_{\alpha}) = \alpha.
+  $$
+
+
+### Contrastes de una cola (y II)
+
++MATS: figcol fig-02_1027-ttest-one-tail-neg-*.pdf 0.5
+
+- $H_0\!: \beta_j = b_j$ frente a $H_{1}\!: \beta_{j}
+  < b_{j}$.
+
+- Estadístico de contraste:
+  $$
+    t = (\bhat_{j} - b_{j})/\se(\bhat_{j}).
+  $$
+
+- Se rechaza $H_0$ si $t < -c_{\alpha}$, donde:
+  $$
+    \Pr(t_{n-k-1} < -c_{\alpha}) = \alpha.
+  $$
+
+
+### Contrastes de una cola y valores-$p$
+
+- Los valores-$p$ que presentan por defecto los programas estadísticos son válidos para contrastes de dos colas.
+
+- Si el estadístico $t$ está en la misma cola de la región de rechazo, el valor-$p$ será la mitad del que imprime el programa informático.
+
+- Si el estadístico $t$ está en la cola opuesta a la de la región de rechazo, el valor-$p$ será mayor que $0.5$ y no se rechazará la $H_0$ a ninguno de los niveles de significación habituales.
+
+
+## Intervalos de confianza
+
+
+### Intervalos de confianza
+
+Un **intervalo de confianza** para el parámetro $\beta_j$ a un **nivel de confianza** de $1-\alpha$ es un intervalo $(\overline{\beta}_j, \underline{\beta}_j)$ que contendrá el valor del parámetro $\beta_j$ con una probabilidad $1-\alpha$: 
+$$
+\Pr(\underline{\beta}_j < \beta_j < \overline{\beta}_j) = 1 - \alpha.  
+$$
+
+
+### Estimación por intervalos
+
+**Estimación por intervalos**: en vez de obtener un único valor (**estimación puntual**), calculamos un intervalo de valores para el parámetro $\beta_j$.
+
++MATS: fig fig-02_1027-conf-interval-*.pdf
+
+
+
+### Contraste de hipótesis
+
+**Contraste de hipótesis**: Rechazamos $H_0\!: \beta_j = b_j$ frente a $H_1\!: \beta_j \neq b_j$ a un nivel de significación $\alpha$ si $b_j$ no está incluido en el intervalo de confianza $(\overline{\beta}_j, \underline{\beta}_j)$ construido a un nivel de confianza $1 - \alpha$.
+
++MATS: fig fig-02_1027-conf-interval-test-*.pdf
+
+### Cálculo
+
+Si se cumplen los supuestos del modelo clásico de regresión lineal, **RLM.1** a **RLM.6**, los límites de un intervalo a un nivel de confianza $1 - \alpha$ para el parámetro $\beta_j$ son:
+$$
+  \bhat_j \pm c_{\alpha/2} \cdot \se(\bhat_j),
+$$
+donde $c_{\alpha/2}$ es el valor crítico de dos colas de una distribución $t_{n-k-1}$ a un nivel de significación $\alpha$.
+
+
+### Simetría
+
+
+El intervalo de confianza del parámetro $\beta_j$ es simétrico y su centro es la estimación $\bhat_j$.
+
++MATS: fig fig-02_1027-conf-interval-estimation-*.pdf
+
+
+## Contrastes de hipótesis lineales sobre los parámetros
+
+
+### Hipótesis lineales sobre los parámetros
+
+- La hipótesis nula se compone de una o más **combinaciones lineales** de los parámetros. Por ejemplo:
+
+  + $H_0\!: \beta_3 = 0, \beta_4 = 1$.
+
+  + $H_0\!: \beta_3  + \beta_4 = 1, \beta_5 = -1$.
+
+- La hipótesis alternativa es la negación de la nula: al menos una de las igualdades no se cumple.
+
+
+### Restricciones de exclusión
+
+- **Restricciones de exclusión múltiple**: las pendientes de $q$ regresores son nulas:
+  $$
+    H_{0}\!: \beta_{1} = \beta_{2} = \dots = \beta_{q} = 0.
+  $$
+- En la hipótesis alternativa al menos una de las pendientes $\beta_{1}, \beta_{2}, \dots, \beta_{q}$ es distinta de $0$:
+  $$
+    H_{1}\!: \text{no $H_0$}.
+  $$
+
+
+### Modelo no restringido
+
+**Modelo no restringido**: los parámetros pueden tomar cualquier valor y es válido tanto bajo la $H_0$ como bajo la $H_1$:
+$$
+  y = \beta_{0} + \beta_{1} x_{1} + \dots + \beta_{q} x_{q} +
+  \beta_{q+1} x_{q+1} + \dots +  \beta_{k} x_{k} + u.
+$$
+
+### Modelo restringido
+
+**Modelo restringido**: los parámetros $\beta_1, \dots, \beta_q$ son iguales a $0$ y sólo es válido bajo la $H_0$:
+$$
+  y = \beta_{0} + \beta_{q+1} x_{q+1} + \dots +  \beta_{k} x_{k} + u.
+$$
+
+
+### Bondad del ajuste
+
+- Si las restricciones de exclusión son ciertas, no debe haber mucha diferencia entre el ajuste del modelo restringido y el del modelo no restringido.
+
+- El contraste se basará en la comparación de las sumas de cuadrados de los residuos del modelo restringido, $\SCRr$, y del modelo no restringido, $\SCRnr$.
+
+
+### Estadístico de contraste
+
+El estadístico de contraste es el **estadístico $\boldsymbol{F}$**:
+$$
+  F = \frac{(\SCRr - \SCRnr) / q}{\SCRnr / (n - k - 1)}.
+$$
+
+### Distribución bajo la hipótesis nula
+
+Si se cumplen los supuestos del modelo clásico de regresión lineal, **cuando la hipótesis nula es cierta** el estadístico $F$ se distribuye como una variable aleatoria $F$ con $q$ y $n - k - 1$ grados de libertad:
+$$
+  F \sim F_{q, n-k-1}.
+$$
+
+### Región de rechazo
+
++MATS: figcol fig-02_1027-ftest-rejection-area-*.pdf 0.5
+
+- Valor crítico a un nivel de significación $\alpha$:
+  $$
+    \Pr(F_{q, n-k-1} > c_{\alpha}) = \alpha.
+  $$
+
+- Valores del estadístico $F$ mayores que $c_{\alpha}$ representan evidencia en contra de la hipótesis nula.
+
+
+
+### La regla de decisión
+
+**Regla de decisión**: se rechaza $H_0$ a un nivel de significación
+$\alpha$ cuando:
+
+- El estadístico $F$ cae en la región de rechazo:
+  $$
+    F > c_{\alpha}.
+  $$
+
+- El valor-$p$ es menor que el nivel de significación $\alpha$. El valor-$p$ es:
+  $$
+    \text{valor-}p = \Pr(F_{q, n-k-1} > F).
+  $$
+
+
+
+### El contraste $F$ y el $R^2$
+
+*Para contrastar restricciones de exclusión* el estadístico $F$ puede calcularse a partir de los coeficientes de determinación del modelo restringido, $\Rsqr$, y del modelo no restringido, $\Rsqnr$:
+$$
+  F = \frac{(\Rsqnr - \Rsqr) / q}{(1 - \Rsqnr) / (n - k - 1)}.
+$$
+
+### Significación de la regresión
+
+- **Significación conjunta de la regresión**: contraste de la hipótesis nula de que todas las pendientes son nulas:
+  $$
+    H_0\!: \beta_1 = \beta_2 = \dots = \beta_k = 0.
+  $$
+
+- El estadístico $F$ en términos del coeficiente de determinación es:
+  $$
+    F = \frac{\Rsq / k}{(1 - \Rsq) / (n - k - 1)}.
+  $$
+
+### Restricciones lineales generales
+
+- Se pueden usar los estadísticos $F$ basados en las sumas de  cuadrados de los residuos para contrastar restricciones lineales generales.
+
+- Las fórmulas basadas en los coeficientes de determinación **sólo** pueden usarse si los modelos restringido y no restringido tienen la **misma variable dependiente**.
+
+- Cualquier conjunto de restricciones lineales siempre puede transformarse en restricciones de exclusión mediante una reparametrización del modelo.
+
+
+## COMMENT Predicción
+
+
+### Predicción puntual
+
+- Predicción del valor medio.
+
+- Predicción del valor.
+
+
+### Intervalos de predicción
+
+- Valor medio.
+
+- Valor de la variable dependiente.
 
