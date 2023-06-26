@@ -1,0 +1,23 @@
+project:
+  type: book
+
+book:
+  title: "ec1027-guide"
+  author: "Norah Jones"
+  date: "6/26/2023"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: litera
+
+editor: visual
+
+execute:
+  freeze: auto
