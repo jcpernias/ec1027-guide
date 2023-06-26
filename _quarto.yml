@@ -11,6 +11,7 @@ book:
       chapters:
         - intro.qmd
         - mcrl.qmd
+        - asymp.qmd
     - part: ts-part.qmd
       chapters:
         - summary.qmd
