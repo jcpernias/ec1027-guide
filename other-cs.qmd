@@ -1,0 +1,340 @@
+# Forma funcional y problemas con los datos
+
+{{< include _macros.qmd >}}
+
+## Forma funcional
+
+### Forma funcional
+
+Por ejemplo, supongamos que la siguiente ecuación de salarios satisface los supuestos **RLM.1** a **RLM.4**:
+$$
+  \begin{aligned}
+  \log(\Var{wage}) = &\beta_{0}
+  + \beta_{1} \Var{educ}
+  + \beta_{2} \Var{exper}
+  + \beta_{3} \Var{exper}^{2} \\
+  &+ \beta_{4} \Var{female}
+  + \beta_{5} \Var{female} \cdot \Var{educ}
+  + u
+  \end{aligned}
+$$
+¿Qué consecuencias tendría estimar el modelo sin $\Var{exper}^2$ o sin
+el término de interacción $\Var{female} \cdot \Var{educ}$? ¿Cómo
+podemos detectar errores de especificación de la **forma funcional**?
+
+
+### Consecuencias
+
+- Al omitir términos relevantes, es probable que obtengamos
+  **estimaciones sesgadas** de los restantes parámetros.
+
+- No está claro como interpretar los **efectos marginales** de las
+  explicativas.
+
+
+### Detección
+
+- Se han propuesto muchas alternativas para detectar errores de
+  especificación de la forma funcional. En este curso consideraremos:
+
+  + Medidas de bondad del ajuste.
+
+  + Contrastes $F$.
+
+  + Contrastes de **hipótesis no anidadas**.
+
+- Todos estos contrastes suponen que la especificación de la variable
+  dependiente es correcta. No sirven, por ejemplo, para elegir entre
+  tomar logaritmos de la variable dependiente o no.
+
+
+### Bondad del ajuste
+
+- Una forma simple de comparar modelos alternativos es usar medidas de
+  bondad del ajuste.
+
+- Debe usarse el $R^2$ ajustado cuando los modelos tienen un número
+  diferente de variables explicativas.
+
+
+### Contrastes $F$
+
+- Podemos probar diferentes especificaciones alternativas incluyendo
+  potencias, términos de interacción y otras transformaciones de las
+  explicativas.
+
+- Los contrastes $F$ se pueden utilizar para determinar la
+  significación de los términos que se añaden al modelo original.
+
+
+### COMMENT Contraste RESET
+
+- El contraste RESET se diseñó para detectar problemas de mala
+  especificación de la forma funcional.
+
+- Bajo la hipótesis nula, la forma funcional es correcta. No es
+  necesario especificar la forma funcional bajo la hipótesis
+  alternativa.
+
+
+### COMMENT Cálculo del contraste RESET
+
+- Se estima por MCO el modelo original:
+  $$
+    y = \beta_{0} + \beta_{1} x_{1} + \dots + \beta_{k} x_{k} + u
+  $$
+
+- Se obtienen las predicciones de la variable dependiente, $\yhat$, y
+  se añaden  al modelo potencias de $\yhat$:
+  $$
+    y = \beta_{0} + \beta_{1} x_{1} + \dots + \beta_{k} x_{k}
+    + \delta_1 \yhat^2 + \delta_2 \yhat^3 +  u
+  $$
+
+- Bajo la hipótesis nula, el modelo original estaba bien especificado
+  y los términos adicionales no son significativos: $H_0\!: \delta_1 =
+  \delta_2 = 0$. Para verificar esta condición se usa un contraste $F$.
+
+
+### COMMENT Variaciones del contraste RESET
+
+- Algunos autores recomiendan añadir solamente los cuadrados de las
+  predicciones:
+  $$
+    y = \beta_{0} + \beta_{1} x_{1} + \dots + \beta_{k} x_{k}
+    + \delta_1 \yhat^2  +  u
+  $$
+  En este caso podemos usar un contraste $t$ para la $H_0\!: \delta_1
+  = 0$.
+
+- Si la varianza condicional de término de error no fuera constante,
+  se utilizarían contrates $F$ y $t$ robustos a heteroscedasticidad.
+
+
+### Modelos no anidados
+- ¿Cómo podemos elegir entre los siguientes modelos?
+  $$
+  \begin{gather}
+    y = \alpha_{0}
+    + \alpha_{1} x_{1}
+    + \alpha_{2} x_{2}
+    + u \tag{Modelo A} \\
+    y = \beta_{0}
+    + \beta_{1} \log(x_{1})
+    + \beta_{2} \log(x_{2})
+    + v \tag{Modelo B}
+  \end{gather}
+  $$
+
+- El ejemplo anterior es un caso de **modelos no anidados**: ninguno de
+  los dos modelos es un caso especial del otro.
+
+- No podemos usar contrastes $F$ para comparar modelos no anidados.
+
+
+### Contrastes de abarcamiento
+
+- Los **contrastes de abarcamiento** (*encompassing tests*) se basan en
+  la construcción de un tercer modelo que contenga como casos
+  especiales los modelos que se quieren comparar.
+
+
+### Contrastes de abarcamiento: ejemplo
+
+- El siguiente modelo tiene como casos especiales el Modelo A y el
+  Modelo B de nuestro ejemplo:
+  $$
+    y = \gamma_{0}
+    + \gamma_{1} x_{1}
+    + \gamma_{2} x_{2}
+    + \gamma_{3} \log(x_{1})
+    + \gamma_{4} \log(x_{2})
+    + \text{error}
+  $$
+
+- Para contrastar la validez de un modelo frente a otro podemos usar los contrastes $F$ correspondientes a las siguientes hipótesis:
+
+  +---------------------------------+-------------------------------------+
+  | **Modelo A** frente a Modelo B: | $H_0\!: \gamma_3 = \gamma_4 = 0$    |
+  +---------------------------------+-------------------------------------+
+  | **Modelo B** frente a Modelo A: | $H_0\!: \gamma_1 = \gamma_2 = 0$    |
+  +---------------------------------+-------------------------------------+
+
+
+### Contrastes de Davidson-MacKinnon
+
+Davidson y MacKinnon proponen añadir a un modelo las predicciones
+obtenidas con otro modelo y contrastar si ese término adicional tiene
+capacidad explicativa.
+
+
+### Contrastes de Davidson-MacKinnon: ejemplo
+
+- Para contrastar la validez del Modelo A:
+  + Se estima el Modelo B y se obtienen las predicciones: $\yhat_B$.
+  + Se contrasta $H_0\!: \theta_B = 0$ en la regresión:
+    $$
+      y = \alpha_{0}
+      + \alpha_{1} x_{1}
+      + \alpha_{2} x_{2}
+      + \theta_{B} \yhat_{B}
+      + \text{error}
+    $$
+
+- En el caso del Modelo B, se contrasta $H_0\!: \theta_A = 0$ en la
+regresión:
+    $$
+      y = \beta_{0}
+      + \beta_{1} \log(x_{1})
+      + \beta_{2} \log(x_{2})
+      + \theta_{A} \yhat_{A}
+      + \text{error}
+    $$
+    donde $\yhat_A$ son las predicciones obtenidas con el Modelo A.
+
+
+### Contrastes de hipótesis no anidadas y heteroscedasticidad
+
+- Las hipótesis no anidadas se contrastan con estadísticos $t$ o $F$
+  en modelos de regresión que se construyen con el único objetivo del
+  contraste de esas hipótesis.
+
+- En caso de heteroscedasticidad se utilizarían las versiones robustas
+  de los contrastes $t$ y $F$.
+
+
+### Contrastes de hipótesis no anidadas: limitaciones
+
+- Estos contrastes no producen siempre una respuesta clara: es posible
+  que se acepten los dos modelos o que se rechacen ambos.
+
+- Rechazar un modelo no quiere decir que el modelo rival sea el
+  correcto.
+
+
+
+## Observaciones incompletas
+
+### Observaciones incompletas
+
+- Un problema relativamente frecuente es la presencia de
+  **observaciones incompletas** para las que faltan los valores de
+  algunas variables.
+
+- Usualmente se ignoran las observaciones incompletas en la
+  estimación.
+
+
+### Observaciones incompletas: consecuencias
+
+- Si se eliminan las observaciones incompletas para la estimación, se
+  reduce el número de observaciones y la precisión de los estimadores
+  empeora.
+
+- Las estimaciones pueden estar sesgadas si la falta de información
+  responde a razones sistemáticas (por ejemplo: las familias más ricas
+  no revelan su renta con mayor frecuencia que familias más pobres).
+
+- No se introducen sesgo si las observaciones incompletas se producen
+  por puro azar.
+
+
+## Muestreo no aleatorio
+
+### Muestreo no aleatorio
+
+El **muestreo no aleatorio** se puede deber a diversas razones:
+
++ Observaciones incompletas.
+
++ Esquemas de obtención de los datos.
+
+
+### Selección muestral
+
+**Selección muestral**: El mecanismo que determina qué observaciones
+forman parte de la muestra no es aleatorio. Distinguimos entre:
+
++ **Selección muestral exógena**: la selección de la muestra se basa
+  en los valores que toman las variables explicativas.
+
++ **Selección muestral endógena**: la muestra no contiene
+  observaciones para algunos valores de la variable dependiente.
+
+
+### Selección muestral: consecuencias
+
+- **Selección muestral exógena**: Los estimadores siguen siendo
+  insesgados y consistentes mientras se cumpla el supuesto de media
+  condicional nula del término de error.
+
+- **Selección muestral endógena**: La selección en base a la variable
+  dependiente implica que el supuesto **RLM.4** no se cumple, por lo que
+  MCO sería en este caso sesgado e inconsistente.
+
+
+### Muestreo estratificado
+
+- **Estratos**: subgrupos de una población que no se solapan y cuya
+  unión es la población total.
+
+- **Muestreo estratificado**: la frecuencia con que se muestrean los
+  diferentes estratos no es proporcional a su tamaño.
+
+- Se trata de garantizar que en la muestra final estén suficientemente
+  representados grupos minoritarios.
+
+
+### Muestreo estratificado: consecuencias
+
+- Si la estratificación se basa en una o más variables explicativas,
+  el estimador de MCO será insesgado y consistente.
+
+- Por el contrario si la estratificación se realiza en base a los
+  valores que toma la variable dependiente, MCO será sesgado e
+  inconsistente.
+
+## Observaciones atípicas y observaciones influyentes
+
+
+### Observaciones atípicas y observaciones influyentes
+
+- **Observaciones atípicas** (*outliers*): observaciones para las que
+  una variable toma un valor inusualmente grande.
+
+- **Observaciones influyentes**: son aquellas que si se eliminan de la
+  muestra provocan grandes cambios en las estimaciones de MCO.
+
+
+### Observaciones atípicas
+
+- Pueden deberse a errores en la introducción de los datos. Si la
+  corrección del error no es obvia, se deberían eliminar esas
+  observaciones.
+
+- Otra posible razón es la inclusión en la muestra de observaciones
+  con características muy diferentes al resto de la población. Con
+  frecuencia, la mejor estrategia en estos casos es presentar los
+  resultados con y sin las observaciones atípicas.
+
+
+### Análisis de los residuos
+
+- El tamaño de los residuos de MCO no es un buen indicador para
+  detectar observaciones atípicas. En general, los residuos de estas
+  observaciones no son especialmente grandes.
+
+
+### Residuos estudentizados
+
+- En la detección de observaciones atípicas se suelen emplear los
+  **residuos estudentizados**, $\hat{\epsilon}$.
+
+- El residuo estudentizado para la observación $i$,
+  $\hat{\epsilon}_i$, puede obtenerse añadiendo al modelo una ficticia
+  que sólo toma el valor 1 en esa observación: $\hat{\epsilon}_i$ es
+  el estadístico $t$ de esa ficticia.
+
+- Se considerarían atípicas aquellas observaciones cuyos residuos
+  estudentizados sean muy grandes de acuerdo con la distribución
+  $t_{n-k-2}$.

@@ -40,3 +40,8 @@
 \newcommand{\stext}[1]{\text{\ #1}}
 
 \newcommand{\adistr}{\stackrel{\mathclap[\scriptstyle]{\mathrm{a}}}{\sim}}
+
+\newcommand{\Var}[1]{\mathit{#1}\xspace}
+\newcommand{\Vart}[2]{\mathit{#1}_{#2}\xspace}
+
+\newcommand{\AR}[1]{\mathrm{AR}(#1)\xspace}
