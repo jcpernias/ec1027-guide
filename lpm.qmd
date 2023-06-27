@@ -12,71 +12,80 @@
 
 La variable dependiente sólo toma dos valores:
 
--   $y_i = 1$, cuando se produce el evento que estamos estudiando;
+- $y_i = 1$, cuando se produce el evento que estamos estudiando;
 
--   $y_i = 0$, cuando no se produce.
+- $y_i = 0$, cuando no se produce.
 
 ### Modelo de regresión múltiple
 
--   Modelo de regresión: $$
+- Modelo de regresión: 
+  $$
       y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + u.
-    $$
+  $$
 
--   ¿Cuál es la interpretación de los parámetros cuando $y$ es una variable binaria?
+- ¿Cuál es la interpretación de los parámetros cuando $y$ es una variable binaria?
 
 ### Probabilidad condicional
 
--   Si $y$ es una variable binaria, su esperanza condicional coincide con la probabilidad condicional de que $y = 1$: $$
+- Si $y$ es una variable binaria, su esperanza condicional coincide con la probabilidad condicional de que $y = 1$: 
+  $$
       \Exp(y | \bm{x}) = \Pr(y = 1 | \bm{x}).
-    $$
+  $$
 
--   **Modelo de probabilidad lineal** (MLP): la probabilidad de que $y$ tome el valor $1$ es una función lineal en los parámetros $\beta_0, \beta_1, \dots, \beta_k$: $$
+- **Modelo de probabilidad lineal** (MLP): la probabilidad de que $y$ tome el valor $1$ es una función lineal en los parámetros $\beta_0, \beta_1, \dots, \beta_k$: 
+  $$
       \Pr(y = 1 | \bm{x}) = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k.
-    $$
+  $$
 
 ### Interpretación de los parámetros
 
--   Podemos expresar el MLP como: $$
+- Podemos expresar el MLP como: 
+  $$
       p(\bm{x}) = \beta_0 + \beta_1 x_1  + \dots + \beta_k x_k,
-    $$ donde $p(\bm{x})$ es una forma abreviada de escribir $\Pr(y = 1 | \bm{x})$.
+  $$ 
+  donde $p(\bm{x})$ es una forma abreviada de escribir $\Pr(y = 1 | \bm{x})$.
 
--   La pendiente $\beta_j$ mide cómo cambia la probabilidad de que $y = 1$ cuando cambia $x_j$, manteniendo inalteradas el resto de explicativas: $$
+- La pendiente $\beta_j$ mide cómo cambia la probabilidad de que $y = 1$ cuando cambia $x_j$, manteniendo inalteradas el resto de explicativas: 
+  $$
       \beta_j = \frac{\Delta p(\bm{x})}{\Delta x_j}.
-    $$
+  $$
 
 ### Ventajas y limitaciones
 
--   En comparación a otros modelos más sofisticados, el MLP:
+- En comparación a otros modelos más sofisticados, el MLP:
 
-    -   es más fácil de usar e interpretar;
+    - es más fácil de usar e interpretar;
 
-    -   proporciona resultados similares cuando las variables explicativas toman valores cercanos a sus medias.
+    - proporciona resultados similares cuando las variables explicativas toman valores cercanos a sus medias.
 
--   El MLP puede generar probabilidades fuera del intervalo $(0, 1)$, por lo que no es adecuado para algunas aplicaciones.
+- El MLP puede generar probabilidades fuera del intervalo $(0, 1)$, por lo que no es adecuado para algunas aplicaciones.
 
 ## Estimación por MCO
 
 ### Estimación
 
--   Los parámetros del MLP se pueden estimar por MCO.
+- Los parámetros del MLP se pueden estimar por MCO.
 
--   Los residuos se obtienen de la forma usual: $$
+- Los residuos se obtienen de la forma usual: 
+  $$
       \uhat_i = y_i - \bhat_0 - \bhat_1 x_{1i} - \dots - \bhat_k x_{ki}.
-    $$
+  $$
 
 ### Predicción
 
--   Las predicciones de MCO se pueden interpretar como estimaciones de la probabilidad de $y = 1$: $$
+- Las predicciones de MCO se pueden interpretar como estimaciones de la probabilidad de $y = 1$: 
+  $$
       \phat_i = \bhat_0 + \bhat_1 x_{1i} + \dots + \bhat_k x_{ki}
-    $$
+  $$
 
--   Para predecir la variable dependiente se suele usar la regla: $$
+- Para predecir la variable dependiente se suele usar la regla: 
+  $$
       \ytilde_{i} =
       \begin{cases}
         1 & \text{si $\phat_{i} \geq 0.5$}, \\
         0 & \text{si $\phat_{i} < 0.5$}.
       \end{cases}
-    $$
+  $$
 
 ### Bondad del ajuste
 
@@ -87,58 +96,62 @@ Tabulación cruzada de $y$ e $\ytilde$:
 | $y_i = 0$ |    $n_{00}$     |    $n_{01}$     |
 | $y_i = 1$ |    $n_{10}$     |    $n_{11}$     |
 
--   Número de predicciones correctas: $n_{00} + n_{11}$.
+- Número de predicciones correctas: $n_{00} + n_{11}$.
 
--   Número total de observaciones: $n = n_{00} + n_{01} + n_{10} + n_{11}$.
+- Número total de observaciones: $n = n_{00} + n_{01} + n_{10} + n_{11}$.
 
--   **Porcentaje de predicciones correctas**: $100 (n_{00} + n_{11}) / n$. Se usa para medir la bondad del ajuste de modelos con variable dependiente binaria.
+- **Porcentaje de predicciones correctas**: $100 (n_{00} + n_{11}) / n$. Se usa para medir la bondad del ajuste de modelos con variable dependiente binaria.
 
 ### Insesgadez y consistencia
 
--   Los supuestos **RLM.1** a **RLM.4** no son incompatibles con que la variable dependiente sea binaria.
+- Los supuestos **RLM.1** a **RLM.4** no son incompatibles con que la variable dependiente sea binaria.
 
--   Si se cumplen los supuestos **RLM.1** a **RLM.4** el estimador MCO es insesgado y consistente.
+- Si se cumplen los supuestos **RLM.1** a **RLM.4** el estimador MCO es insesgado y consistente.
 
 ### Heteroscedasticidad
 
--   En el modelo lineal de probabilidad se incumple el supuesto **RLM.5**.
+- En el modelo lineal de probabilidad se incumple el supuesto **RLM.5**.
 
--   La varianza condicional del término de error puede escribirse como: $$
+- La varianza condicional del término de error puede escribirse como: 
+  $$
       \var(u|\bm{x}) = p(\bm{x})\big(1 - p(\bm{x})\big).
-    $$
+  $$
 
 ### Uso de MCO
 
--   Los parámetros del modelo lineal de probabilidad pueden estimarse por MCO.
+- Los parámetros del modelo lineal de probabilidad pueden estimarse por MCO.
 
--   Para contrastar hipótesis o construir intervalos de confianza es necesario usar estimaciones robustas a heteroscedasticidad de $\var(\bhat)$.
+- Para contrastar hipótesis o construir intervalos de confianza es necesario usar estimaciones robustas a heteroscedasticidad de $\var(\bhat)$.
 
 ## Estimación eficiente
 
 ### Varianza del término de error
 
--   La varianza condicional del término de error del MLP puede escribirse como: $$
+- La varianza condicional del término de error del MLP puede escribirse como: 
+  $$
       \var(u_i|\bm{x_i}) = p(\bm{x_i})\big(1 - p(\bm{x_i})\big).
-    $$
+  $$
 
--   La probabilidad $p_i = p(\bm{x_i})$ depende de parámetros desconocidos.
+- La probabilidad $p_i = p(\bm{x_i})$ depende de parámetros desconocidos.
 
--   Se podría aplicar MCPF si se reemplaza $p_i$ por una estimación, $\phat_i$.
+- Se podría aplicar MCPF si se reemplaza $p_i$ por una estimación, $\phat_i$.
 
 ### Mínimos Cuadrados Ponderados Factibles
 
--   Si se cumplen los supuestos **RLM.1** a **RLM.4**, MCO es un estimador insesgado.
+- Si se cumplen los supuestos **RLM.1** a **RLM.4**, MCO es un estimador insesgado.
 
--   Con las estimaciones $\bhat_0, \bhat_1, \dots, \bhat_k$ se estima la probabilidad de que $y = 1$: $$
+- Con las estimaciones $\bhat_0, \bhat_1, \dots, \bhat_k$ se estima la probabilidad de que $y = 1$: 
+  $$
       \phat_i = \bhat_0 + \bhat_1 x_{1i} + \dots + \bhat_k x_{ki}
-    $$
+  $$
 
--   Los pesos para obtener el estimador MCPF son $w_i = 1 / \hhat_i$, donde: $$
+- Los pesos para obtener el estimador MCPF son $w_i = 1 / \hhat_i$, donde: 
+  $$
       \hhat_i = \phat_i (1 - \phat_i).
-    $$
+  $$
 
 ### Limitaciones
 
--   El estimador MCPF no puede obtenerse si para algunas observaciones se obtiene $\phat_i \leq 0$ o $\phat_i \geq 1$.
+- El estimador MCPF no puede obtenerse si para algunas observaciones se obtiene $\phat_i \leq 0$ o $\phat_i \geq 1$.
 
--   Aunque se han propuesto alternativas, en esos casos es mejor usar MCO y contrastes de hipótesis robustos a heteroscedasticidad.
+- Aunque se han propuesto alternativas, en esos casos es mejor usar MCO y contrastes de hipótesis robustos a heteroscedasticidad.
