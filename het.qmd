@@ -234,9 +234,10 @@ Un procedimiento común con datos de corte transversal:
 
 ### Estimación robusta de $\var(\bhat)$
 
-- [[https://en.wikipedia.org/wiki/Halbert_White][Halbert White]] mostró que se puede obtener una estimación consistente de $\var(\bhat)$ exista o no heteroscedasticidad:
+- [Halbert White](https://en.wikipedia.org/wiki/Halbert_White) mostró que se puede obtener una estimación consistente de $\var(\bhat)$ exista o no heteroscedasticidad:
   $$
-    \widehat{\var}_R(\bhat_{1}) = \frac{\sum(x_{i} - \bar{x})^{2} \uhat^2_i}{%
+    \widehat{\var}_R(\bhat_{1}) = 
+    \frac{\sum(x_{i} - \bar{x})^{2} \uhat^2_i}{
       \Big[\sum(x_{i} - \bar{x})^{2}\Big]^{2}}.
   $$
 
@@ -324,8 +325,8 @@ $$
 
 ### Contraste de Breusch-Pagan
 
-- En la actualidad, se usa comúnmente la variante, debida a [[https://en.wikipedia.org/wiki/Roger_Koenker][Koenker]],
-  del contraste que propusieron [[https://en.wikipedia.org/wiki/Trevor_S._Breusch][Breusch]] y [[https://en.wikipedia.org/wiki/Adrian_Pagan][Pagan]].
+- En la actualidad, se usa comúnmente la variante, debida a [Koenker](https://en.wikipedia.org/wiki/Roger_Koenker),
+  del contraste que propusieron [Breusch](https://en.wikipedia.org/wiki/Trevor_S._Breusch) y [Pagan](https://en.wikipedia.org/wiki/Adrian_Pagan).
 
 - En la regresión auxiliar se usan como regresores las $k$ variables explicativas del modelo de regresión original.
 
@@ -347,7 +348,7 @@ $$
 
 ### Contraste de White: motivación
 
-[[https://en.wikipedia.org/wiki/Halbert_White][White]] demuestra que la heteroscedasticidad sólo es problemática si la varianza condicional de $u$ depende de:
+[White](https://en.wikipedia.org/wiki/Halbert_White) demuestra que la heteroscedasticidad sólo es problemática si la varianza condicional de $u$ depende de:
 
 - las variables explicativas: $x_1, x_2, \dots, x_k$;
 
@@ -401,7 +402,7 @@ $$
 
 ### Contraste de White: alternativas (y II)
 
-[[https://en.wikipedia.org/wiki/Jeffrey_Wooldridge][Wooldridge]] propone una variante del contraste de White donde sólo se incluyen en la regresión auxiliar las predicciones de MCO, $\yhat$, y sus cuadrados, $\yhat^2$:
+[Wooldridge](https://en.wikipedia.org/wiki/Jeffrey_Wooldridge) propone una variante del contraste de White donde sólo se incluyen en la regresión auxiliar las predicciones de MCO, $\yhat$, y sus cuadrados, $\yhat^2$:
 $$
   \uhat^2_i = \delta_0 + \delta_1 \yhat_{i} + \delta_2 \yhat^2_{i} +  \text{error}.
 $$
@@ -411,14 +412,15 @@ $$
 
 ### Heteroscedasticidad
 
-+MATS: figcol img/het3.pdf 0.5
+Aquí iba la figura @fig-het-shades-1.
+
 
 Con **heteroscedasticidad** la dispersión alrededor de la FRP cambia con los valores de la explicativa.
 
 
 ### Ineficiencia de MCO
 
-+MATS: figcol img/het4.pdf 0.5
+Aquí iba la figura @fig-het-shades-2.
 
 La **ineficiencia de MCO** se debe a que se tratan por igual todas las observaciones, aunque no todas contienen información igual de precisa para estimar la FRP.
 
