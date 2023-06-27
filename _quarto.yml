@@ -9,7 +9,6 @@ book:
     - index.qmd
     - part: cs-part.qmd
       chapters:
-        - intro.qmd
         - mcrl.qmd
         - asymp.qmd
         - het.qmd
