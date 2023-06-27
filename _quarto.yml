@@ -13,6 +13,7 @@ book:
         - mcrl.qmd
         - asymp.qmd
         - het.qmd
+        - lpm.qmd
     - part: ts-part.qmd
       chapters:
         - summary.qmd
