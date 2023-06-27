@@ -2,11 +2,148 @@
 
 {{< include _macros.qmd >}}
 
+```{r plotting-functions}
+#| output: false
+
+options(tidyverse.quiet = TRUE)
+library(tidyverse)
+library(rlang, warn.conflicts = FALSE)
+
+
+# Función que crea las variables que se representarán 
+# en el gráfico
+mkdb <- function(pars) {
+  # Comprueba que se ha especificado semilla para generador 
+  # de números aleatorios
+  if (!is.null(pars$seed))
+    set.seed(pars$seed)
+
+  # Variable x equiespaciada
+  x <- seq(pars$rangex[1], pars$rangex[2], 
+           length.out = pars$n)
+
+  # Fórmula para la varianza
+  if (is_formula(pars$sigma))
+    sdu <- eval_tidy(f_rhs(pars$sigma))
+  else
+    sdu <- pars$sigma
+  
+  # Término de error
+  u <- rnorm(pars$n, mean = 0, sd = sdu)
+  
+  # Variable dependiente
+  y <- pars$beta[1] + pars$beta[2] * x + u
+  
+  # Devuelve base de datos con las variables generadas
+  tibble(y, x, u)
+}
+
+base_plot <- function(data, mapping) {
+  ggplot(data = data, mapping = mapping) +
+    theme_classic() +
+    theme(axis.title.x =
+            element_text(family = "Georgia", face = "italic",
+                         size = 15, angle = 0, hjust = 1,
+                         margin = 
+                           margin(t = 0.08, unit = "inches")),
+          axis.title.y =
+            element_text(family = "Georgia", face = "italic", 
+                         size = 15, angle = 0, hjust = 1,
+                         margin = margin(r = 0.08, unit = "inches")),
+          axis.line =
+            element_line(colour = 'black', linewidth = 0.5,
+                         lineend = "round",
+                         arrow = grid::arrow(ends = "last", type = "closed",
+                                             angle = 22.5,
+                                             length = unit(0.05, "inches"))))
+}
+
+mkplot <- function(data, pars, shades = NULL) {
+  # Reserva espacio en blanco en los márgenes del
+  # gráfico
+  dx <- (pars$rangex[2] - pars$rangex[1]) / 50
+  x0 <- pars$rangex[1] - dx
+  x1 <- pars$rangex[2] + dx
+  y0 <- pars$beta[1] + pars$beta[2] * x0
+  y1 <- pars$beta[1] + pars$beta[2] * x1
+
+  # Gráfico con la FRP
+  base_plot <- base_plot(data, aes(x, y)) +
+    geom_segment(aes(x = x0, xend = x1, y = y0, yend = y1),
+                 linewidth = 0.4, colour = "DarkBlue") +
+    scale_y_continuous(expand = c(0, 0),
+                       limits = pars$ylimits,
+                       breaks = NULL) +
+    scale_x_continuous(expand = c(0, 0),
+                       limits = pars$xlimits,
+                       breaks = NULL) +
+    ylab("y") + xlab("x")
+
+  # Zonas sombreadas
+  if (is.null(shades))
+    final_plot <- base_plot + geom_point(size = 0.3)
+  else {
+    # Determina qué puntos están dentro de cada una 
+    # de las zonas sombreadas  
+    in_shades <- 
+      reduce(map(shades, 
+                 ~ between(db$x, .x[1], .x[2])), 
+             `|`)
+    # Estilo semitransparente para los puntos fuera 
+    # de las zonas sombreadas
+    final_plot <- base_plot +
+      geom_point(data = filter(data, !in_shades), 
+                 alpha = 0.1, size = 0.3) +
+      geom_point(data = filter(data, in_shades), 
+                 size = 0.3)
+    # Zonas sombreadas
+    for (sx in shades) {
+      final_plot <- final_plot +
+        annotate("rect", 
+                 xmin = sx[1], xmax = sx[2],
+                 ymin = pars$ylimits[1], 
+                 ymax = pars$ylimits[2],
+                 alpha = .1, fill = "Blue")
+    }
+  }
+
+  final_plot
+}
+
+pars <- list(
+  seed = 12101492,
+  n = 400,
+  rangex = c(1, 10),
+  sigma = 45,
+  beta = c(100, 60),
+  ylimits = c(0, 1000),
+  xlimits = c(0, 11)
+)
+
+db <- mkdb(pars)
+
+pars_het <- pars
+pars_het$sigma <- ~ 1 + 10 * x + 0.5 * x^2
+
+db_het <- mkdb(pars_het)
+```
+
 ## Introducción
 
 ### Homoscedasticidad (I)
 
-+MATS: figcol img/het1.pdf 0.5
+```{r}
+#| label: fig-het
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - "Homoscedasticidad"
+#|   - "Heteroscedasticidad"
+#| fig-cap: Dispersión alrededor de la función de regresión poblacional
+#| fig-width: 3
+#| fig-height: 3
+mkplot(db, pars)
+mkplot(db_het, pars_het)
+```
 
 **Homoscedasticidad**. La dispersión alrededor de la función de regresión poblacional, FRP, es constante:
 $$
@@ -16,13 +153,23 @@ $$
 
 ### Homoscedasticidad (y II)
 
-+MATS: figcol img/het2.pdf 0.5
+```{r}
+#| label: fig-het-shades
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - "Homoscedasticidad"
+#|   - "Heteroscedasticidad"
+#| fig-cap: Dispersión alrededor de la función de regresión poblacional
+#| fig-width: 3
+#| fig-height: 3
+shades <- list(c(2.5, 3.5), c(6.5, 7.5))
+mkplot(db, pars, shades)
+mkplot(db_het, pars_het, shades)
+```
 
 **Homoscedasticidad**. Todas las observaciones son igual de informativas a la hora de determinar por donde pasa la FRP.
 
 ### Heteroscedasticidad (I)
-
-+MATS: figcol img/het3.pdf 0.5
 
 **Heteroscedasticidad**. La dispersión alrededor de la FRP cambia con los valores de la explicativa:
 $$
@@ -30,8 +177,6 @@ $$
 $$
 
 ### Heteroscedasticidad (y II)
-
-+MATS: figcol img/het4.pdf 0.5
 
 **Heteroscedasticidad**. Algunas observaciones contienen menos información para estimar la FRP.
 
