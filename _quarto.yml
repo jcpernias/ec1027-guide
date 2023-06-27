@@ -32,3 +32,4 @@ editor: visual
 
 execute:
   freeze: auto
+  echo: false
