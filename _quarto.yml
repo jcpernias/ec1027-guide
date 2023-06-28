@@ -16,7 +16,7 @@ book:
         - other-cs.qmd
     - part: ts-part.qmd
       chapters:
-        - summary.qmd
+        - intro-ts.qmd
     - references.qmd
 
 lang: es

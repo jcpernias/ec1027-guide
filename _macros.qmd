@@ -1,7 +1,19 @@
+
+\newcommand{\diff}{\mathop{}\!\mathrm{d}}
+\newcommand{\incr}{\mathop{}\!\Delta}
+\newcommand{\incrpct}{\mathop{}\!\Delta\%}
+\newcommand{\iratio}[2]{\frac{\incr #1}{\incr #2}}
+\newcommand{\ipctratio}[2]{\frac{\incrpct #1}{\incrpct #2}}
+
+\DeclarePairedDelimiter\Math@abs{\lvert}{\rvert}
+\newcommand{\abs}[1]{\lvert#1\rvert}}
+
+\DeclarePairedDelimiter\Math@eval{.}{\rvert}
+\newcommand{\eval}[2]{#1\rvert_{#2}}
+
 \DeclareMathOperator{\SCT}{SCT}
 \DeclareMathOperator{\SCE}{SCE}
 \DeclareMathOperator{\SCR}{SCR}
-
 \newcommand{\SCRr}{\SCR_{r}}
 \newcommand{\SCRnr}{\SCR_{nr}}
 
@@ -27,7 +39,6 @@
 \newcommand{\ytilde}{\tilde{y}}
 \newcommand{\btilde}{\tilde{\beta}}
 \newcommand{\atilde}{\tilde{\alpha}}
-
 \newcommand{\ymean}{\bar{y}}
 
 \newcommand{\SER}{\hat{\sigma}}
@@ -38,10 +49,9 @@
 \newcommand{\Rsqnr}{R^2_{nr}}
 \newcommand{\bm}[1]{\boldsymbol{#1}}
 \newcommand{\stext}[1]{\text{\ #1}}
-
-\newcommand{\adistr}{\stackrel{\mathclap[\scriptstyle]{\mathrm{a}}}{\sim}}
+\newcommand{\adistr}{\stackrel{%
+  \mathclap[\scriptstyle]{\mathrm{a}}}{\sim}}
 
 \newcommand{\Var}[1]{\mathit{#1}\xspace}
 \newcommand{\Vart}[2]{\mathit{#1}_{#2}\xspace}
-
 \newcommand{\AR}[1]{\mathrm{AR}(#1)\xspace}
