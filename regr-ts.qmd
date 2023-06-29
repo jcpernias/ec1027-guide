@@ -171,10 +171,10 @@ persistentes a largo plazo. Distinguimos entre:
 
 ### Raíces unitarias
 
--   Un paseo aleatorio es un caso especial de un \AR{1}, donde
+-   Un paseo aleatorio es un caso especial de un AR(1), donde
     $\rho = 1$, incumpliendo la condición de estabilidad.
 
--   La condición de estabilidad de procesos \AR{p} es más complicada y depende del valor de las raíces del **polinomio característico**: un polinomio de orden $p$ formado a partir de los coeficientes del proceso \AR{p}.
+-   La condición de estabilidad de procesos AR(*p*) es más complicada y depende del valor de las raíces del **polinomio característico**: un polinomio de orden $p$ formado a partir de los coeficientes del proceso AR(*p*).
 
 -   Cuando una de esas raíces sea igual a 1, se dice que el proceso
     tiene una **raíz unitaria**.
@@ -216,7 +216,7 @@ persistentes a largo plazo. Distinguimos entre:
 
 ### Modelo AR(1)
 
-El modelo autorregresivo de orden 1, `\AR{1}`{=latex}, puede escribirse
+El modelo autorregresivo de orden 1, AR(1), puede escribirse
 como:
 $$
   y_t = \alpha + \rho y_{t-1} + u_t,
@@ -225,7 +225,7 @@ donde $u_t$ es un ruido blanco.
 
 ### Estacionariedad y dependencia débil
 
-Las propiedades dinámicas del proceso `\AR{1}`{=latex} dependen del
+Las propiedades dinámicas del proceso AR(1) dependen del
 valor de $\rho$:
 
 -   $y_t$ es estacionario y débilmente dependiente si $\abs{\rho} < 1$.
@@ -296,7 +296,7 @@ valor de $\rho$:
 
 ### Contraste de Dickey-Fuller aumentado
 
--   Si $y_t$ sigue un proceso `\AR{p}`{=latex} es necesario incluir
+-   Si $y_t$ sigue un proceso AR(*p*) es necesario incluir
     $p-1$ retardos de $\incr y_t$ en la regresión de Dickey-Fuller para
     obtener un contraste válido:
     $$
