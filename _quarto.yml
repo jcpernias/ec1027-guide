@@ -19,6 +19,7 @@ book:
         - intro-ts.qmd
         - ols-ts.qmd
         - regr-ts.qmd
+        - autocorr.qmd
     - references.qmd
 
 lang: es
