@@ -1,419 +1,473 @@
-# Modelos de regresión con series temporales
+
+# Regresión con series temporales
 
 {{< include _macros.qmd >}}
 
-## Introducción
+## Selección del número de retardos
 
--   Con series temporales es posible investigar las relaciones dinámicas
-    entre variables.
+### Introducción
 
--   En primer lugar, examinaremos algunos modelos comúnmente utilizados.
-
-## Modelos estáticos
-
--   En un **modelo estático**, un cambio en una variable explicativa
-    sólo tiene efectos en el periodo en que se produce y no tiene
-    influencia en los periodos posteriores.
-
--   Todas las variables del modelo se refieren al mismo periodo
-    temporal:
+-   Modelo ARDL($p$, $q$):
     $$
-       y_t = \alpha + \beta z_{t} + u_t,
-    $$
-    donde $y_t$ es la variable dependiente, $z_t$ la variable
-    explicativa, $\alpha$ y $\beta$ son parámetros desconocidos, $t = 1,
-     2, \dots, T$ y $u_t$ es un término de error no observable tal que
-    $\Exp(u_t | z_t) = 0$.
-
-## Modelos de retardos distribuidos
-
--   En un **modelo de retardos distribuidos** los cambios en las
-    variables explicativas tienen efectos en más de un periodo.
-
--   Estos modelos se caracterizan por incluir retardos de las variables
-    explicativas:
-    $$
-      y_t = \alpha + \beta_0 z_{t} + \beta_1 z_{t-1} + \beta_2 z_{t-2} + \dots + \beta_L z_{t-L} + u_t,
-    $$
-    donde $L$ es el número de retardos que aparecen en el modelo, y
-    $\Exp(u_t | z_t, z_{t-1}, z_{t-2}, \dots) = 0$.
-
-## Equilibrio dinámico
-
--   Utilizaremos como ejemplo un modelo con dos retardos:
-    $$
-      y_t = \alpha + \beta_0 z_{t} + \beta_1 z_{t-1} + \beta_2 z_{t-2} + u_t,
+       y_t = \alpha + \rho_1 y_{t-1} + \dots + \rho_p y_{t-p} +
+       \beta_0 z_t + \beta_1 z_{t-1} + \dots + \beta_q z_{t-q} +
+       u_t
     $$
 
--   En ausencia de perturbaciones, $u_t = 0$, en equilibrio dinámico las
-    variables toman siempre el mismo valor: $y_t = y^*$ y $z_t = z^*$.
+-   ¿Cuántos retardos hay que incluir en una regresión de series
+    temporales?
 
--   Supongamos que, partiendo de un equilibrio dinámico, la variable $z$
-    aumenta permanentemente en una unidad en el periodo 3. ¿Cómo se
-    ajustarían las variables al nuevo equilibrio?
+-   ¿Qué métodos podemos usar para determinar el número de retardos?
 
-## Ajuste a un nuevo equilibrio
+### Selección de retardos
 
-La tabla muestra como se ajustan las variable dependiente a un cambio
-unitario permanente de $z$. En el nuevo equilibrio $z_t = z^* + 1$ e
-$y_t = y^* + \beta_0 + \beta_1 + \beta_2$.
+-   Si se selecciona un número demasiado pequeño de retardos se omite
+    información relevante.
 
-  $t$        $z_t$       $\incr z_t$   $\incr z_{t-1}$   $\incr z_{t-2}$   $\incr y_{t}$   $y_t$
-  ---------- ----------- ------------- ----------------- ----------------- --------------- -------------------------------------
-  $1$        $z^*$       $0$           $0$               $0$               $0$             $y^*$
-  $2$        $z^*$       $0$           $0$               $0$               $0$             $y^*$
-  $3$        $z^* + 1$   $1$           $0$               $0$               $\beta_0$       $y^* + \beta_0$
-  $4$        $z^* + 1$   $0$           $1$               $0$               $\beta_1$       $y^* + \beta_0 + \beta_1$
-  $5$        $z^* + 1$   $0$           $0$               $1$               $\beta_2$       $y^* + \beta_0 + \beta_1 + \beta_2$
-  $6$        $z^* + 1$   $0$           $0$               $0$               $0$             $y^* + \beta_0 + \beta_1 + \beta_2$
-  $7$        $z^* + 1$   $0$           $0$               $0$               $0$             $y^* + \beta_0 + \beta_1 + \beta_2$
-  $\vdots$                                                                                 
+-   Con un número demasiado grande se pierde eficiencia.
 
-## Multiplicadores dinámicos
+### Selección de modelos
 
--   El parámetro $\beta_0$ es el **multiplicador de impacto** o
-    **multiplicador de corto plazo**. Es el efecto inmediato o
-    contemporáneo de un cambio unitario de $z_t$ sobre $y_t$.
+-   Se establece un número máximo de retardos a considerar procurando
+    que sea lo suficientemente elevado para capturar todas las
+    relaciones dinámicas.
 
--   Los parámetros $\beta_h$, $h = 0, 1, \dots$, son los
-    **multiplicadores dinámicos** y miden el efecto de $z$ sobre $y$
-    después de $h$ periodos:
+-   Se estiman modelos de regresión con diferente número de retardos.
+    **La muestra debe ser la misma en todas las regresiones**.
+
+-   Se utiliza algún indicador para determinar cuál es el modelo más
+    adecuado.
+
+### Contrastes F
+
+-   Se contrasta la significación del último retardo usando un
+    contraste $F$. Si el último retardo no es significativo, se estima
+    un nuevo modelo sin ese retardo y se vuelve a repetir el proceso.
+
+-   Los contrastes $F$ no están diseñados para seleccionar modelos y el
+    procedimiento tiende a seleccionar más retardos de los necesarios.
+
+### Criterios de información
+
+-   En la selección de modelos se suele usar algún **criterio de
+    información**: medidas de la bondad del ajuste que incluyen una
+    penalización creciente en el número de parámetros.
+
+-   Se estiman todos los modelos con diferente número de retardos que se
+    quieran comparar. Se selecciona aquel con un menor valor del
+    criterio de información.
+
+### Algunos criterios de información
+
+-   **AIC**: criterio de información de Akaike. En los modelos de
+    regresión puede escribirse como:
     $$
-      \iratio{y_t}{z_{t-h}} = \iratio{y_{t+h}}{z_{t}} = \beta_h.
+       \text{AIC} = C + T \log\left(\frac{\SCR}{T}\right) + 2 (K + 1),
     $$
+    donde $C$ es una constante, $T$ es el número de observaciones,
+    $\SCR$ es la suma del cuadrado de los residuos y $K$ es el número de
+    parámetros.
 
-## Multiplicadores acumulativos
-
--   Los **multiplicadores acumulativos**, $\delta_h$, suman los efectos
-    que produce un cambio unitario de $z$ sobre la variable dependiente
-    conforme pasa el tiempo:
-
-    Periodos transcurridos   Multiplicador acumulativo
-    ------------------------ ------------------------------------------
-    $0$                      $\delta_0 = \beta_0$
-    $1$                      $\delta_1 = \beta_0 + \beta_1$
-    $2$                      $\delta_2 = \beta_0 + \beta_1 + \beta_2$
-    $\vdots$                 $\vdots$
-    $L$                      $\delta_L = \sum_{i=0}^L \beta_i$
-
--   En la última fila de la tabla aparece el **multiplicador de largo
-    plazo**, $\delta_L$, que es la suma de todos los multiplicadores
-    dinámicos.
-
-## Modelos autorregresivos
-
--   En un **modelo autorregresivo** las variables explicativas son
-    retardos de la variable dependiente.
-
--   Modelo autorregresivo de orden p, AR(p):
+-   **BIC**: criterio de información bayesiano.
     $$
-       y_t = \alpha + \rho_1 y_{t-1} + \rho_2 y_{t-2} + \dots +  \rho_p y_{t-p} + u_{t},
+       \text{BIC} = C + T \log\left(\frac{\SCR}{T}\right) + \log(T) (K + 1).
     $$
-    donde $\Exp(u_t | y_{t-1}, y_{t-2}, \dots) = 0$.
+    Se diferencia del AIC en que penaliza más el número de parámetros.
 
-## Modelos ARDL
+### Comparación entre criterios
 
--   Un **modelo autorregresivo con retardos distribuidos**,
-    $\text{ARDL}(p, q)$, incluye como variables explicativas $p$
-    retardos de $y$ y $q$ retardos de $z$:
+-   Usando el BIC se obtiene una estimación consistente del número de
+    retardos.
+
+-   El AIC produce resultados similares aunque suele seleccionar un
+    número de retardos mayor que el BIC.
+
+## Regresión espuria
+
+### Regresión espuria en cortes transversales
+
+-   Dos variables, $y$ y $x$, parecen estar muy correlacionadas y la
+    regresión de $y$ sobre $x$ produce resultados significativos.
+
+-   La relación entre $y$ y $x$ desaparece cuando se incluye una tercera
+    variable, $z$, en la regresión.
+
+-   La regresión de $y$ sobre $x$ es un ejemplo de **regresión
+    espuria**.
+
+### Regresión espuria en series temporales
+
+-   La omisión de variables relevantes también puede producir
+    regresiones espurias con datos de series temporales.
+
+-   Además, es muy frecuente encontrar regresiones espurias cuando se
+    incluyen series temporales con tendencia o que sean altamente
+    persistentes.
+
+### Tipos de tendencia
+
+La **tendencia** de una serie temporal está constituida por movimientos
+persistentes a largo plazo. Distinguimos entre:
+
+-   Tendecias deterministas.
+
+-   Tendencias estocásticas.
+
+### Tendencias deterministas
+
+-   Una **tendencia determinista** es una función no aleatoria del
+    tiempo.
+
+-   Por ejemplo, si $y_t$ fluctúa alrededor de una **tendencia lineal**:
     $$
-      y_t =
-      \alpha + \rho_1 y_{t-1} +
-      \dots +
-      \rho_p y_{t-p} +
-      \beta_0 z_{t} +
-      \beta_1 z_{t-1} +
-      \dots +
-      \beta_q z_{t-q} +
-      u_{t},
+      y_t = \alpha + \delta t + u_t,
     $$
-    donde
-    $\Exp(u_t | z_t, y_{t-1}, z_{t-1}, y_{t-2}, z_{t-2}, \dots) = 0$.
+    donde $u_t$ es un proceso estacionario y débilmente dependiente.
 
-# El modelo clásico de regresión con series temporales
+### Regresión y tendencias lineales
 
-## Introducción
-
--   ¿Podemos usar MCO para estimar modelos de series temporales?
-
--   ¿Qué tiene que cumplirse para que MCO tenga buenas propiedades
-    exactas?
-
-## Supuestos
-
-Los supuestos del **modelo clásico de regresión lineal con series
-temporales** son:
-
--   **ST.1**: Linealidad en los parámetros.
-
--   **ST.2**: Ausencia de colinealidad perfecta.
-
--   **ST.3**: Media condicional nula.
-
--   **ST.4**: Homoscedasticidad.
-
--   **ST.5**: Ausencia de correlación serial.
-
--   **ST.6**: Normalidad.
-
-## Linealidad en los parámetros
-
-**ST.1**: **Linealidad en los parámetros**.
-
-El proceso estocástico $\{(y_t, x_{1t}, x_{2t}, \dots, x_{kt})\!: t = 1,
-2, \dots, T\}$ sigue el modelo:
-$$
-  y_t = \beta_0 + \beta_1 x_{1t} + \beta_1 x_{2t} + \dots + \beta_1 x_{kt} + u_t
-$$
-donde $\{u_t\!: t = 1, 2, \dots, T\}$ es una secuencia de perturbaciones
-aleatorias no observables.
-
-## Notación
-
--   Nuestra especificación:
+-   Regresión con dos variables, $y_t$ y $x_t$, las cuales no están
+    relacionadas pero presentan **tendencias lineales**:
     $$
-      y_t = \beta_0 + \beta_1 x_{1t} + \beta_1 x_{2t} + \dots + \beta_1 x_{kt} + u_t,
-    $$
-    admite modelos dinámicos. Por ejemplo, obtenemos un modelo retardos
-    distribuidos si definimos $x_{1t} = z_t, x_{2t} = z_{t-1}, \dots$
-
--   $\bm{x_t} = (x_{1t}, x_{2t}, \dots, x_{kt})$: los valores que toman
-    las explicativas en el periodo $t$.
-
--   $\bm{X} = (\bm{x_1}, \bm{x_2}, \dots, \bm{x_T})$: los valores de
-    todas las explicativas en todos los periodos de la muestra.
-
-## Ausencia de colinealidad perfecta
-
-**ST.2**: **Ausencia de colinealidad perfecta**.
-
-En la muestra ninguna de las variables explicativas es constante ni una
-combinación lineal perfecta de las otras explicativas.
-
-## Media condicional nula
-
-**ST.3**: **Media condicional nula**.
-
-La media del término de error es $0$ condicional a los valores que toman
-las explicativas en **todos** los periodos de tiempo :
-$$
-  \Exp(u_t | \bm{X}) = 0,\quad t = 1, 2, \dots, T.
-$$
-
-## Exogeneidad estricta
-
-**ST.3** implica que las variables explicativas son **estrictamente
-exógenas**. El término de error $u_t$ debe estar incorrelacionado con
-todas las explicativas en **todos** los periodos de tiempo:
-
--   $\Exp(u_t | \bm{x_t}) = 0$: **exogeneidad contemporánea**.
-
--   $\Exp(u_t | \bm{x_{t-1}}, \bm{x_{t-2}}, \dots, \bm{x_{1}}) =
-     0$: incorrelación con valores pasados de $\bm{x_t}$.
-
--   $\Exp(u_t | \bm{x_{t+1}}, \bm{x_{t+2}}, \dots, \bm{x_{T}}) = 0$:
-    incorrelación con valores futuros de $\bm{x_t}$.
-
-## Restricciones que impone la exogeneidad estricta
-
-La exogeneidad estricta es incompatible con algunos casos importantes:
-
--   Efectos de **retroalimentación**: los valores que toma $y_t$ afectan
-    a los valores futuros de las variables explicativas:
-    $\bm{x_{t+1}}, \dots, \bm{x_{T}}$.
-
--   Modelos autorregresivos.
-
-## Homoscedasticidad
-
-**ST.4**: **Homoscedasticidad**.
-
-Condicional a $\bm{X}$, la varianza de $u_t$ es la misma en todos los
-periodos:
-$$
-  \var(u_t | \bm{X}) = \sigma^2,\quad t = 1, 2, \dots, T.
-$$
-
-## Ausencia de correlación serial
-
-**ST.5**: **Ausencia de correlación serial**.
-
-Condicional a $\bm{X}$, las perturbaciones aleatorias de dos periodos
-diferentes están incorrelacionadas:
-$$
-  \corr(u_t, u_s | \bm{X}) = 0,\quad \text{para todo $t \neq s$.}
-$$
-
-## Normalidad
-
-**ST.6**: **Normalidad**.
-
-El término de error $u_t$ es independiente de $\bm{X}$ y se distribuye
-independiente e idénticamente como $\Normal(0, \sigma^2)$.
-
-## Propiedades de muestras finitas
-
-Los supuestos del modelo clásico de regresión con series temporales
-garantizan las siguientes propiedades del estimador de MCO:
-
--   **Insesgadez**: si se cumplen **TS.1**, **TS.2** y **TS.3**.
-
--   **Eficiencia**: si, además, se cumplen **TS.4** y **TS.5**. En este
-    caso, se pueden usar las fórmulas de MCO de los errores típicos de
-    $\hat{\beta_j}$.
-
--   **Normalidad**: si, además, se cumple **TS.6**. Las fórmulas
-    tradicionales de los contrastes $t$ y $F$ son válidas.
-
-## Limitaciones del modelo clásico
-
--   No es posible obtener estimaciones insesgadas de los parámetros de
-    modelos que incluyan retardos de la variable dependiente.
-
--   El estimador MCO tampoco tienen buenas propiedades exactas en
-    presencia de efectos de retroalimentación.
-
--   Algunos de los supuestos del modelo clásico son muy restrictivos:
-    normalidad, exogeneidad estricta, ausencia de correlación serial,
-    etc.
-
-# Propiedades asintóticas de MCO con series temporales
-
-## Introducción
-
-¿Qué supuestos son necesarios para que el estimador MCO tenga buenas
-propiedades asintóticas en modelos de regresión con series temporales?
-
-## Supuestos
-
--   **ST.1\'**: Linealidad y dependencia débil.
--   **ST.2\'**: Ausencia de colinealidad perfecta.
--   **ST.3\'**: Exogeneidad (contemporánea).
--   **ST.4\'**: Homoscedasticidad.
--   **ST.5\'**: Ausencia de correlación serial.
-
-## Linealidad y dependencia débil
-
-**ST.1\'**: **Linealidad y dependencia débil**.
-
-El proceso estocástico $\{(y_t, x_{1t}, x_{2t}, \dots, x_{kt})\!: t =
-1, 2, \dots, T\}$ es **estacionario** y **débilmente dependiente** sigue
-el modelo:
-$$
-  y_t = \beta_0 + \beta_1 x_{1t} + \beta_1 x_{2t} + \dots + \beta_1 x_{kt} + u_t
-$$
-donde $\{u_t\!: t = 1, 2, \dots, T\}$ es la secuencia de perturbaciones
-aleatorias.
-
-## Ausencia de colinealidad perfecta
-
-**ST.2\'**: **Ausencia de colinealidad perfecta**.
-
-En la muestra ninguna de las variables explicativas es constante ni una
-combinación lineal perfecta de las otras explicativas.
-
-## Exogeneidad contemporánea
-
-**ST.3\'**: **Exogeneidad (contemporánea)**.
-
--   Las variables explicativas $\bm{x}_t$ son **contemporáneamente
-    exógenas**:
-    $$
-      \Exp(u_{t}|\bm{x}_{t}) = 0.
+      y_t = \alpha + \beta x_t + u_t.
     $$
 
--   Este supuesto no se viola si se dan fenómenos de retroalimentación o
-    si se incluyen retardos de la variable dependiente entre las
-    explicativas.
+-   A pesar de que $\beta = 0$, la regresión anterior con frecuencia
+    indicaría que existe una relación significativa entre las dos
+    variables.
 
-## Homoscedasticidad y ausencia de autocorrelación
+-   Para evitar encontrar regresiones espurias, es aconsejable
+    introducir una tendencia lineal en la regresión anterior:
+    $$
+      y_t = \alpha + \beta x_t + \delta t + u_t.
+    $$
 
-**ST.4\'**: **Homoscedasticidad**.
+### Tendencias estocásticas
 
+-   Una **tendencia estocástica** es aleatoria y varía con el paso del
+    tiempo.
+
+-   El ejemplo más simple de una variable con tendencia estocástica es
+    el **paseo aleatorio**:
+    $$
+      y_t = y_{t-1} + e_t.
+    $$
+
+-   Un paseo aleatorio alterna episodios de crecimiento durante varios
+    periodos, con episodios donde la tendencia es decreciente.
+
+### Paseo aleatorio con deriva
+
+-   Algunas series tienen una tendencia de crecimiento sostenido a largo
+    plazo.
+
+-   **Paseo aleatorio con deriva**:
+    $$
+      y_t = \delta + y_{t-1} + e_t.
+    $$
+
+-   Si el parámetro $\delta > 0$ la variable $y_t$ tiende a crecer con
+    el paso del tiempo.
+
+### Raíces unitarias
+
+-   Un paseo aleatorio es un caso especial de un \AR{1}, donde
+    $\rho = 1$, incumpliendo la condición de estabilidad.
+
+-   La condición de estabilidad de procesos \AR{p} es más complicada y depende del valor de las raíces del **polinomio característico**: un polinomio de orden $p$ formado a partir de los coeficientes del proceso \AR{p}.
+
+-   Cuando una de esas raíces sea igual a 1, se dice que el proceso
+    tiene una **raíz unitaria**.
+
+### Raíces unitarias, tendencias estocásticas y procesos I(1)
+
+-   Si un proceso tiene una raíz unitaria entonces tiene una tendencia
+    estocástica.
+
+-   La diferencia de un proceso con una raíz unitaria no tiene tendencia
+    estocástica.
+
+-   Un proceso con una raíz unitaria es un proceso integrado de orden 1,
+    I(1).
+
+### Regresión espuria y tendencias estocásticas
+
+-   Si $y_t$ y $x_t$ son procesos I(1), la regresión de $y_t$ sobre
+    $x_t$ mostrará con mucha frecuencia resultados muy significativos
+    aunque, en realidad, las dos variables no estén relacionadas.
+
+-   Cuando $y_t$ y $x_t$ están relacionadas y tienen una tendencia
+    común, los residuos de la regresión de $y_t$ sobre $x_t$ deberían
+    comportarse como un proceso I(0). En ese caso las variables están
+    **cointegradas**.
+
+### Regresión con variables con tendencias
+
+-   Debemos añadir un término de tendencia lineal cuando alguna de las
+    variables presente tendencias deterministas.
+
+-   Las variables con raíz unitaria deben ser diferenciadas para
+    eliminar las tendencias estocásticas.
+
+-   La posibilidad de que haya relaciones de cointegración entre
+    variables I(1) no se explorará en este curso.
+
+## Contrastes de raíz unitaria
+
+### Modelo AR(1)
+
+El modelo autorregresivo de orden 1, `\AR{1}`{=latex}, puede escribirse
+como:
 $$
-  \var(u_t|\bm{x}_t) = \sigma^2.
+  y_t = \alpha + \rho y_{t-1} + u_t,
 $$
+donde $u_t$ es un ruido blanco.
 
-**ST.5\'**: **Ausencia de correlación serial**.
+### Estacionariedad y dependencia débil
 
-$$
-  \corr(u_t, u_s | \bm{x}_t, \bm{x}_s) = 0,\quad \text{para todo $t \neq s$.}
-$$
+Las propiedades dinámicas del proceso `\AR{1}`{=latex} dependen del
+valor de $\rho$:
 
-## Propiedades asintóticas
+-   $y_t$ es estacionario y débilmente dependiente si $\abs{\rho} < 1$.
 
--   **Consistencia**: si se cumplen **TS.1\'** a **TS.3\'**.
+-   $y_t$ es un paseo aleatorio si $\rho = 1$.
 
--   **Normalidad asintótica**: si además se cumplen **TS.4\'** y
-    **TS.5\'**.
+-   $y_t$ tiene un comportamiento explosivo cuando $\rho > 1$.
 
-## Conclusiones
+### Detección de raíces unitarias
 
--   Con muestras de tamaño moderado o grande, bastan los supuestos
-    **ST.1\'** a **ST.5\'** para garantizar buenas propiedades del
-    estimador MCO.
+-   Los estadísticos habituales no pueden usarse para contrastar la
+    existencia de una raíz unitaria.
 
--   En particular, no es necesario realizar supuestos muy restrictivos
-    como exogeneidad estricta o normalidad.
+-   La estimación MCO del parámetro $\rho$ está sesgada hacia abajo y el
+    sesgo aumenta cuanto más cerca está $\rho$ de 1.
 
--   Por otro lado, el supuesto **ST.1\'** requiere estacionariedad y
-    dependencia débil de la variable dependiente y de las variables
-    explicativas.
+-   La distribución del estadístico $t = (\hat{\rho} - 1)/\se({\rho})$
+    es muy diferente de una $t_{T-2}$ o de una normal cuando $\rho$
+    tiene un valor cercano a 1.
 
-# Inferencia asintótica
+### Regresión de Dickey-Fuller
 
-## Introducción
+-   Proceso AR(1):
+    $$
+      y_t = \alpha + \rho y_{t-1} + u_t,
+    $$
 
--   Para estimar los errores típicos de $\hat{\beta}_j$ con las fórmulas
-    tradicionales de MCO es necesario que se cumplan los supuestos
-    **ST.4\'** y **ST.5\'**.
+-   Restando $y_{t-1}$ de ambos lados:
+    $$
+      \incr y_t = \alpha + (\rho - 1) y_{t-1} + u_t.
+    $$
 
--   Sin embargo, es frecuente encontrar correlación serial en el término
-    de error.
+-   Dickey y Fuller plantean contrastar la existencia de una raíz
+    unitaria estimado por MCO el modelo de regresión:
+    $$
+      \incr y_t = \alpha + \beta y_{t-1} + u_t.
+    $$
 
--   También es frecuente, especialmente en modelos financieros, la
-    presencia de heteroscedasticidad.
+### Contraste $\bm{t}$ de Dickey-Fuller
 
-## Inferencia robusta
+-   Regresión de Dickey y Fuller:
+    $$
+      \incr y_t = \alpha + \beta y_{t-1} + u_t.
+    $$
 
--   Las aportaciones de Newey y West, y de autores posteriores, muestran
-    como pueden obtenerse estimaciones de $\var(\hat{\beta})$ que sólo
-    requieren los supuestos **ST.1\'**, **ST.2\'** y **ST.3\'** y que
-    son válidas aun en presencia de correlación serial y
-    heteroscedasticidad.
+-   La existencia de una raíz unitaria implica que $\beta = 0$.
 
--   Se suele usar el acrónimo **HAC** (*heteroskedasticity and
-    autocorrelation consistent*) para referirse a esos errores típicos
-    robustos.
+-   Dickey y Fuller proponen contrastar la hipótesis nula
+    $H_0\!: \beta = 0$ frente a la alternativa $H_1\!: \beta < 0$ mediante un contraste
+    $t$ de una cola.
 
-## Contrastes $t$ robustos
+### Distribución del contraste de Dickey-Fuller
 
-La hipótesis nula $\beta_j = b$ puede contrastarse usando un cociente
-$t$ robusto que utiliza la estimación MCO, $\hat{\beta}_j$, y un error
-típico robusto a heteroscedasticidad y autocorrelación,
-$\se_{\text{HAC}}(\bhat_j)$:
-$$
-  t_{j} = \frac{\bhat_{j} - b}{\se_{\text{HAC}}(\bhat_{j})}.
-$$
+-   **No debe usarse un contraste $\bm{t}$ robusto a
+    heteroscedasticidad**. Bajo la hipótesis nula el contraste $t$
+    tradicional es válido aunque haya heteroscedasticidad.
 
-## Contrastes de hipótesis lineales
+-   El contraste de Dickey-Fuller bajo la hipótesis nula no sigue una
+    distribución normal ni ninguna otra distribución convencional.
 
--   En presencia de autocorrelación y heteroscedasticidad no es válido
-    el estadístico $F$ que compara las $\SCR$ o los $\Rsq$ de los
-    modelos restringido y no restringido. Tampoco existe una versión
-    robusta de este contraste.
+-   Los valores críticos del contraste se obtienen mediante simulación:
 
--   Para contrastar restricciones lineales generales sobre los
-    parámetros del modelo, utilizamos contrastes de Wald construidos con
-    estimaciones de $\var(\hat{\bm\beta})$ robustas a
-    heteroscedasticidad y autocorrelación.
+    +-----------+-----------+-----------+
+    | $10\%$    | $5\%$     | $1\%$     |
+    +==========:+==========:+==========:+
+    | $-2{,}57$ | $-2{,}86$ | $-3{,}43$ |
+    +-----------+-----------+-----------+
 
-## Estimación e inferencia robusta con MCO
+### Contraste de Dickey-Fuller aumentado
 
--   Se estiman por MCO los parámetros del modelo de regresión. MCO es
-    consistente si se cumplen los supuestos **ST.1\'**, **ST.2\'** y
-    **ST.3\'**.
+-   Si $y_t$ sigue un proceso `\AR{p}`{=latex} es necesario incluir
+    $p-1$ retardos de $\incr y_t$ en la regresión de Dickey-Fuller para
+    obtener un contraste válido:
+    $$
+      \incr y_t =
+      \alpha + \beta y_{t-1} + \phi_1 \incr y_{t-1}  +
+      \phi_2 \incr y_{t-2} + \dots  + \phi_{p-1} \incr y_{t-p+1}  + u_t.
+    $$
 
--   Los contrastes de hipótesis se llevan a cabo utilizando una
-    estimación de $\var(\hat{\bm\beta})$ robusta a heteroscedasticidad y
-    autocorrelación.
+-   Los valores críticos de Dickey-Fuller son válidos para contrastar
+    $H_0\!: \beta = 0$ frente a $H_1\!: \beta < 0$.
+
+### Selección de retardos
+
+-   Es conveniente utilizar un criterio de información para seleccionar
+    el número de retardos a incluir en la regresión de Dickey-Fuller.
+
+-   Para el constraste de Dickey-Fuller aumentado es preferible el AIC.
+
+### Tendencias
+
+-   Si $y_t$ presenta una tendencia creciente o decreciente es
+    aconsejable añadir una tendencia lineal a la regresión de
+    Dickey-Fuller:
+    $$
+      \incr y_t =
+      \alpha + \delta t + \beta y_{t-1} + \phi_1 \incr y_{t-1}  +
+      \phi_2 \incr y_{t-2} + \dots  + \phi_{p-1} \incr y_{t-p+1}  + u_t.
+    $$
+
+-   Cuando se incluye una tendencia, la distribución del contraste de
+    Dickey-Fuller es diferente y es necesario usar otros valores
+    críticos:
+
+    +-----------+-----------+-----------+
+    | $10\%$    | $5\%$     | $1\%$     |
+    +==========:+==========:+==========:+
+    | $-3{,}12$ | $-3{,}41$ | $-3{,}96$ |
+    +-----------+-----------+-----------+
+
+
+### Resumen
+
+-   Mediante la inspección de gráficos, se determina si es necesario
+    incluir una tendencia lineal en la regresión de Dickey-Fuller.
+
+-   Se selecciona el número de retardos en la regresión de Dickey-Fuller
+    de acuerdo con el valor del AIC.
+
+-   Se rechaza la presencia de raíz unitaria cuando el valor del
+    cociente $t$ para $H_0\!: \beta = 0$ frente a $H_1\!: \beta < 0$ es
+    menor que los valores críticos de la siguiente tabla:
+
+    +------------------+-----------+-----------+-----------+
+    | Tendencia lineal | $10\%$    | $5\%$     | $1\%$     |
+    +:=================+==========:+==========:+==========:+
+    | No               | $-2{,}57$ | $-2{,}86$ | $-3{,}43$ |
+    +------------------+-----------+-----------+-----------+
+    | Sí               | $-3{,}12$ | $-3{,}41$ | $-3{,}96$ |
+    +------------------+-----------+-----------+-----------+
+
+
+## Otras cuestiones
+
+### Multiplicadores de largo plazo (I)
+
+-   Modelo con tres retardos de la variable explicativa:
+    $$
+       y_t = \alpha + \beta_0 z_t + \beta_1 z_{t-1} + \beta_2 z_{t-2} + \beta_3 z_{t-3} + u_t.
+    $$
+
+-   Es posible reescribir el modelo anterior como:
+    $$
+       y_t = \alpha + \delta_0 \incr z_t + \delta_1 \incr z_{t-1} +
+       \delta_2 \incr z_{t-2} + \delta_3 z_{t-3} + u_t
+    $$
+
+-   Con la regresión anterior se estiman directamente los
+    multiplicadores acumulativos y de largo plazo y sus correspondientes
+    errores típicos.
+
+### Multiplicadores de largo plazo (y II)
+
+-   Modelo ARDL($p$, $q$):
+    $$
+       y_t = \alpha + \rho_1 y_{t-1} + \dots + \rho_p y_{t-p} +
+       \beta_0 z_t + \beta_1 z_{t-1} + \dots + \beta_q z_{t-q} +
+       u_t
+    $$
+
+-   El multiplicador de largo plazo es una función no lineal de los
+    parámetros:
+    $$
+       \delta_{\text{LP}} = \frac{\sum_{j=0}^q \beta_j}{1 - \sum_{j=1}^p \rho_j}.
+    $$
+
+-   En este curso no se tratará como obtener los multiplicadores
+    acumulativos y sus errores típicos en modelos ARDL.
+
+### Cambio estructural
+
+-   Se produce un **cambio estructural** cuando los parámetros del
+    modelo de regresión no permanecen constantes a lo largo de todo el
+    periodo muestral.
+
+-   Consideraremos el caso de que los parámetros sólo cambian una vez y
+    que conocemos en qué periodo se produce el cambio.
+
+### Contraste de Chow (I)
+
+-   Modelo de regresión original:
+    $$
+      y_t = \beta_0 + \beta_1 x_{1t}  + \beta_2 x_{2t} + u_t.
+    $$
+
+-   El **contraste de Chow** puede usarse cuando se sospecha de la
+    existencia de un cambio estructural en el periodo $\tau$, $1 < \tau
+     < T$.
+
+-   Creamos una variable ficticia $D_t$ que toma el valor 0 en todos los
+    periodos anteriores a $\tau$ y valor 1 a partir del periodo $\tau$.
+    $$
+      D_t =
+      \begin{cases}
+        0 & \text{si $t < \tau$}, \\
+        1 & \text{si $t \geq \tau$}.
+      \end{cases}
+    $$
+
+### Contraste de Chow (y II)
+
+-   Añadimos al modelo original la variable $D_t$ así como interacciones
+    de $D_t$ con todas las variables explicativas:
+    $$
+      y_t = \beta_0 + \beta_1 x_{1t}  + \beta_2 x_{2t} +
+      \theta_0 D_t + \theta_1 D_t x_{1t}   + \theta_2 D_t x_{2t}
+      + u_t.
+    $$
+
+-   Bajo la hipótesis nula de que no se ha producido cambio estructural,
+    los términos que se han añadido no son significativos.
+
+-   Puede usarse un estadístico $F$ para contrastar $\theta_0 = \theta_1
+     = \theta_2 = 0$.
+
+-   En caso que se rechace la hipótesis nula, el parámetro $\theta_j$
+    muestra como ha cambiado el parámetro $\beta_j$ a partir del periodo
+    $\tau$.
+
+### Estacionalidad
+
+-   Con datos trimestrales y mensuales es usual observar variables con
+    fuertes oscilaciones estacionales.
+
+-   Una forma simple de controlar este tipo de variación es incluir
+    **variables ficticias estacionales** en el modelo de regresión.
+
+### Variables ficticias estacionales
+
+-   Con datos trimestrales podemos definir cuatro variables ficticias
+    estacionales $D^s_t$, $s = 1, \dots, 4$:
+    $$
+      D^s_t =
+      \begin{cases}
+        0 & \text{si $t$ corresponde al trimestre $s$}, \\
+        1 & \text{en caso contrario}.
+      \end{cases}
+    $$
+
+-   En la regresión sólo incluiríamos tres de estas variables. De otra
+    forma, incurriríamos en la **trampa de la variables ficticias**.
+
+-   De la misma manera, para controlar la estacionalidad en datos
+    mensuales incluiríamos un conjunto de 11 variables ficticias
+    estacionales.

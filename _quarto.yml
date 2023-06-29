@@ -17,6 +17,7 @@ book:
     - part: ts-part.qmd
       chapters:
         - intro-ts.qmd
+        - ols-ts.qmd
         - regr-ts.qmd
     - references.qmd
 
