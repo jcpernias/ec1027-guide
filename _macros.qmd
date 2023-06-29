@@ -6,7 +6,7 @@
 \newcommand{\ipctratio}[2]{\frac{\incrpct #1}{\incrpct #2}}
 
 \DeclarePairedDelimiter\Math@abs{\lvert}{\rvert}
-\newcommand{\abs}[1]{\lvert#1\rvert}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
 
 \DeclarePairedDelimiter\Math@eval{.}{\rvert}
 \newcommand{\eval}[2]{#1\rvert_{#2}}
