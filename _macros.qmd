@@ -49,8 +49,8 @@
 \newcommand{\Rsqnr}{R^2_{nr}}
 \newcommand{\bm}[1]{\boldsymbol{#1}}
 \newcommand{\stext}[1]{\text{\ #1}}
-\newcommand{\adistr}{\stackrel{%
-  \mathclap[\scriptstyle]{\mathrm{a}}}{\sim}}
+
+\newcommand{\adistr}{\stackrel{\mathrm{a}}{\sim}}
 
 \newcommand{\Var}[1]{\mathit{#1}\xspace}
 \newcommand{\Vart}[2]{\mathit{#1}_{#2}\xspace}
