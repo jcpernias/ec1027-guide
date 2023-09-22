@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.427">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>ec1027-guide - 3&nbsp; Propiedades asintóticas del estimador MCO</title>
+<title>ec1027-guide - 2&nbsp; Propiedades asintóticas del estimador MCO</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ts-part.html" rel="next">
+<link href="./het.html" rel="next">
 <link href="./mcrl.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -62,8 +62,22 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 </head>
 
@@ -76,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cs-part.html">Regresión con datos de corte transversal</a></li><li class="breadcrumb-item"><a href="./asymp.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cs-part.html">Regresión con datos de corte transversal</a></li><li class="breadcrumb-item"><a href="./asymp.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -104,7 +118,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text">Prefacio</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -118,20 +132,32 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./mcrl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./asymp.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./het.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lpm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./other-cs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forma funcional y problemas con los datos</span></span></a>
   </div>
 </li>
       </ul>
@@ -147,8 +173,26 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  <a href="./intro-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ols-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regr-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocorr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></span></a>
   </div>
 </li>
       </ul>
@@ -169,7 +213,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Tabla de contenidos</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">3.1</span> Introducción</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">2.1</span> Introducción</a>
   <ul class="collapse">
   <li><a href="#el-supuesto-de-normalidad" id="toc-el-supuesto-de-normalidad" class="nav-link" data-scroll-target="#el-supuesto-de-normalidad">El supuesto de normalidad</a></li>
   <li><a href="#inferencia-en-el-modelo-clásico" id="toc-inferencia-en-el-modelo-clásico" class="nav-link" data-scroll-target="#inferencia-en-el-modelo-clásico">Inferencia en el modelo clásico</a></li>
@@ -183,7 +227,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#normalidad-asintótica" id="toc-normalidad-asintótica" class="nav-link" data-scroll-target="#normalidad-asintótica">Normalidad asintótica</a></li>
   <li><a href="#consideraciones-prácticas" id="toc-consideraciones-prácticas" class="nav-link" data-scroll-target="#consideraciones-prácticas">Consideraciones prácticas</a></li>
   </ul></li>
-  <li><a href="#propiedades-asintóticas-de-mco" id="toc-propiedades-asintóticas-de-mco" class="nav-link" data-scroll-target="#propiedades-asintóticas-de-mco"><span class="header-section-number">3.2</span> Propiedades asintóticas de MCO</a>
+  <li><a href="#propiedades-asintóticas-de-mco" id="toc-propiedades-asintóticas-de-mco" class="nav-link" data-scroll-target="#propiedades-asintóticas-de-mco"><span class="header-section-number">2.2</span> Propiedades asintóticas de MCO</a>
   <ul class="collapse">
   <li><a href="#consistencia-1" id="toc-consistencia-1" class="nav-link" data-scroll-target="#consistencia-1">Consistencia</a></li>
   <li><a href="#inconsistencia" id="toc-inconsistencia" class="nav-link" data-scroll-target="#inconsistencia">Inconsistencia</a></li>
@@ -191,17 +235,17 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#varianza-de-los-estimadores-mco" id="toc-varianza-de-los-estimadores-mco" class="nav-link" data-scroll-target="#varianza-de-los-estimadores-mco">Varianza de los estimadores MCO</a></li>
   <li><a href="#normalidad-asintótica-del-estimador-mco" id="toc-normalidad-asintótica-del-estimador-mco" class="nav-link" data-scroll-target="#normalidad-asintótica-del-estimador-mco">Normalidad asintótica del estimador MCO</a></li>
   </ul></li>
-  <li><a href="#inferencia-asintótica" id="toc-inferencia-asintótica" class="nav-link" data-scroll-target="#inferencia-asintótica"><span class="header-section-number">3.3</span> Inferencia asintótica</a>
+  <li><a href="#inferencia-asintótica" id="toc-inferencia-asintótica" class="nav-link" data-scroll-target="#inferencia-asintótica"><span class="header-section-number">2.3</span> Inferencia asintótica</a>
   <ul class="collapse">
   <li><a href="#contraste-de-hipótesis-en-muestras-grandes" id="toc-contraste-de-hipótesis-en-muestras-grandes" class="nav-link" data-scroll-target="#contraste-de-hipótesis-en-muestras-grandes">Contraste de hipótesis en muestras grandes</a></li>
-  <li><a href="#contrastes-t" id="toc-contrastes-t" class="nav-link" data-scroll-target="#contrastes-t">Contrastes <span class="math inline">\(t\)</span></a></li>
+  <li><a href="#contrastes-t" id="toc-contrastes-t" class="nav-link" data-scroll-target="#contrastes-t">Contrastes <span class="math inline">t</span></a></li>
   <li><a href="#intervalos-de-confianza" id="toc-intervalos-de-confianza" class="nav-link" data-scroll-target="#intervalos-de-confianza">Intervalos de confianza</a></li>
-  <li><a href="#contrastes-f" id="toc-contrastes-f" class="nav-link" data-scroll-target="#contrastes-f">Contrastes <span class="math inline">\(F\)</span></a></li>
+  <li><a href="#contrastes-f" id="toc-contrastes-f" class="nav-link" data-scroll-target="#contrastes-f">Contrastes <span class="math inline">F</span></a></li>
   <li><a href="#otros-contrastes-asintóticos" id="toc-otros-contrastes-asintóticos" class="nav-link" data-scroll-target="#otros-contrastes-asintóticos">Otros contrastes asintóticos</a></li>
   <li><a href="#contrastes-de-wald" id="toc-contrastes-de-wald" class="nav-link" data-scroll-target="#contrastes-de-wald">Contrastes de Wald</a></li>
   <li><a href="#contrastes-de-multiplicadores-de-lagrange" id="toc-contrastes-de-multiplicadores-de-lagrange" class="nav-link" data-scroll-target="#contrastes-de-multiplicadores-de-lagrange">Contrastes de multiplicadores de Lagrange</a></li>
   <li><a href="#contraste-de-variables-omitidas" id="toc-contraste-de-variables-omitidas" class="nav-link" data-scroll-target="#contraste-de-variables-omitidas">Contraste de variables omitidas</a></li>
-  <li><a href="#contraste-mathopmathrmlm-de-variables-omitidas" id="toc-contraste-mathopmathrmlm-de-variables-omitidas" class="nav-link" data-scroll-target="#contraste-mathopmathrmlm-de-variables-omitidas">Contraste <span class="math inline">\(\mathop{\mathrm{LM}}\)</span> de variables omitidas</a></li>
+  <li><a href="#contraste-mathopmathrmlm-de-variables-omitidas" id="toc-contraste-mathopmathrmlm-de-variables-omitidas" class="nav-link" data-scroll-target="#contraste-mathopmathrmlm-de-variables-omitidas">Contraste <span class="math inline">\mathop{\mathrm{LM}}</span> de variables omitidas</a></li>
   <li><a href="#regla-de-decisión" id="toc-regla-de-decisión" class="nav-link" data-scroll-target="#regla-de-decisión">Regla de decisión</a></li>
   <li><a href="#contrastes-de-razón-de-verosimilitudes" id="toc-contrastes-de-razón-de-verosimilitudes" class="nav-link" data-scroll-target="#contrastes-de-razón-de-verosimilitudes">Contrastes de razón de verosimilitudes</a></li>
   </ul></li>
@@ -213,7 +257,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></h1>
 </div>
 
 
@@ -228,13 +272,13 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="introducción" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">3.1</span> Introducción</h2>
+<section id="introducción" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">2.1</span> Introducción</h2>
 <section id="el-supuesto-de-normalidad" class="level3">
 <h3 class="anchored" data-anchor-id="el-supuesto-de-normalidad">El supuesto de normalidad</h3>
-<p>El supuesto <strong>RLM.6</strong> del modelo clásico de regresión requiere la normalidad del término de error: <span class="math display">\[
+<p>El supuesto <strong>RLM.6</strong> del modelo clásico de regresión requiere la normalidad del término de error: <span class="math display">
 u \sim \mathop{\mathrm{Normal}}(0, \sigma^{2}).
-\]</span></p>
+</span></p>
 </section>
 <section id="inferencia-en-el-modelo-clásico" class="level3">
 <h3 class="anchored" data-anchor-id="inferencia-en-el-modelo-clásico">Inferencia en el modelo clásico</h3>
@@ -254,7 +298,7 @@ u \sim \mathop{\mathrm{Normal}}(0, \sigma^{2}).
 </section>
 <section id="teoremas-sobre-límites" class="level3">
 <h3 class="anchored" data-anchor-id="teoremas-sobre-límites">Teoremas sobre límites</h3>
-<p>Bajo ciertas condiciones, secuencias de variables aleatorias obtenidas por muestreo aleatorio cumplen conforme <span class="math inline">\(n \to \infty\)</span>:</p>
+<p>Bajo ciertas condiciones, secuencias de variables aleatorias obtenidas por muestreo aleatorio cumplen conforme <span class="math inline">n \to \infty</span>:</p>
 <ul>
 <li><p><strong>Leyes de grandes números</strong>: establecen la convergencia de medias muestrales a la media poblacional.</p></li>
 <li><p><strong>Teoremas del límite central</strong>: establecen la <strong>distribución asintótica</strong> de las medias muestrales.</p></li>
@@ -270,9 +314,9 @@ u \sim \mathop{\mathrm{Normal}}(0, \sigma^{2}).
 </section>
 <section id="consistencia" class="level3">
 <h3 class="anchored" data-anchor-id="consistencia">Consistencia</h3>
-<p>Un estimador es consistente si conforme aumenta el tamaño muestral converge en probabilidad al parámetro poblacional: <span class="math display">\[
+<p>Un estimador es consistente si conforme aumenta el tamaño muestral converge en probabilidad al parámetro poblacional: <span class="math display">
 \mathop{\mathrm{plim}}\hat{\beta}_j = \beta_j.
-\]</span></p>
+</span></p>
 <p>Intuitivamente, cuanto mayor es el tamaño muestral más cerca está un estimador consistente del parámetro poblacional.</p>
 </section>
 <section id="consistencia-e-insesgadez" class="level3">
@@ -305,87 +349,87 @@ u \sim \mathop{\mathrm{Normal}}(0, \sigma^{2}).
 </ul>
 </section>
 </section>
-<section id="propiedades-asintóticas-de-mco" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="propiedades-asintóticas-de-mco"><span class="header-section-number">3.2</span> Propiedades asintóticas de MCO</h2>
+<section id="propiedades-asintóticas-de-mco" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="propiedades-asintóticas-de-mco"><span class="header-section-number">2.2</span> Propiedades asintóticas de MCO</h2>
 <section id="consistencia-1" class="level3">
 <h3 class="anchored" data-anchor-id="consistencia-1">Consistencia</h3>
 <ul>
 <li><p>MCO es consistente si se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong>.</p></li>
-<li><p>El supuesto <strong>RLM.4</strong>, <span class="math inline">\(E(u|\boldsymbol{x}) = 0\)</span>, puede relajarse y basta con: <span class="math display">\[
+<li><p>El supuesto <strong>RLM.4</strong>, <span class="math inline">E(u|\boldsymbol{x}) = 0</span>, puede relajarse y basta con: <span class="math display">
   \mathop{\mathrm{E}}(u) = 0 \text{\ y} \mathop{\mathrm{cov}}(x_{j}, u) \text{\ para $j = 1, 2, \dots, k$}.
-\]</span></p></li>
+</span></p></li>
 </ul>
 </section>
 <section id="inconsistencia" class="level3">
 <h3 class="anchored" data-anchor-id="inconsistencia">Inconsistencia</h3>
 <ul>
-<li><p>La <strong>inconsistencia</strong> de <span class="math inline">\(\hat{\beta}_i\)</span> es la diferencia entre el límite del estimador y el parámetro poblacional. En el caso de MCO: <span class="math display">\[
+<li><p>La <strong>inconsistencia</strong> de <span class="math inline">\hat{\beta}_i</span> es la diferencia entre el límite del estimador y el parámetro poblacional. En el caso de MCO: <span class="math display">
   \mathop{\mathrm{plim}}\hat{\beta}_{i} - \beta_{i} = \frac{\mathop{\mathrm{cov}}(x_{i}, u)}{\mathop{\mathrm{var}}(x_{i})}.
-\]</span></p></li>
+</span></p></li>
 <li><p>MCO es <strong>inconsistente</strong> si el término de error y, al menos, una de las explicativas están correlacionados.</p></li>
 </ul>
 </section>
 <section id="variable-relevante-omitida" class="level3">
 <h3 class="anchored" data-anchor-id="variable-relevante-omitida">Variable relevante omitida</h3>
 <ul>
-<li><p>Se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong> en el modelo poblacional: <span class="math display">\[
+<li><p>Se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong> en el modelo poblacional: <span class="math display">
   y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + u.
-\]</span></p></li>
-<li><p>Si se omite la variable <span class="math inline">\(x_2\)</span>, el sesgo del estimador MCO de <span class="math inline">\(\beta_1\)</span> es: <span class="math display">\[
+</span></p></li>
+<li><p>Si se omite la variable <span class="math inline">x_2</span>, el sesgo del estimador MCO de <span class="math inline">\beta_1</span> es: <span class="math display">
   \mathop{\mathrm{plim}}\hat{\beta}_{1} - \beta_{1} = \beta_2 \delta_{21},
-\]</span> donde <span class="math inline">\(\delta_{21} = \mathop{\mathrm{cov}}(x_1, x_2) / \mathop{\mathrm{var}}(x_1)\)</span>, mide la intensidad de la asociación de las variables <span class="math inline">\(x_2\)</span> y <span class="math inline">\(x_1\)</span>.</p></li>
-<li><p>Omitir una variable relevante, <span class="math inline">\(\beta_2 \neq 0\)</span>, causa inconsistencia si la variable omitida está correlacionada con alguna de las explicativas, <span class="math inline">\(\delta_{21} \neq 0\)</span>.</p></li>
+</span> donde <span class="math inline">\delta_{21} = \mathop{\mathrm{cov}}(x_1, x_2) / \mathop{\mathrm{var}}(x_1)</span>, mide la intensidad de la asociación de las variables <span class="math inline">x_2</span> y <span class="math inline">x_1</span>.</p></li>
+<li><p>Omitir una variable relevante, <span class="math inline">\beta_2 \neq 0</span>, causa inconsistencia si la variable omitida está correlacionada con alguna de las explicativas, <span class="math inline">\delta_{21} \neq 0</span>.</p></li>
 </ul>
 </section>
 <section id="varianza-de-los-estimadores-mco" class="level3">
 <h3 class="anchored" data-anchor-id="varianza-de-los-estimadores-mco">Varianza de los estimadores MCO</h3>
 <p>Si se cumplen los supuestos de Gauss-Markov, <strong>RLM.1</strong> a <strong>RLM.5</strong>:</p>
 <ul>
-<li><p><span class="math inline">\(\hat{\sigma}^2\)</span> es un estimador consistente de <span class="math inline">\(\mathop{\mathrm{var}}(u)\)</span>.</p></li>
-<li><p>Las fórmulas para estimar las varianzas de los estimadores MCO son válidas asintóticamente: <span class="math display">\[
+<li><p><span class="math inline">\hat{\sigma}^2</span> es un estimador consistente de <span class="math inline">\mathop{\mathrm{var}}(u)</span>.</p></li>
+<li><p>Las fórmulas para estimar las varianzas de los estimadores MCO son válidas asintóticamente: <span class="math display">
   \widehat{\mathop{\mathrm{var}}}(\hat{\beta}_{j}) = \frac{\hat{\sigma}^2}{\mathop{\mathrm{SCT}}_{j}(1-R^2_{j})}.
-\]</span></p></li>
+</span></p></li>
 </ul>
 </section>
 <section id="normalidad-asintótica-del-estimador-mco" class="level3">
 <h3 class="anchored" data-anchor-id="normalidad-asintótica-del-estimador-mco">Normalidad asintótica del estimador MCO</h3>
-<p>Si se cumplen los supuestos de Gauss-Markov, <strong>RLM.1</strong> a <strong>RLM.5</strong>, la distribución asintótica del estimador MCO es normal: <span class="math display">\[
-    \frac{\hat{\beta}_{j} - \beta_{j}}{\mathop{\mathrm{dt}}(\hat{\beta}_{j})} \stackrel{\mathclap[\scriptstyle]{\mathrm{a}}}{\sim}\mathop{\mathrm{Normal}}(0, 1),
+<p>Si se cumplen los supuestos de Gauss-Markov, <strong>RLM.1</strong> a <strong>RLM.5</strong>, la distribución asintótica del estimador MCO es normal: <span class="math display">
+    \frac{\hat{\beta}_{j} - \beta_{j}}{\mathop{\mathrm{dt}}(\hat{\beta}_{j})} \stackrel{\mathrm{a}}{\sim}\mathop{\mathrm{Normal}}(0, 1),
     \text{\ para $j = 0, 1, 2, \dots, k$}.
-  \]</span></p>
+  </span></p>
 </section>
 </section>
-<section id="inferencia-asintótica" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="inferencia-asintótica"><span class="header-section-number">3.3</span> Inferencia asintótica</h2>
+<section id="inferencia-asintótica" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="inferencia-asintótica"><span class="header-section-number">2.3</span> Inferencia asintótica</h2>
 <section id="contraste-de-hipótesis-en-muestras-grandes" class="level3">
 <h3 class="anchored" data-anchor-id="contraste-de-hipótesis-en-muestras-grandes">Contraste de hipótesis en muestras grandes</h3>
 <ul>
-<li><p>No es necesario el supuesto de normalidad del término de error para usar los contrastes <span class="math inline">\(t\)</span> y <span class="math inline">\(F\)</span>.</p></li>
+<li><p>No es necesario el supuesto de normalidad del término de error para usar los contrastes <span class="math inline">t</span> y <span class="math inline">F</span>.</p></li>
 <li><p>Disponemos de otros contrastes que sólo son válidos asintóticamente.</p></li>
 </ul>
 </section>
 <section id="contrastes-t" class="level3">
-<h3 class="anchored" data-anchor-id="contrastes-t">Contrastes <span class="math inline">\(t\)</span></h3>
+<h3 class="anchored" data-anchor-id="contrastes-t">Contrastes <span class="math inline">t</span></h3>
 <ul>
-<li>Si se cumplen los supuestos de Gauss-Markov, podemos usar la distribución <span class="math inline">\(t\)</span> para determinar valores críticos y los valores-<span class="math inline">\(p\)</span> de los contrates <span class="math inline">\(t\)</span>. <span class="math display">\[
-  \frac{\hat{\beta}_{j} - \beta_{j}}{\mathop{\mathrm{et}}(\hat{\beta}_{j})} \stackrel{\mathclap[\scriptstyle]{\mathrm{a}}}{\sim}t_{n - k - 1}.
-\]</span></li>
+<li>Si se cumplen los supuestos de Gauss-Markov, podemos usar la distribución <span class="math inline">t</span> para determinar valores críticos y los valores-<span class="math inline">p</span> de los contrates <span class="math inline">t</span>. <span class="math display">
+  \frac{\hat{\beta}_{j} - \beta_{j}}{\mathop{\mathrm{et}}(\hat{\beta}_{j})} \stackrel{\mathrm{a}}{\sim}t_{n - k - 1}.
+</span></li>
 </ul>
 </section>
 <section id="intervalos-de-confianza" class="level3">
 <h3 class="anchored" data-anchor-id="intervalos-de-confianza">Intervalos de confianza</h3>
 <ul>
-<li>Si se cumplen los supuestos de Gauss-Markov, podemos usar la fórmula habitual para obtener un intervalo a un nivel de confianza <span class="math inline">\(1 - \alpha\)</span> para el parámetro <span class="math inline">\(\beta_j\)</span>: <span class="math display">\[
+<li>Si se cumplen los supuestos de Gauss-Markov, podemos usar la fórmula habitual para obtener un intervalo a un nivel de confianza <span class="math inline">1 - \alpha</span> para el parámetro <span class="math inline">\beta_j</span>: <span class="math display">
   \hat{\beta}_j \pm c_{\alpha/2} \cdot \mathop{\mathrm{et}}(\hat{\beta}_j),
-\]</span> donde <span class="math inline">\(c_{\alpha/2}\)</span> es el valor crítico de dos colas de una distribución <span class="math inline">\(t_{n-k-1}\)</span> a un nivel de significación <span class="math inline">\(\alpha\)</span>.</li>
+</span> donde <span class="math inline">c_{\alpha/2}</span> es el valor crítico de dos colas de una distribución <span class="math inline">t_{n-k-1}</span> a un nivel de significación <span class="math inline">\alpha</span>.</li>
 </ul>
 </section>
 <section id="contrastes-f" class="level3">
-<h3 class="anchored" data-anchor-id="contrastes-f">Contrastes <span class="math inline">\(F\)</span></h3>
+<h3 class="anchored" data-anchor-id="contrastes-f">Contrastes <span class="math inline">F</span></h3>
 <ul>
-<li>Si se cumplen los supuestos de Gauss-Markov, podemos usar la distribución <span class="math inline">\(F\)</span> para determinar valores críticos y los valores-<span class="math inline">\(p\)</span> de los contrates <span class="math inline">\(F\)</span>. <span class="math display">\[
-  \frac{(\mathop{\mathrm{SCR}}_{r}- \mathop{\mathrm{SCR}}_{nr}) / q}{\mathop{\mathrm{SCR}}_{nr}/ (n - k - 1)}  \stackrel{\mathclap[\scriptstyle]{\mathrm{a}}}{\sim}F_{q,\, n - k - 1}.
-\]</span></li>
+<li>Si se cumplen los supuestos de Gauss-Markov, podemos usar la distribución <span class="math inline">F</span> para determinar valores críticos y los valores-<span class="math inline">p</span> de los contrates <span class="math inline">F</span>. <span class="math display">
+  \frac{(\mathop{\mathrm{SCR}}_{r}- \mathop{\mathrm{SCR}}_{nr}) / q}{\mathop{\mathrm{SCR}}_{nr}/ (n - k - 1)}  \stackrel{\mathrm{a}}{\sim}F_{q,\, n - k - 1}.
+</span></li>
 </ul>
 </section>
 <section id="otros-contrastes-asintóticos" class="level3">
@@ -400,15 +444,15 @@ u \sim \mathop{\mathrm{Normal}}(0, \sigma^{2}).
 <section id="contrastes-de-wald" class="level3">
 <h3 class="anchored" data-anchor-id="contrastes-de-wald">Contrastes de Wald</h3>
 <ul>
-<li><p>Los <strong>contrastes de Wald</strong> pueden interpretarse como una generalización de los contrastes <span class="math inline">\(t\)</span>.</p></li>
+<li><p>Los <strong>contrastes de Wald</strong> pueden interpretarse como una generalización de los contrastes <span class="math inline">t</span>.</p></li>
 <li><p>Sólo requieren la estimación del modelo no restringido.</p></li>
-<li><p>Bajo la <span class="math inline">\(H_0\)</span> se distribuyen como una <span class="math inline">\(\chi^2\)</span> con <span class="math inline">\(q\)</span> grados de libertad. También se usan versiones de este contraste que se distribuyen como una <span class="math inline">\(F_{q,\, n - k - 1}\)</span>.</p></li>
+<li><p>Bajo la <span class="math inline">H_0</span> se distribuyen como una <span class="math inline">\chi^2</span> con <span class="math inline">q</span> grados de libertad. También se usan versiones de este contraste que se distribuyen como una <span class="math inline">F_{q,\, n - k - 1}</span>.</p></li>
 </ul>
 </section>
 <section id="contrastes-de-multiplicadores-de-lagrange" class="level3">
 <h3 class="anchored" data-anchor-id="contrastes-de-multiplicadores-de-lagrange">Contrastes de multiplicadores de Lagrange</h3>
 <ul>
-<li><p>Para utilizar un <strong>contraste de multiplicadores de Lagrange</strong>, <span class="math inline">\(\mathop{\mathrm{LM}}\)</span>, sólo es necesaria la estimación del modelo restringido.</p></li>
+<li><p>Para utilizar un <strong>contraste de multiplicadores de Lagrange</strong>, <span class="math inline">\mathop{\mathrm{LM}}</span>, sólo es necesaria la estimación del modelo restringido.</p></li>
 <li><p>Son especialmente útiles cuando la estimación del modelo no restringido es difícil.</p></li>
 <li><p>Frecuentemente se calculan a partir de una <strong>regresión auxiliar</strong>.</p></li>
 </ul>
@@ -416,40 +460,40 @@ u \sim \mathop{\mathrm{Normal}}(0, \sigma^{2}).
 <section id="contraste-de-variables-omitidas" class="level3">
 <h3 class="anchored" data-anchor-id="contraste-de-variables-omitidas">Contraste de variables omitidas</h3>
 <ul>
-<li><p>Modelo de regresión poblacional que cumple <strong>RLM.1</strong> a <strong>RLM.5</strong>: <span class="math display">\[
+<li><p>Modelo de regresión poblacional que cumple <strong>RLM.1</strong> a <strong>RLM.5</strong>: <span class="math display">
   y = \beta_0 + \beta_1 x_1  + \beta_2 x_2  + \beta_3 x_3  + \beta_4 x_4 + u.
-\]</span></p></li>
-<li><p>Estamos interesados en contrastar la hipótesis nula <span class="math display">\[
+</span></p></li>
+<li><p>Estamos interesados en contrastar la hipótesis nula <span class="math display">
   H_0\!: \beta_3 = \beta_4 = 0.
-\]</span></p></li>
+</span></p></li>
 </ul>
 </section>
 <section id="contraste-mathopmathrmlm-de-variables-omitidas" class="level3">
-<h3 class="anchored" data-anchor-id="contraste-mathopmathrmlm-de-variables-omitidas">Contraste <span class="math inline">\(\mathop{\mathrm{LM}}\)</span> de variables omitidas</h3>
+<h3 class="anchored" data-anchor-id="contraste-mathopmathrmlm-de-variables-omitidas">Contraste <span class="math inline">\mathop{\mathrm{LM}}</span> de variables omitidas</h3>
 <ul>
-<li><p>Estimación del modelo restringido por MCO: <span class="math display">\[
+<li><p>Estimación del modelo restringido por MCO: <span class="math display">
   y = \hat{\beta}_0 + \hat{\beta}_1 x_1  + \hat{\beta}_2 x_2 + \hat{u}.
-\]</span></p></li>
-<li><p><strong>Regresión auxiliar</strong> usando los residuos como variable dependiente y todas las explicativas, tanto incluidas como excluidas: <span class="math display">\[
+</span></p></li>
+<li><p><strong>Regresión auxiliar</strong> usando los residuos como variable dependiente y todas las explicativas, tanto incluidas como excluidas: <span class="math display">
   \hat{u}\text{\ sobre $x_1, x_2, x_3, x_4$}.
-\]</span></p></li>
-<li><p>El estadístico de contraste es <span class="math inline">\(\mathop{\mathrm{LM}}= n R^2_{aux}\)</span>: el número de observaciones multiplicado por el <span class="math inline">\(R^2\)</span> de la regresión auxiliar.</p></li>
+</span></p></li>
+<li><p>El estadístico de contraste es <span class="math inline">\mathop{\mathrm{LM}}= n R^2_{aux}</span>: el número de observaciones multiplicado por el <span class="math inline">R^2</span> de la regresión auxiliar.</p></li>
 </ul>
 </section>
 <section id="regla-de-decisión" class="level3">
 <h3 class="anchored" data-anchor-id="regla-de-decisión">Regla de decisión</h3>
-<p>Si la hipótesis nula que impone <span class="math inline">\(q\)</span> restricciones es correcta:</p>
+<p>Si la hipótesis nula que impone <span class="math inline">q</span> restricciones es correcta:</p>
 <ul>
-<li><p>El estadístico <span class="math inline">\(\mathop{\mathrm{LM}}\)</span> se distribuye asintóticamente como una <span class="math inline">\(\chi^2\)</span> con <span class="math inline">\(q\)</span> grados de libertad: <span class="math display">\[
-  n R^2_{aux} \stackrel{\mathclap[\scriptstyle]{\mathrm{a}}}{\sim}\chi^2_q.
-\]</span></p></li>
-<li><p>Una versión alternativa del contraste utiliza un estadístico <span class="math inline">\(F\)</span> para contrastar restricciones de exclusión en la regresión auxiliar.</p></li>
+<li><p>El estadístico <span class="math inline">\mathop{\mathrm{LM}}</span> se distribuye asintóticamente como una <span class="math inline">\chi^2</span> con <span class="math inline">q</span> grados de libertad: <span class="math display">
+  n R^2_{aux} \stackrel{\mathrm{a}}{\sim}\chi^2_q.
+</span></p></li>
+<li><p>Una versión alternativa del contraste utiliza un estadístico <span class="math inline">F</span> para contrastar restricciones de exclusión en la regresión auxiliar.</p></li>
 </ul>
 </section>
 <section id="contrastes-de-razón-de-verosimilitudes" class="level3">
 <h3 class="anchored" data-anchor-id="contrastes-de-razón-de-verosimilitudes">Contrastes de razón de verosimilitudes</h3>
 <ul>
-<li><p>Se pueden interpretar como una generalización del contraste <span class="math inline">\(F\)</span>.</p></li>
+<li><p>Se pueden interpretar como una generalización del contraste <span class="math inline">F</span>.</p></li>
 <li><p>Requieren la estimación del modelo restringido y del modelo no restringido.</p></li>
 <li><p>Son útiles cuando en modelos no lineales que se estiman con métodos diferentes a MCO.</p></li>
 </ul>
@@ -695,12 +739,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./mcrl.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ts-part.html" class="pagination-link">
-        <span class="nav-page-text">Regresión con datos de series temporales</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./het.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

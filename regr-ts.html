@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ec1027-guide - 8&nbsp; Regresión con series temporales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./autocorr.html" rel="next">
+<link href="./ols-ts.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ts-part.html">Regresión con datos de series temporales</a></li><li class="breadcrumb-item"><a href="./regr-ts.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">ec1027-guide</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./cs-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de corte transversal</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mcrl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./asymp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./het.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lpm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./other-cs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forma funcional y problemas con los datos</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./ts-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de series temporales</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ols-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regr-ts.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocorr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#selección-del-número-de-retardos" id="toc-selección-del-número-de-retardos" class="nav-link active" data-scroll-target="#selección-del-número-de-retardos"><span class="header-section-number">8.1</span> Selección del número de retardos</a>
+  <ul class="collapse">
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#selección-de-retardos" id="toc-selección-de-retardos" class="nav-link" data-scroll-target="#selección-de-retardos">Selección de retardos</a></li>
+  <li><a href="#selección-de-modelos" id="toc-selección-de-modelos" class="nav-link" data-scroll-target="#selección-de-modelos">Selección de modelos</a></li>
+  <li><a href="#contrastes-f" id="toc-contrastes-f" class="nav-link" data-scroll-target="#contrastes-f">Contrastes F</a></li>
+  <li><a href="#criterios-de-información" id="toc-criterios-de-información" class="nav-link" data-scroll-target="#criterios-de-información">Criterios de información</a></li>
+  <li><a href="#algunos-criterios-de-información" id="toc-algunos-criterios-de-información" class="nav-link" data-scroll-target="#algunos-criterios-de-información">Algunos criterios de información</a></li>
+  <li><a href="#comparación-entre-criterios" id="toc-comparación-entre-criterios" class="nav-link" data-scroll-target="#comparación-entre-criterios">Comparación entre criterios</a></li>
+  </ul></li>
+  <li><a href="#regresión-espuria" id="toc-regresión-espuria" class="nav-link" data-scroll-target="#regresión-espuria"><span class="header-section-number">8.2</span> Regresión espuria</a>
+  <ul class="collapse">
+  <li><a href="#regresión-espuria-en-cortes-transversales" id="toc-regresión-espuria-en-cortes-transversales" class="nav-link" data-scroll-target="#regresión-espuria-en-cortes-transversales">Regresión espuria en cortes transversales</a></li>
+  <li><a href="#regresión-espuria-en-series-temporales" id="toc-regresión-espuria-en-series-temporales" class="nav-link" data-scroll-target="#regresión-espuria-en-series-temporales">Regresión espuria en series temporales</a></li>
+  <li><a href="#tipos-de-tendencia" id="toc-tipos-de-tendencia" class="nav-link" data-scroll-target="#tipos-de-tendencia">Tipos de tendencia</a></li>
+  <li><a href="#tendencias-deterministas" id="toc-tendencias-deterministas" class="nav-link" data-scroll-target="#tendencias-deterministas">Tendencias deterministas</a></li>
+  <li><a href="#regresión-y-tendencias-lineales" id="toc-regresión-y-tendencias-lineales" class="nav-link" data-scroll-target="#regresión-y-tendencias-lineales">Regresión y tendencias lineales</a></li>
+  <li><a href="#tendencias-estocásticas" id="toc-tendencias-estocásticas" class="nav-link" data-scroll-target="#tendencias-estocásticas">Tendencias estocásticas</a></li>
+  <li><a href="#paseo-aleatorio-con-deriva" id="toc-paseo-aleatorio-con-deriva" class="nav-link" data-scroll-target="#paseo-aleatorio-con-deriva">Paseo aleatorio con deriva</a></li>
+  <li><a href="#raíces-unitarias" id="toc-raíces-unitarias" class="nav-link" data-scroll-target="#raíces-unitarias">Raíces unitarias</a></li>
+  <li><a href="#raíces-unitarias-tendencias-estocásticas-y-procesos-i1" id="toc-raíces-unitarias-tendencias-estocásticas-y-procesos-i1" class="nav-link" data-scroll-target="#raíces-unitarias-tendencias-estocásticas-y-procesos-i1">Raíces unitarias, tendencias estocásticas y procesos I(1)</a></li>
+  <li><a href="#regresión-espuria-y-tendencias-estocásticas" id="toc-regresión-espuria-y-tendencias-estocásticas" class="nav-link" data-scroll-target="#regresión-espuria-y-tendencias-estocásticas">Regresión espuria y tendencias estocásticas</a></li>
+  <li><a href="#regresión-con-variables-con-tendencias" id="toc-regresión-con-variables-con-tendencias" class="nav-link" data-scroll-target="#regresión-con-variables-con-tendencias">Regresión con variables con tendencias</a></li>
+  </ul></li>
+  <li><a href="#contrastes-de-raíz-unitaria" id="toc-contrastes-de-raíz-unitaria" class="nav-link" data-scroll-target="#contrastes-de-raíz-unitaria"><span class="header-section-number">8.3</span> Contrastes de raíz unitaria</a>
+  <ul class="collapse">
+  <li><a href="#modelo-ar1" id="toc-modelo-ar1" class="nav-link" data-scroll-target="#modelo-ar1">Modelo AR(1)</a></li>
+  <li><a href="#estacionariedad-y-dependencia-débil" id="toc-estacionariedad-y-dependencia-débil" class="nav-link" data-scroll-target="#estacionariedad-y-dependencia-débil">Estacionariedad y dependencia débil</a></li>
+  <li><a href="#detección-de-raíces-unitarias" id="toc-detección-de-raíces-unitarias" class="nav-link" data-scroll-target="#detección-de-raíces-unitarias">Detección de raíces unitarias</a></li>
+  <li><a href="#regresión-de-dickey-fuller" id="toc-regresión-de-dickey-fuller" class="nav-link" data-scroll-target="#regresión-de-dickey-fuller">Regresión de Dickey-Fuller</a></li>
+  <li><a href="#contraste-boldsymbolt-de-dickey-fuller" id="toc-contraste-boldsymbolt-de-dickey-fuller" class="nav-link" data-scroll-target="#contraste-boldsymbolt-de-dickey-fuller">Contraste <span class="math inline">\boldsymbol{t}</span> de Dickey-Fuller</a></li>
+  <li><a href="#distribución-del-contraste-de-dickey-fuller" id="toc-distribución-del-contraste-de-dickey-fuller" class="nav-link" data-scroll-target="#distribución-del-contraste-de-dickey-fuller">Distribución del contraste de Dickey-Fuller</a></li>
+  <li><a href="#contraste-de-dickey-fuller-aumentado" id="toc-contraste-de-dickey-fuller-aumentado" class="nav-link" data-scroll-target="#contraste-de-dickey-fuller-aumentado">Contraste de Dickey-Fuller aumentado</a></li>
+  <li><a href="#selección-de-retardos-1" id="toc-selección-de-retardos-1" class="nav-link" data-scroll-target="#selección-de-retardos-1">Selección de retardos</a></li>
+  <li><a href="#tendencias" id="toc-tendencias" class="nav-link" data-scroll-target="#tendencias">Tendencias</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
+  </ul></li>
+  <li><a href="#otras-cuestiones" id="toc-otras-cuestiones" class="nav-link" data-scroll-target="#otras-cuestiones"><span class="header-section-number">8.4</span> Otras cuestiones</a>
+  <ul class="collapse">
+  <li><a href="#multiplicadores-de-largo-plazo-i" id="toc-multiplicadores-de-largo-plazo-i" class="nav-link" data-scroll-target="#multiplicadores-de-largo-plazo-i">Multiplicadores de largo plazo (I)</a></li>
+  <li><a href="#multiplicadores-de-largo-plazo-y-ii" id="toc-multiplicadores-de-largo-plazo-y-ii" class="nav-link" data-scroll-target="#multiplicadores-de-largo-plazo-y-ii">Multiplicadores de largo plazo (y II)</a></li>
+  <li><a href="#cambio-estructural" id="toc-cambio-estructural" class="nav-link" data-scroll-target="#cambio-estructural">Cambio estructural</a></li>
+  <li><a href="#contraste-de-chow-i" id="toc-contraste-de-chow-i" class="nav-link" data-scroll-target="#contraste-de-chow-i">Contraste de Chow (I)</a></li>
+  <li><a href="#contraste-de-chow-y-ii" id="toc-contraste-de-chow-y-ii" class="nav-link" data-scroll-target="#contraste-de-chow-y-ii">Contraste de Chow (y II)</a></li>
+  <li><a href="#estacionalidad" id="toc-estacionalidad" class="nav-link" data-scroll-target="#estacionalidad">Estacionalidad</a></li>
+  <li><a href="#variables-ficticias-estacionales" id="toc-variables-ficticias-estacionales" class="nav-link" data-scroll-target="#variables-ficticias-estacionales">Variables ficticias estacionales</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="selección-del-número-de-retardos" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="selección-del-número-de-retardos"><span class="header-section-number">8.1</span> Selección del número de retardos</h2>
+<section id="introducción" class="level3">
+<h3 class="anchored" data-anchor-id="introducción">Introducción</h3>
+<ul>
+<li><p>Modelo ARDL(<span class="math inline">p</span>, <span class="math inline">q</span>): <span class="math display">
+   y_t = \alpha + \rho_1 y_{t-1} + \dots + \rho_p y_{t-p} +
+   \beta_0 z_t + \beta_1 z_{t-1} + \dots + \beta_q z_{t-q} +
+   u_t
+</span></p></li>
+<li><p>¿Cuántos retardos hay que incluir en una regresión de series temporales?</p></li>
+<li><p>¿Qué métodos podemos usar para determinar el número de retardos?</p></li>
+</ul>
+</section>
+<section id="selección-de-retardos" class="level3">
+<h3 class="anchored" data-anchor-id="selección-de-retardos">Selección de retardos</h3>
+<ul>
+<li><p>Si se selecciona un número demasiado pequeño de retardos se omite información relevante.</p></li>
+<li><p>Con un número demasiado grande se pierde eficiencia.</p></li>
+</ul>
+</section>
+<section id="selección-de-modelos" class="level3">
+<h3 class="anchored" data-anchor-id="selección-de-modelos">Selección de modelos</h3>
+<ul>
+<li><p>Se establece un número máximo de retardos a considerar procurando que sea lo suficientemente elevado para capturar todas las relaciones dinámicas.</p></li>
+<li><p>Se estiman modelos de regresión con diferente número de retardos. <strong>La muestra debe ser la misma en todas las regresiones</strong>.</p></li>
+<li><p>Se utiliza algún indicador para determinar cuál es el modelo más adecuado.</p></li>
+</ul>
+</section>
+<section id="contrastes-f" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-f">Contrastes F</h3>
+<ul>
+<li><p>Se contrasta la significación del último retardo usando un contraste <span class="math inline">F</span>. Si el último retardo no es significativo, se estima un nuevo modelo sin ese retardo y se vuelve a repetir el proceso.</p></li>
+<li><p>Los contrastes <span class="math inline">F</span> no están diseñados para seleccionar modelos y el procedimiento tiende a seleccionar más retardos de los necesarios.</p></li>
+</ul>
+</section>
+<section id="criterios-de-información" class="level3">
+<h3 class="anchored" data-anchor-id="criterios-de-información">Criterios de información</h3>
+<ul>
+<li><p>En la selección de modelos se suele usar algún <strong>criterio de información</strong>: medidas de la bondad del ajuste que incluyen una penalización creciente en el número de parámetros.</p></li>
+<li><p>Se estiman todos los modelos con diferente número de retardos que se quieran comparar. Se selecciona aquel con un menor valor del criterio de información.</p></li>
+</ul>
+</section>
+<section id="algunos-criterios-de-información" class="level3">
+<h3 class="anchored" data-anchor-id="algunos-criterios-de-información">Algunos criterios de información</h3>
+<ul>
+<li><p><strong>AIC</strong>: criterio de información de Akaike. En los modelos de regresión puede escribirse como: <span class="math display">
+   \text{AIC} = C + T \log\left(\frac{\mathop{\mathrm{SCR}}}{T}\right) + 2 (K + 1),
+</span> donde <span class="math inline">C</span> es una constante, <span class="math inline">T</span> es el número de observaciones, <span class="math inline">\mathop{\mathrm{SCR}}</span> es la suma del cuadrado de los residuos y <span class="math inline">K</span> es el número de parámetros.</p></li>
+<li><p><strong>BIC</strong>: criterio de información bayesiano. <span class="math display">
+   \text{BIC} = C + T \log\left(\frac{\mathop{\mathrm{SCR}}}{T}\right) + \log(T) (K + 1).
+</span> Se diferencia del AIC en que penaliza más el número de parámetros.</p></li>
+</ul>
+</section>
+<section id="comparación-entre-criterios" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-entre-criterios">Comparación entre criterios</h3>
+<ul>
+<li><p>Usando el BIC se obtiene una estimación consistente del número de retardos.</p></li>
+<li><p>El AIC produce resultados similares aunque suele seleccionar un número de retardos mayor que el BIC.</p></li>
+</ul>
+</section>
+</section>
+<section id="regresión-espuria" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="regresión-espuria"><span class="header-section-number">8.2</span> Regresión espuria</h2>
+<section id="regresión-espuria-en-cortes-transversales" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-espuria-en-cortes-transversales">Regresión espuria en cortes transversales</h3>
+<ul>
+<li><p>Dos variables, <span class="math inline">y</span> y <span class="math inline">x</span>, parecen estar muy correlacionadas y la regresión de <span class="math inline">y</span> sobre <span class="math inline">x</span> produce resultados significativos.</p></li>
+<li><p>La relación entre <span class="math inline">y</span> y <span class="math inline">x</span> desaparece cuando se incluye una tercera variable, <span class="math inline">z</span>, en la regresión.</p></li>
+<li><p>La regresión de <span class="math inline">y</span> sobre <span class="math inline">x</span> es un ejemplo de <strong>regresión espuria</strong>.</p></li>
+</ul>
+</section>
+<section id="regresión-espuria-en-series-temporales" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-espuria-en-series-temporales">Regresión espuria en series temporales</h3>
+<ul>
+<li><p>La omisión de variables relevantes también puede producir regresiones espurias con datos de series temporales.</p></li>
+<li><p>Además, es muy frecuente encontrar regresiones espurias cuando se incluyen series temporales con tendencia o que sean altamente persistentes.</p></li>
+</ul>
+</section>
+<section id="tipos-de-tendencia" class="level3">
+<h3 class="anchored" data-anchor-id="tipos-de-tendencia">Tipos de tendencia</h3>
+<p>La <strong>tendencia</strong> de una serie temporal está constituida por movimientos persistentes a largo plazo. Distinguimos entre:</p>
+<ul>
+<li><p>Tendecias deterministas.</p></li>
+<li><p>Tendencias estocásticas.</p></li>
+</ul>
+</section>
+<section id="tendencias-deterministas" class="level3">
+<h3 class="anchored" data-anchor-id="tendencias-deterministas">Tendencias deterministas</h3>
+<ul>
+<li><p>Una <strong>tendencia determinista</strong> es una función no aleatoria del tiempo.</p></li>
+<li><p>Por ejemplo, si <span class="math inline">y_t</span> fluctúa alrededor de una <strong>tendencia lineal</strong>: <span class="math display">
+  y_t = \alpha + \delta t + u_t,
+</span> donde <span class="math inline">u_t</span> es un proceso estacionario y débilmente dependiente.</p></li>
+</ul>
+</section>
+<section id="regresión-y-tendencias-lineales" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-y-tendencias-lineales">Regresión y tendencias lineales</h3>
+<ul>
+<li><p>Regresión con dos variables, <span class="math inline">y_t</span> y <span class="math inline">x_t</span>, las cuales no están relacionadas pero presentan <strong>tendencias lineales</strong>: <span class="math display">
+  y_t = \alpha + \beta x_t + u_t.
+</span></p></li>
+<li><p>A pesar de que <span class="math inline">\beta = 0</span>, la regresión anterior con frecuencia indicaría que existe una relación significativa entre las dos variables.</p></li>
+<li><p>Para evitar encontrar regresiones espurias, es aconsejable introducir una tendencia lineal en la regresión anterior: <span class="math display">
+  y_t = \alpha + \beta x_t + \delta t + u_t.
+</span></p></li>
+</ul>
+</section>
+<section id="tendencias-estocásticas" class="level3">
+<h3 class="anchored" data-anchor-id="tendencias-estocásticas">Tendencias estocásticas</h3>
+<ul>
+<li><p>Una <strong>tendencia estocástica</strong> es aleatoria y varía con el paso del tiempo.</p></li>
+<li><p>El ejemplo más simple de una variable con tendencia estocástica es el <strong>paseo aleatorio</strong>: <span class="math display">
+  y_t = y_{t-1} + e_t.
+</span></p></li>
+<li><p>Un paseo aleatorio alterna episodios de crecimiento durante varios periodos, con episodios donde la tendencia es decreciente.</p></li>
+</ul>
+</section>
+<section id="paseo-aleatorio-con-deriva" class="level3">
+<h3 class="anchored" data-anchor-id="paseo-aleatorio-con-deriva">Paseo aleatorio con deriva</h3>
+<ul>
+<li><p>Algunas series tienen una tendencia de crecimiento sostenido a largo plazo.</p></li>
+<li><p><strong>Paseo aleatorio con deriva</strong>: <span class="math display">
+  y_t = \delta + y_{t-1} + e_t.
+</span></p></li>
+<li><p>Si el parámetro <span class="math inline">\delta &gt; 0</span> la variable <span class="math inline">y_t</span> tiende a crecer con el paso del tiempo.</p></li>
+</ul>
+</section>
+<section id="raíces-unitarias" class="level3">
+<h3 class="anchored" data-anchor-id="raíces-unitarias">Raíces unitarias</h3>
+<ul>
+<li><p>Un paseo aleatorio es un caso especial de un AR(1), donde <span class="math inline">\rho = 1</span>, incumpliendo la condición de estabilidad.</p></li>
+<li><p>La condición de estabilidad de procesos AR(<em>p</em>) es más complicada y depende del valor de las raíces del <strong>polinomio característico</strong>: un polinomio de orden <span class="math inline">p</span> formado a partir de los coeficientes del proceso AR(<em>p</em>).</p></li>
+<li><p>Cuando una de esas raíces sea igual a 1, se dice que el proceso tiene una <strong>raíz unitaria</strong>.</p></li>
+</ul>
+</section>
+<section id="raíces-unitarias-tendencias-estocásticas-y-procesos-i1" class="level3">
+<h3 class="anchored" data-anchor-id="raíces-unitarias-tendencias-estocásticas-y-procesos-i1">Raíces unitarias, tendencias estocásticas y procesos I(1)</h3>
+<ul>
+<li><p>Si un proceso tiene una raíz unitaria entonces tiene una tendencia estocástica.</p></li>
+<li><p>La diferencia de un proceso con una raíz unitaria no tiene tendencia estocástica.</p></li>
+<li><p>Un proceso con una raíz unitaria es un proceso integrado de orden 1, I(1).</p></li>
+</ul>
+</section>
+<section id="regresión-espuria-y-tendencias-estocásticas" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-espuria-y-tendencias-estocásticas">Regresión espuria y tendencias estocásticas</h3>
+<ul>
+<li><p>Si <span class="math inline">y_t</span> y <span class="math inline">x_t</span> son procesos I(1), la regresión de <span class="math inline">y_t</span> sobre <span class="math inline">x_t</span> mostrará con mucha frecuencia resultados muy significativos aunque, en realidad, las dos variables no estén relacionadas.</p></li>
+<li><p>Cuando <span class="math inline">y_t</span> y <span class="math inline">x_t</span> están relacionadas y tienen una tendencia común, los residuos de la regresión de <span class="math inline">y_t</span> sobre <span class="math inline">x_t</span> deberían comportarse como un proceso I(0). En ese caso las variables están <strong>cointegradas</strong>.</p></li>
+</ul>
+</section>
+<section id="regresión-con-variables-con-tendencias" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-con-variables-con-tendencias">Regresión con variables con tendencias</h3>
+<ul>
+<li><p>Debemos añadir un término de tendencia lineal cuando alguna de las variables presente tendencias deterministas.</p></li>
+<li><p>Las variables con raíz unitaria deben ser diferenciadas para eliminar las tendencias estocásticas.</p></li>
+<li><p>La posibilidad de que haya relaciones de cointegración entre variables I(1) no se explorará en este curso.</p></li>
+</ul>
+</section>
+</section>
+<section id="contrastes-de-raíz-unitaria" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="contrastes-de-raíz-unitaria"><span class="header-section-number">8.3</span> Contrastes de raíz unitaria</h2>
+<section id="modelo-ar1" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-ar1">Modelo AR(1)</h3>
+<p>El modelo autorregresivo de orden 1, AR(1), puede escribirse como: <span class="math display">
+  y_t = \alpha + \rho y_{t-1} + u_t,
+</span> donde <span class="math inline">u_t</span> es un ruido blanco.</p>
+</section>
+<section id="estacionariedad-y-dependencia-débil" class="level3">
+<h3 class="anchored" data-anchor-id="estacionariedad-y-dependencia-débil">Estacionariedad y dependencia débil</h3>
+<p>Las propiedades dinámicas del proceso AR(1) dependen del valor de <span class="math inline">\rho</span>:</p>
+<ul>
+<li><p><span class="math inline">y_t</span> es estacionario y débilmente dependiente si <span class="math inline">\lvert\rho\rvert &lt; 1</span>.</p></li>
+<li><p><span class="math inline">y_t</span> es un paseo aleatorio si <span class="math inline">\rho = 1</span>.</p></li>
+<li><p><span class="math inline">y_t</span> tiene un comportamiento explosivo cuando <span class="math inline">\rho &gt; 1</span>.</p></li>
+</ul>
+</section>
+<section id="detección-de-raíces-unitarias" class="level3">
+<h3 class="anchored" data-anchor-id="detección-de-raíces-unitarias">Detección de raíces unitarias</h3>
+<ul>
+<li><p>Los estadísticos habituales no pueden usarse para contrastar la existencia de una raíz unitaria.</p></li>
+<li><p>La estimación MCO del parámetro <span class="math inline">\rho</span> está sesgada hacia abajo y el sesgo aumenta cuanto más cerca está <span class="math inline">\rho</span> de 1.</p></li>
+<li><p>La distribución del estadístico <span class="math inline">t = (\hat{\rho} - 1)/\mathop{\mathrm{et}}({\rho})</span> es muy diferente de una <span class="math inline">t_{T-2}</span> o de una normal cuando <span class="math inline">\rho</span> tiene un valor cercano a 1.</p></li>
+</ul>
+</section>
+<section id="regresión-de-dickey-fuller" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-de-dickey-fuller">Regresión de Dickey-Fuller</h3>
+<ul>
+<li><p>Proceso AR(1): <span class="math display">
+  y_t = \alpha + \rho y_{t-1} + u_t,
+</span></p></li>
+<li><p>Restando <span class="math inline">y_{t-1}</span> de ambos lados: <span class="math display">
+  \mathop{}\!\Delta y_t = \alpha + (\rho - 1) y_{t-1} + u_t.
+</span></p></li>
+<li><p>Dickey y Fuller plantean contrastar la existencia de una raíz unitaria estimado por MCO el modelo de regresión: <span class="math display">
+  \mathop{}\!\Delta y_t = \alpha + \beta y_{t-1} + u_t.
+</span></p></li>
+</ul>
+</section>
+<section id="contraste-boldsymbolt-de-dickey-fuller" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-boldsymbolt-de-dickey-fuller">Contraste <span class="math inline">\boldsymbol{t}</span> de Dickey-Fuller</h3>
+<ul>
+<li><p>Regresión de Dickey y Fuller: <span class="math display">
+  \mathop{}\!\Delta y_t = \alpha + \beta y_{t-1} + u_t.
+</span></p></li>
+<li><p>La existencia de una raíz unitaria implica que <span class="math inline">\beta = 0</span>.</p></li>
+<li><p>Dickey y Fuller proponen contrastar la hipótesis nula <span class="math inline">H_0\!: \beta = 0</span> frente a la alternativa <span class="math inline">H_1\!: \beta &lt; 0</span> mediante un contraste <span class="math inline">t</span> de una cola.</p></li>
+</ul>
+</section>
+<section id="distribución-del-contraste-de-dickey-fuller" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-del-contraste-de-dickey-fuller">Distribución del contraste de Dickey-Fuller</h3>
+<ul>
+<li><p><strong>No debe usarse un contraste <span class="math inline">\boldsymbol{t}</span> robusto a heteroscedasticidad</strong>. Bajo la hipótesis nula el contraste <span class="math inline">t</span> tradicional es válido aunque haya heteroscedasticidad.</p></li>
+<li><p>El contraste de Dickey-Fuller bajo la hipótesis nula no sigue una distribución normal ni ninguna otra distribución convencional.</p></li>
+<li><p>Los valores críticos del contraste se obtienen mediante simulación:</p>
+<table class="table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"><span class="math inline">10\%</span></th>
+<th style="text-align: right;"><span class="math inline">5\%</span></th>
+<th style="text-align: right;"><span class="math inline">1\%</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline">-2{,}57</span></td>
+<td style="text-align: right;"><span class="math inline">-2{,}86</span></td>
+<td style="text-align: right;"><span class="math inline">-3{,}43</span></td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+</section>
+<section id="contraste-de-dickey-fuller-aumentado" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-dickey-fuller-aumentado">Contraste de Dickey-Fuller aumentado</h3>
+<ul>
+<li><p>Si <span class="math inline">y_t</span> sigue un proceso AR(<em>p</em>) es necesario incluir <span class="math inline">p-1</span> retardos de <span class="math inline">\mathop{}\!\Delta y_t</span> en la regresión de Dickey-Fuller para obtener un contraste válido: <span class="math display">
+  \mathop{}\!\Delta y_t =
+  \alpha + \beta y_{t-1} + \phi_1 \mathop{}\!\Delta y_{t-1}  +
+  \phi_2 \mathop{}\!\Delta y_{t-2} + \dots  + \phi_{p-1} \mathop{}\!\Delta y_{t-p+1}  + u_t.
+</span></p></li>
+<li><p>Los valores críticos de Dickey-Fuller son válidos para contrastar <span class="math inline">H_0\!: \beta = 0</span> frente a <span class="math inline">H_1\!: \beta &lt; 0</span>.</p></li>
+</ul>
+</section>
+<section id="selección-de-retardos-1" class="level3">
+<h3 class="anchored" data-anchor-id="selección-de-retardos-1">Selección de retardos</h3>
+<ul>
+<li><p>Es conveniente utilizar un criterio de información para seleccionar el número de retardos a incluir en la regresión de Dickey-Fuller.</p></li>
+<li><p>Para el constraste de Dickey-Fuller aumentado es preferible el AIC.</p></li>
+</ul>
+</section>
+<section id="tendencias" class="level3">
+<h3 class="anchored" data-anchor-id="tendencias">Tendencias</h3>
+<ul>
+<li><p>Si <span class="math inline">y_t</span> presenta una tendencia creciente o decreciente es aconsejable añadir una tendencia lineal a la regresión de Dickey-Fuller: <span class="math display">
+  \mathop{}\!\Delta y_t =
+  \alpha + \delta t + \beta y_{t-1} + \phi_1 \mathop{}\!\Delta y_{t-1}  +
+  \phi_2 \mathop{}\!\Delta y_{t-2} + \dots  + \phi_{p-1} \mathop{}\!\Delta y_{t-p+1}  + u_t.
+</span></p></li>
+<li><p>Cuando se incluye una tendencia, la distribución del contraste de Dickey-Fuller es diferente y es necesario usar otros valores críticos:</p>
+<table class="table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"><span class="math inline">10\%</span></th>
+<th style="text-align: right;"><span class="math inline">5\%</span></th>
+<th style="text-align: right;"><span class="math inline">1\%</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline">-3{,}12</span></td>
+<td style="text-align: right;"><span class="math inline">-3{,}41</span></td>
+<td style="text-align: right;"><span class="math inline">-3{,}96</span></td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+</section>
+<section id="resumen" class="level3">
+<h3 class="anchored" data-anchor-id="resumen">Resumen</h3>
+<ul>
+<li><p>Mediante la inspección de gráficos, se determina si es necesario incluir una tendencia lineal en la regresión de Dickey-Fuller.</p></li>
+<li><p>Se selecciona el número de retardos en la regresión de Dickey-Fuller de acuerdo con el valor del AIC.</p></li>
+<li><p>Se rechaza la presencia de raíz unitaria cuando el valor del cociente <span class="math inline">t</span> para <span class="math inline">H_0\!: \beta = 0</span> frente a <span class="math inline">H_1\!: \beta &lt; 0</span> es menor que los valores críticos de la siguiente tabla:</p>
+<table class="table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tendencia lineal</th>
+<th style="text-align: right;"><span class="math inline">10\%</span></th>
+<th style="text-align: right;"><span class="math inline">5\%</span></th>
+<th style="text-align: right;"><span class="math inline">1\%</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;"><span class="math inline">-2{,}57</span></td>
+<td style="text-align: right;"><span class="math inline">-2{,}86</span></td>
+<td style="text-align: right;"><span class="math inline">-3{,}43</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sí</td>
+<td style="text-align: right;"><span class="math inline">-3{,}12</span></td>
+<td style="text-align: right;"><span class="math inline">-3{,}41</span></td>
+<td style="text-align: right;"><span class="math inline">-3{,}96</span></td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+</section>
+</section>
+<section id="otras-cuestiones" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="otras-cuestiones"><span class="header-section-number">8.4</span> Otras cuestiones</h2>
+<section id="multiplicadores-de-largo-plazo-i" class="level3">
+<h3 class="anchored" data-anchor-id="multiplicadores-de-largo-plazo-i">Multiplicadores de largo plazo (I)</h3>
+<ul>
+<li><p>Modelo con tres retardos de la variable explicativa: <span class="math display">
+   y_t = \alpha + \beta_0 z_t + \beta_1 z_{t-1} + \beta_2 z_{t-2} + \beta_3 z_{t-3} + u_t.
+</span></p></li>
+<li><p>Es posible reescribir el modelo anterior como: <span class="math display">
+   y_t = \alpha + \delta_0 \mathop{}\!\Delta z_t + \delta_1 \mathop{}\!\Delta z_{t-1} +
+   \delta_2 \mathop{}\!\Delta z_{t-2} + \delta_3 z_{t-3} + u_t
+</span></p></li>
+<li><p>Con la regresión anterior se estiman directamente los multiplicadores acumulativos y de largo plazo y sus correspondientes errores típicos.</p></li>
+</ul>
+</section>
+<section id="multiplicadores-de-largo-plazo-y-ii" class="level3">
+<h3 class="anchored" data-anchor-id="multiplicadores-de-largo-plazo-y-ii">Multiplicadores de largo plazo (y II)</h3>
+<ul>
+<li><p>Modelo ARDL(<span class="math inline">p</span>, <span class="math inline">q</span>): <span class="math display">
+   y_t = \alpha + \rho_1 y_{t-1} + \dots + \rho_p y_{t-p} +
+   \beta_0 z_t + \beta_1 z_{t-1} + \dots + \beta_q z_{t-q} +
+   u_t
+</span></p></li>
+<li><p>El multiplicador de largo plazo es una función no lineal de los parámetros: <span class="math display">
+   \delta_{\text{LP}} = \frac{\sum_{j=0}^q \beta_j}{1 - \sum_{j=1}^p \rho_j}.
+</span></p></li>
+<li><p>En este curso no se tratará como obtener los multiplicadores acumulativos y sus errores típicos en modelos ARDL.</p></li>
+</ul>
+</section>
+<section id="cambio-estructural" class="level3">
+<h3 class="anchored" data-anchor-id="cambio-estructural">Cambio estructural</h3>
+<ul>
+<li><p>Se produce un <strong>cambio estructural</strong> cuando los parámetros del modelo de regresión no permanecen constantes a lo largo de todo el periodo muestral.</p></li>
+<li><p>Consideraremos el caso de que los parámetros sólo cambian una vez y que conocemos en qué periodo se produce el cambio.</p></li>
+</ul>
+</section>
+<section id="contraste-de-chow-i" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-chow-i">Contraste de Chow (I)</h3>
+<ul>
+<li><p>Modelo de regresión original: <span class="math display">
+  y_t = \beta_0 + \beta_1 x_{1t}  + \beta_2 x_{2t} + u_t.
+</span></p></li>
+<li><p>El <strong>contraste de Chow</strong> puede usarse cuando se sospecha de la existencia de un cambio estructural en el periodo <span class="math inline">\tau</span>, <span class="math inline">1 &lt; \tau  &lt; T</span>.</p></li>
+<li><p>Creamos una variable ficticia <span class="math inline">D_t</span> que toma el valor 0 en todos los periodos anteriores a <span class="math inline">\tau</span> y valor 1 a partir del periodo <span class="math inline">\tau</span>. <span class="math display">
+  D_t =
+  \begin{cases}
+    0 &amp; \text{si $t &lt; \tau$}, \\
+    1 &amp; \text{si $t \geq \tau$}.
+  \end{cases}
+</span></p></li>
+</ul>
+</section>
+<section id="contraste-de-chow-y-ii" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-chow-y-ii">Contraste de Chow (y II)</h3>
+<ul>
+<li><p>Añadimos al modelo original la variable <span class="math inline">D_t</span> así como interacciones de <span class="math inline">D_t</span> con todas las variables explicativas: <span class="math display">
+  y_t = \beta_0 + \beta_1 x_{1t}  + \beta_2 x_{2t} +
+  \theta_0 D_t + \theta_1 D_t x_{1t}   + \theta_2 D_t x_{2t}
+  + u_t.
+</span></p></li>
+<li><p>Bajo la hipótesis nula de que no se ha producido cambio estructural, los términos que se han añadido no son significativos.</p></li>
+<li><p>Puede usarse un estadístico <span class="math inline">F</span> para contrastar <span class="math inline">\theta_0 = \theta_1  = \theta_2 = 0</span>.</p></li>
+<li><p>En caso que se rechace la hipótesis nula, el parámetro <span class="math inline">\theta_j</span> muestra como ha cambiado el parámetro <span class="math inline">\beta_j</span> a partir del periodo <span class="math inline">\tau</span>.</p></li>
+</ul>
+</section>
+<section id="estacionalidad" class="level3">
+<h3 class="anchored" data-anchor-id="estacionalidad">Estacionalidad</h3>
+<ul>
+<li><p>Con datos trimestrales y mensuales es usual observar variables con fuertes oscilaciones estacionales.</p></li>
+<li><p>Una forma simple de controlar este tipo de variación es incluir <strong>variables ficticias estacionales</strong> en el modelo de regresión.</p></li>
+</ul>
+</section>
+<section id="variables-ficticias-estacionales" class="level3">
+<h3 class="anchored" data-anchor-id="variables-ficticias-estacionales">Variables ficticias estacionales</h3>
+<ul>
+<li><p>Con datos trimestrales podemos definir cuatro variables ficticias estacionales <span class="math inline">D^s_t</span>, <span class="math inline">s = 1, \dots, 4</span>: <span class="math display">
+  D^s_t =
+  \begin{cases}
+    0 &amp; \text{si $t$ corresponde al trimestre $s$}, \\
+    1 &amp; \text{en caso contrario}.
+  \end{cases}
+</span></p></li>
+<li><p>En la regresión sólo incluiríamos tres de estas variables. De otra forma, incurriríamos en la <strong>trampa de la variables ficticias</strong>.</p></li>
+<li><p>De la misma manera, para controlar la estacionalidad en datos mensuales incluiríamos un conjunto de 11 variables ficticias estacionales.</p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ols-ts.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./autocorr.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

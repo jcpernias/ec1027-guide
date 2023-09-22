@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>ec1027-guide - Bibliografía</title>
+<title>ec1027-guide - 4&nbsp; El modelo de probabilidad lineal</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,26 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -49,7 +30,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./autocorr.html" rel="prev">
+<link href="./other-cs.html" rel="next">
+<link href="./het.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -80,6 +62,22 @@ div.csl-indent {
   }
 }</script>
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 </head>
 
@@ -92,7 +90,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./references.html">Bibliografía</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cs-part.html">Regresión con datos de corte transversal</a></li><li class="breadcrumb-item"><a href="./lpm.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -152,7 +150,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./lpm.html" class="sidebar-item-text sidebar-link">
+  <a href="./lpm.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></span></a>
   </div>
 </li>
@@ -201,7 +199,7 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link active">
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bibliografía</span></a>
   </div>
 </li>
@@ -211,14 +209,43 @@ div.csl-indent {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">4.1</span> Introducción</a>
+  <ul class="collapse">
+  <li><a href="#eventos-cuantitativos" id="toc-eventos-cuantitativos" class="nav-link" data-scroll-target="#eventos-cuantitativos">Eventos cuantitativos</a></li>
+  <li><a href="#variable-dependiente-binaria" id="toc-variable-dependiente-binaria" class="nav-link" data-scroll-target="#variable-dependiente-binaria">Variable dependiente binaria</a></li>
+  <li><a href="#modelo-de-regresión-múltiple" id="toc-modelo-de-regresión-múltiple" class="nav-link" data-scroll-target="#modelo-de-regresión-múltiple">Modelo de regresión múltiple</a></li>
+  <li><a href="#probabilidad-condicional" id="toc-probabilidad-condicional" class="nav-link" data-scroll-target="#probabilidad-condicional">Probabilidad condicional</a></li>
+  <li><a href="#interpretación-de-los-parámetros" id="toc-interpretación-de-los-parámetros" class="nav-link" data-scroll-target="#interpretación-de-los-parámetros">Interpretación de los parámetros</a></li>
+  <li><a href="#ventajas-y-limitaciones" id="toc-ventajas-y-limitaciones" class="nav-link" data-scroll-target="#ventajas-y-limitaciones">Ventajas y limitaciones</a></li>
+  </ul></li>
+  <li><a href="#estimación-por-mco" id="toc-estimación-por-mco" class="nav-link" data-scroll-target="#estimación-por-mco"><span class="header-section-number">4.2</span> Estimación por MCO</a>
+  <ul class="collapse">
+  <li><a href="#estimación" id="toc-estimación" class="nav-link" data-scroll-target="#estimación">Estimación</a></li>
+  <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción">Predicción</a></li>
+  <li><a href="#bondad-del-ajuste" id="toc-bondad-del-ajuste" class="nav-link" data-scroll-target="#bondad-del-ajuste">Bondad del ajuste</a></li>
+  <li><a href="#insesgadez-y-consistencia" id="toc-insesgadez-y-consistencia" class="nav-link" data-scroll-target="#insesgadez-y-consistencia">Insesgadez y consistencia</a></li>
+  <li><a href="#heteroscedasticidad" id="toc-heteroscedasticidad" class="nav-link" data-scroll-target="#heteroscedasticidad">Heteroscedasticidad</a></li>
+  <li><a href="#uso-de-mco" id="toc-uso-de-mco" class="nav-link" data-scroll-target="#uso-de-mco">Uso de MCO</a></li>
+  </ul></li>
+  <li><a href="#estimación-eficiente" id="toc-estimación-eficiente" class="nav-link" data-scroll-target="#estimación-eficiente"><span class="header-section-number">4.3</span> Estimación eficiente</a>
+  <ul class="collapse">
+  <li><a href="#varianza-del-término-de-error" id="toc-varianza-del-término-de-error" class="nav-link" data-scroll-target="#varianza-del-término-de-error">Varianza del término de error</a></li>
+  <li><a href="#mínimos-cuadrados-ponderados-factibles" id="toc-mínimos-cuadrados-ponderados-factibles" class="nav-link" data-scroll-target="#mínimos-cuadrados-ponderados-factibles">Mínimos Cuadrados Ponderados Factibles</a></li>
+  <li><a href="#limitaciones" id="toc-limitaciones" class="nav-link" data-scroll-target="#limitaciones">Limitaciones</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Bibliografía</h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></h1>
 </div>
 
 
@@ -233,11 +260,177 @@ div.csl-indent {
 
 </header>
 
-<div id="refs" role="list" style="display: none">
+<section id="introducción" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">4.1</span> Introducción</h2>
+<section id="eventos-cuantitativos" class="level3">
+<h3 class="anchored" data-anchor-id="eventos-cuantitativos">Eventos cuantitativos</h3>
+<p>¿Es posible usar el modelo de regresión para analizar los determinantes de <strong>eventos cuantitativos</strong>?</p>
+</section>
+<section id="variable-dependiente-binaria" class="level3">
+<h3 class="anchored" data-anchor-id="variable-dependiente-binaria">Variable dependiente binaria</h3>
+<p>La variable dependiente sólo toma dos valores:</p>
+<ul>
+<li><p><span class="math inline">y_i = 1</span>, cuando se produce el evento que estamos estudiando;</p></li>
+<li><p><span class="math inline">y_i = 0</span>, cuando no se produce.</p></li>
+</ul>
+</section>
+<section id="modelo-de-regresión-múltiple" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-de-regresión-múltiple">Modelo de regresión múltiple</h3>
+<ul>
+<li><p>Modelo de regresión: <span class="math display">
+    y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + u.
+</span></p></li>
+<li><p>¿Cuál es la interpretación de los parámetros cuando <span class="math inline">y</span> es una variable binaria?</p></li>
+</ul>
+</section>
+<section id="probabilidad-condicional" class="level3">
+<h3 class="anchored" data-anchor-id="probabilidad-condicional">Probabilidad condicional</h3>
+<ul>
+<li><p>Si <span class="math inline">y</span> es una variable binaria, su esperanza condicional coincide con la probabilidad condicional de que <span class="math inline">y = 1</span>: <span class="math display">
+    \mathop{\mathrm{E}}(y | \boldsymbol{x}) = \Pr(y = 1 | \boldsymbol{x}).
+</span></p></li>
+<li><p><strong>Modelo de probabilidad lineal</strong> (MLP): la probabilidad de que <span class="math inline">y</span> tome el valor <span class="math inline">1</span> es una función lineal en los parámetros <span class="math inline">\beta_0, \beta_1, \dots, \beta_k</span>: <span class="math display">
+    \Pr(y = 1 | \boldsymbol{x}) = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k.
+</span></p></li>
+</ul>
+</section>
+<section id="interpretación-de-los-parámetros" class="level3">
+<h3 class="anchored" data-anchor-id="interpretación-de-los-parámetros">Interpretación de los parámetros</h3>
+<ul>
+<li><p>Podemos expresar el MLP como: <span class="math display">
+    p(\boldsymbol{x}) = \beta_0 + \beta_1 x_1  + \dots + \beta_k x_k,
+</span> donde <span class="math inline">p(\boldsymbol{x})</span> es una forma abreviada de escribir <span class="math inline">\Pr(y = 1 | \boldsymbol{x})</span>.</p></li>
+<li><p>La pendiente <span class="math inline">\beta_j</span> mide cómo cambia la probabilidad de que <span class="math inline">y = 1</span> cuando cambia <span class="math inline">x_j</span>, manteniendo inalteradas el resto de explicativas: <span class="math display">
+    \beta_j = \frac{\Delta p(\boldsymbol{x})}{\Delta x_j}.
+</span></p></li>
+</ul>
+</section>
+<section id="ventajas-y-limitaciones" class="level3">
+<h3 class="anchored" data-anchor-id="ventajas-y-limitaciones">Ventajas y limitaciones</h3>
+<ul>
+<li><p>En comparación a otros modelos más sofisticados, el MLP:</p>
+<ul>
+<li><p>es más fácil de usar e interpretar;</p></li>
+<li><p>proporciona resultados similares cuando las variables explicativas toman valores cercanos a sus medias.</p></li>
+</ul></li>
+<li><p>El MLP puede generar probabilidades fuera del intervalo <span class="math inline">(0, 1)</span>, por lo que no es adecuado para algunas aplicaciones.</p></li>
+</ul>
+</section>
+</section>
+<section id="estimación-por-mco" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="estimación-por-mco"><span class="header-section-number">4.2</span> Estimación por MCO</h2>
+<section id="estimación" class="level3">
+<h3 class="anchored" data-anchor-id="estimación">Estimación</h3>
+<ul>
+<li><p>Los parámetros del MLP se pueden estimar por MCO.</p></li>
+<li><p>Los residuos se obtienen de la forma usual: <span class="math display">
+    \hat{u}_i = y_i - \hat{\beta}_0 - \hat{\beta}_1 x_{1i} - \dots - \hat{\beta}_k x_{ki}.
+</span></p></li>
+</ul>
+</section>
+<section id="predicción" class="level3">
+<h3 class="anchored" data-anchor-id="predicción">Predicción</h3>
+<ul>
+<li><p>Las predicciones de MCO se pueden interpretar como estimaciones de la probabilidad de <span class="math inline">y = 1</span>: <span class="math display">
+    \hat{p}_i = \hat{\beta}_0 + \hat{\beta}_1 x_{1i} + \dots + \hat{\beta}_k x_{ki}
+</span></p></li>
+<li><p>Para predecir la variable dependiente se suele usar la regla: <span class="math display">
+    \tilde{y}_{i} =
+    \begin{cases}
+      1 &amp; \text{si $\hat{p}_{i} \geq 0.5$}, \\
+      0 &amp; \text{si $\hat{p}_{i} &lt; 0.5$}.
+    \end{cases}
+</span></p></li>
+</ul>
+</section>
+<section id="bondad-del-ajuste" class="level3">
+<h3 class="anchored" data-anchor-id="bondad-del-ajuste">Bondad del ajuste</h3>
+<p>Tabulación cruzada de <span class="math inline">y</span> e <span class="math inline">\tilde{y}</span>:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;"><span class="math inline">\tilde{y}_i = 0</span></th>
+<th style="text-align: center;"><span class="math inline">\tilde{y}_i = 1</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">y_i = 0</span></td>
+<td style="text-align: center;"><span class="math inline">n_{00}</span></td>
+<td style="text-align: center;"><span class="math inline">n_{01}</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">y_i = 1</span></td>
+<td style="text-align: center;"><span class="math inline">n_{10}</span></td>
+<td style="text-align: center;"><span class="math inline">n_{11}</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>Número de predicciones correctas: <span class="math inline">n_{00} + n_{11}</span>.</p></li>
+<li><p>Número total de observaciones: <span class="math inline">n = n_{00} + n_{01} + n_{10} + n_{11}</span>.</p></li>
+<li><p><strong>Porcentaje de predicciones correctas</strong>: <span class="math inline">100 (n_{00} + n_{11}) / n</span>. Se usa para medir la bondad del ajuste de modelos con variable dependiente binaria.</p></li>
+</ul>
+</section>
+<section id="insesgadez-y-consistencia" class="level3">
+<h3 class="anchored" data-anchor-id="insesgadez-y-consistencia">Insesgadez y consistencia</h3>
+<ul>
+<li><p>Los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong> no son incompatibles con que la variable dependiente sea binaria.</p></li>
+<li><p>Si se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong> el estimador MCO es insesgado y consistente.</p></li>
+</ul>
+</section>
+<section id="heteroscedasticidad" class="level3">
+<h3 class="anchored" data-anchor-id="heteroscedasticidad">Heteroscedasticidad</h3>
+<ul>
+<li><p>En el modelo lineal de probabilidad se incumple el supuesto <strong>RLM.5</strong>.</p></li>
+<li><p>La varianza condicional del término de error puede escribirse como: <span class="math display">
+    \mathop{\mathrm{var}}(u|\boldsymbol{x}) = p(\boldsymbol{x})\big(1 - p(\boldsymbol{x})\big).
+</span></p></li>
+</ul>
+</section>
+<section id="uso-de-mco" class="level3">
+<h3 class="anchored" data-anchor-id="uso-de-mco">Uso de MCO</h3>
+<ul>
+<li><p>Los parámetros del modelo lineal de probabilidad pueden estimarse por MCO.</p></li>
+<li><p>Para contrastar hipótesis o construir intervalos de confianza es necesario usar estimaciones robustas a heteroscedasticidad de <span class="math inline">\mathop{\mathrm{var}}(\hat{\beta})</span>.</p></li>
+</ul>
+</section>
+</section>
+<section id="estimación-eficiente" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="estimación-eficiente"><span class="header-section-number">4.3</span> Estimación eficiente</h2>
+<section id="varianza-del-término-de-error" class="level3">
+<h3 class="anchored" data-anchor-id="varianza-del-término-de-error">Varianza del término de error</h3>
+<ul>
+<li><p>La varianza condicional del término de error del MLP puede escribirse como: <span class="math display">
+    \mathop{\mathrm{var}}(u_i|\boldsymbol{x_i}) = p(\boldsymbol{x_i})\big(1 - p(\boldsymbol{x_i})\big).
+</span></p></li>
+<li><p>La probabilidad <span class="math inline">p_i = p(\boldsymbol{x_i})</span> depende de parámetros desconocidos.</p></li>
+<li><p>Se podría aplicar MCPF si se reemplaza <span class="math inline">p_i</span> por una estimación, <span class="math inline">\hat{p}_i</span>.</p></li>
+</ul>
+</section>
+<section id="mínimos-cuadrados-ponderados-factibles" class="level3">
+<h3 class="anchored" data-anchor-id="mínimos-cuadrados-ponderados-factibles">Mínimos Cuadrados Ponderados Factibles</h3>
+<ul>
+<li><p>Si se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong>, MCO es un estimador insesgado.</p></li>
+<li><p>Con las estimaciones <span class="math inline">\hat{\beta}_0, \hat{\beta}_1, \dots, \hat{\beta}_k</span> se estima la probabilidad de que <span class="math inline">y = 1</span>: <span class="math display">
+    \hat{p}_i = \hat{\beta}_0 + \hat{\beta}_1 x_{1i} + \dots + \hat{\beta}_k x_{ki}
+</span></p></li>
+<li><p>Los pesos para obtener el estimador MCPF son <span class="math inline">w_i = 1 / \hat{h}_i</span>, donde: <span class="math display">
+    \hat{h}_i = \hat{p}_i (1 - \hat{p}_i).
+</span></p></li>
+</ul>
+</section>
+<section id="limitaciones" class="level3">
+<h3 class="anchored" data-anchor-id="limitaciones">Limitaciones</h3>
+<ul>
+<li><p>El estimador MCPF no puede obtenerse si para algunas observaciones se obtiene <span class="math inline">\hat{p}_i \leq 0</span> o <span class="math inline">\hat{p}_i \geq 1</span>.</p></li>
+<li><p>Aunque se han propuesto alternativas, en esos casos es mejor usar MCO y contrastes de hipótesis robustos a heteroscedasticidad.</p></li>
+</ul>
 
-</div>
 
-
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -475,11 +668,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./autocorr.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></span>
+      <a href="./het.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./other-cs.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forma funcional y problemas con los datos</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

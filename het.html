@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ec1027-guide - 3&nbsp; Heteroscedasticidad</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./lpm.html" rel="next">
+<link href="./asymp.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cs-part.html">Regresión con datos de corte transversal</a></li><li class="breadcrumb-item"><a href="./het.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">ec1027-guide</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./cs-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de corte transversal</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mcrl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./asymp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./het.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lpm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./other-cs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forma funcional y problemas con los datos</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./ts-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de series temporales</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ols-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regr-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocorr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">3.1</span> Introducción</a>
+  <ul class="collapse">
+  <li><a href="#homoscedasticidad-i" id="toc-homoscedasticidad-i" class="nav-link" data-scroll-target="#homoscedasticidad-i">Homoscedasticidad (I)</a></li>
+  <li><a href="#homoscedasticidad-y-ii" id="toc-homoscedasticidad-y-ii" class="nav-link" data-scroll-target="#homoscedasticidad-y-ii">Homoscedasticidad (y II)</a></li>
+  <li><a href="#heteroscedasticidad-i" id="toc-heteroscedasticidad-i" class="nav-link" data-scroll-target="#heteroscedasticidad-i">Heteroscedasticidad (I)</a></li>
+  <li><a href="#heteroscedasticidad-y-ii" id="toc-heteroscedasticidad-y-ii" class="nav-link" data-scroll-target="#heteroscedasticidad-y-ii">Heteroscedasticidad (y II)</a></li>
+  </ul></li>
+  <li><a href="#consecuencias-de-la-heteroscedasticidad" id="toc-consecuencias-de-la-heteroscedasticidad" class="nav-link" data-scroll-target="#consecuencias-de-la-heteroscedasticidad"><span class="header-section-number">3.2</span> Consecuencias de la heteroscedasticidad</a>
+  <ul class="collapse">
+  <li><a href="#insesgadez-y-consistencia" id="toc-insesgadez-y-consistencia" class="nav-link" data-scroll-target="#insesgadez-y-consistencia">Insesgadez y consistencia</a></li>
+  <li><a href="#varianza-de-los-estimadores-de-mco" id="toc-varianza-de-los-estimadores-de-mco" class="nav-link" data-scroll-target="#varianza-de-los-estimadores-de-mco">Varianza de los estimadores de MCO</a></li>
+  <li><a href="#contraste-de-hipótesis" id="toc-contraste-de-hipótesis" class="nav-link" data-scroll-target="#contraste-de-hipótesis">Contraste de hipótesis</a></li>
+  <li><a href="#eficiencia" id="toc-eficiencia" class="nav-link" data-scroll-target="#eficiencia">Eficiencia</a></li>
+  </ul></li>
+  <li><a href="#inferencia-robusta-a-heteroscedasticidad" id="toc-inferencia-robusta-a-heteroscedasticidad" class="nav-link" data-scroll-target="#inferencia-robusta-a-heteroscedasticidad"><span class="header-section-number">3.3</span> Inferencia robusta a heteroscedasticidad</a>
+  <ul class="collapse">
+  <li><a href="#errores-típicos-robustos" id="toc-errores-típicos-robustos" class="nav-link" data-scroll-target="#errores-típicos-robustos">Errores típicos robustos</a></li>
+  <li><a href="#varianza-del-estimador-mco" id="toc-varianza-del-estimador-mco" class="nav-link" data-scroll-target="#varianza-del-estimador-mco">Varianza del estimador MCO</a></li>
+  <li><a href="#estimación-robusta-de-mathopmathrmvarhatbeta" id="toc-estimación-robusta-de-mathopmathrmvarhatbeta" class="nav-link" data-scroll-target="#estimación-robusta-de-mathopmathrmvarhatbeta">Estimación robusta de <span class="math inline">\mathop{\mathrm{var}}(\hat{\beta})</span></a></li>
+  <li><a href="#contrastes-t-robustos" id="toc-contrastes-t-robustos" class="nav-link" data-scroll-target="#contrastes-t-robustos">Contrastes <span class="math inline">t</span> robustos</a></li>
+  <li><a href="#contrastes-de-hipótesis-lineales" id="toc-contrastes-de-hipótesis-lineales" class="nav-link" data-scroll-target="#contrastes-de-hipótesis-lineales">Contrastes de hipótesis lineales</a></li>
+  </ul></li>
+  <li><a href="#contrastes-de-heteroscedasticidad" id="toc-contrastes-de-heteroscedasticidad" class="nav-link" data-scroll-target="#contrastes-de-heteroscedasticidad"><span class="header-section-number">3.4</span> Contrastes de heteroscedasticidad</a>
+  <ul class="collapse">
+  <li><a href="#por-qué" id="toc-por-qué" class="nav-link" data-scroll-target="#por-qué">¿Por qué?</a></li>
+  <li><a href="#contrastes-de-especificación" id="toc-contrastes-de-especificación" class="nav-link" data-scroll-target="#contrastes-de-especificación">Contrastes de especificación</a></li>
+  <li><a href="#contrastes-de-heteroscedasticidad-1" id="toc-contrastes-de-heteroscedasticidad-1" class="nav-link" data-scroll-target="#contrastes-de-heteroscedasticidad-1">Contrastes de heteroscedasticidad</a></li>
+  <li><a href="#enfoque-general" id="toc-enfoque-general" class="nav-link" data-scroll-target="#enfoque-general">Enfoque general</a></li>
+  <li><a href="#regresión-auxiliar" id="toc-regresión-auxiliar" class="nav-link" data-scroll-target="#regresión-auxiliar">Regresión auxiliar</a></li>
+  <li><a href="#contraste-de-breusch-pagan" id="toc-contraste-de-breusch-pagan" class="nav-link" data-scroll-target="#contraste-de-breusch-pagan">Contraste de Breusch-Pagan</a></li>
+  <li><a href="#contraste-de-breusch-pagan-ejemplo" id="toc-contraste-de-breusch-pagan-ejemplo" class="nav-link" data-scroll-target="#contraste-de-breusch-pagan-ejemplo">Contraste de Breusch-Pagan: ejemplo</a></li>
+  <li><a href="#contraste-de-white-motivación" id="toc-contraste-de-white-motivación" class="nav-link" data-scroll-target="#contraste-de-white-motivación">Contraste de White: motivación</a></li>
+  <li><a href="#contraste-de-white" id="toc-contraste-de-white" class="nav-link" data-scroll-target="#contraste-de-white">Contraste de White</a></li>
+  <li><a href="#contraste-de-white-ejemplo" id="toc-contraste-de-white-ejemplo" class="nav-link" data-scroll-target="#contraste-de-white-ejemplo">Contraste de White: ejemplo</a></li>
+  <li><a href="#contraste-de-white-alternativas-i" id="toc-contraste-de-white-alternativas-i" class="nav-link" data-scroll-target="#contraste-de-white-alternativas-i">Contraste de White: alternativas (I)</a></li>
+  <li><a href="#contraste-de-white-alternativas-y-ii" id="toc-contraste-de-white-alternativas-y-ii" class="nav-link" data-scroll-target="#contraste-de-white-alternativas-y-ii">Contraste de White: alternativas (y II)</a></li>
+  </ul></li>
+  <li><a href="#ineficiencia-de-mco" id="toc-ineficiencia-de-mco" class="nav-link" data-scroll-target="#ineficiencia-de-mco"><span class="header-section-number">3.5</span> Ineficiencia de MCO</a>
+  <ul class="collapse">
+  <li><a href="#heteroscedasticidad" id="toc-heteroscedasticidad" class="nav-link" data-scroll-target="#heteroscedasticidad">Heteroscedasticidad</a></li>
+  <li><a href="#ineficiencia-de-mco-1" id="toc-ineficiencia-de-mco-1" class="nav-link" data-scroll-target="#ineficiencia-de-mco-1">Ineficiencia de MCO</a></li>
+  <li><a href="#estimación-eficiente" id="toc-estimación-eficiente" class="nav-link" data-scroll-target="#estimación-eficiente">Estimación eficiente</a></li>
+  <li><a href="#mínimos-cuadrados-generalizados" id="toc-mínimos-cuadrados-generalizados" class="nav-link" data-scroll-target="#mínimos-cuadrados-generalizados">Mínimos Cuadrados Generalizados</a></li>
+  </ul></li>
+  <li><a href="#mínimos-cuadrados-ponderados" id="toc-mínimos-cuadrados-ponderados" class="nav-link" data-scroll-target="#mínimos-cuadrados-ponderados"><span class="header-section-number">3.6</span> Mínimos cuadrados ponderados</a>
+  <ul class="collapse">
+  <li><a href="#modelo-de-regresión" id="toc-modelo-de-regresión" class="nav-link" data-scroll-target="#modelo-de-regresión">Modelo de regresión</a></li>
+  <li><a href="#heteroscedasticidad-1" id="toc-heteroscedasticidad-1" class="nav-link" data-scroll-target="#heteroscedasticidad-1">Heteroscedasticidad</a></li>
+  <li><a href="#heteroscedasticidad-conocida" id="toc-heteroscedasticidad-conocida" class="nav-link" data-scroll-target="#heteroscedasticidad-conocida">Heteroscedasticidad conocida</a></li>
+  <li><a href="#transformación-del-modelo" id="toc-transformación-del-modelo" class="nav-link" data-scroll-target="#transformación-del-modelo">Transformación del modelo</a></li>
+  <li><a href="#ejemplo" id="toc-ejemplo" class="nav-link" data-scroll-target="#ejemplo">Ejemplo</a></li>
+  <li><a href="#mínimos-cuadrados-ponderados-1" id="toc-mínimos-cuadrados-ponderados-1" class="nav-link" data-scroll-target="#mínimos-cuadrados-ponderados-1">Mínimos Cuadrados Ponderados</a></li>
+  <li><a href="#propiedades-de-mcp" id="toc-propiedades-de-mcp" class="nav-link" data-scroll-target="#propiedades-de-mcp">Propiedades de MCP</a></li>
+  <li><a href="#predicciones-y-residuos" id="toc-predicciones-y-residuos" class="nav-link" data-scroll-target="#predicciones-y-residuos">Predicciones y residuos</a></li>
+  <li><a href="#suma-ponderada-de-los-cuadrados-de-los-residuos" id="toc-suma-ponderada-de-los-cuadrados-de-los-residuos" class="nav-link" data-scroll-target="#suma-ponderada-de-los-cuadrados-de-los-residuos">Suma ponderada de los cuadrados de los residuos</a></li>
+  <li><a href="#bondad-del-ajuste" id="toc-bondad-del-ajuste" class="nav-link" data-scroll-target="#bondad-del-ajuste">Bondad del ajuste</a></li>
+  </ul></li>
+  <li><a href="#mínimos-cuadrados-ponderados-factibles" id="toc-mínimos-cuadrados-ponderados-factibles" class="nav-link" data-scroll-target="#mínimos-cuadrados-ponderados-factibles"><span class="header-section-number">3.7</span> Mínimos cuadrados ponderados factibles</a>
+  <ul class="collapse">
+  <li><a href="#heteroscedasticidad-desconocida" id="toc-heteroscedasticidad-desconocida" class="nav-link" data-scroll-target="#heteroscedasticidad-desconocida">Heteroscedasticidad desconocida</a></li>
+  <li><a href="#modelización-de-la-heteroscedasticidad" id="toc-modelización-de-la-heteroscedasticidad" class="nav-link" data-scroll-target="#modelización-de-la-heteroscedasticidad">Modelización de la heteroscedasticidad</a></li>
+  <li><a href="#estimación-de-h_i-i" id="toc-estimación-de-h_i-i" class="nav-link" data-scroll-target="#estimación-de-h_i-i">Estimación de <span class="math inline">h_i</span> (I)</a></li>
+  <li><a href="#estimación-de-h_i-y-ii" id="toc-estimación-de-h_i-y-ii" class="nav-link" data-scroll-target="#estimación-de-h_i-y-ii">Estimación de <span class="math inline">h_i</span> (y II)</a></li>
+  <li><a href="#mínimos-cuadrados-ponderados-factibles-1" id="toc-mínimos-cuadrados-ponderados-factibles-1" class="nav-link" data-scroll-target="#mínimos-cuadrados-ponderados-factibles-1">Mínimos Cuadrados Ponderados Factibles</a></li>
+  <li><a href="#propiedades-de-mcpf" id="toc-propiedades-de-mcpf" class="nav-link" data-scroll-target="#propiedades-de-mcpf">Propiedades de MCPF</a></li>
+  <li><a href="#especificaciones-alternativas" id="toc-especificaciones-alternativas" class="nav-link" data-scroll-target="#especificaciones-alternativas">Especificaciones alternativas</a></li>
+  </ul></li>
+  <li><a href="#otras-cuestiones" id="toc-otras-cuestiones" class="nav-link" data-scroll-target="#otras-cuestiones"><span class="header-section-number">3.8</span> Otras cuestiones</a>
+  <ul class="collapse">
+  <li><a href="#comparación-con-mco" id="toc-comparación-con-mco" class="nav-link" data-scroll-target="#comparación-con-mco">Comparación con MCO</a></li>
+  <li><a href="#inferencia-robusta" id="toc-inferencia-robusta" class="nav-link" data-scroll-target="#inferencia-robusta">Inferencia robusta</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introducción" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">3.1</span> Introducción</h2>
+<section id="homoscedasticidad-i" class="level3">
+<h3 class="anchored" data-anchor-id="homoscedasticidad-i">Homoscedasticidad (I)</h3>
+<div id="fig-het" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-het-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="het_files/figure-html/fig-het-1.png" class="img-fluid figure-img" data-ref-parent="fig-het" width="288"></p>
+<figcaption class="figure-caption">(a) Homoscedasticidad</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-het-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="het_files/figure-html/fig-het-2.png" class="img-fluid figure-img" data-ref-parent="fig-het" width="288"></p>
+<figcaption class="figure-caption">(b) Heteroscedasticidad</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figura&nbsp;3.1: Dispersión alrededor de la función de regresión poblacional</figcaption><p></p>
+</figure>
+</div>
+<p><strong>Homoscedasticidad</strong>. La dispersión alrededor de la función de regresión poblacional, FRP, es constante: <span class="math display">
+  \mathop{\mathrm{var}}(u_i | x_i) = \sigma^2.
+</span></p>
+</section>
+<section id="homoscedasticidad-y-ii" class="level3">
+<h3 class="anchored" data-anchor-id="homoscedasticidad-y-ii">Homoscedasticidad (y II)</h3>
+<div id="fig-het-shades" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-het-shades-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="het_files/figure-html/fig-het-shades-1.png" class="img-fluid figure-img" data-ref-parent="fig-het-shades" width="288"></p>
+<figcaption class="figure-caption">(a) Homoscedasticidad</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-het-shades-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="het_files/figure-html/fig-het-shades-2.png" class="img-fluid figure-img" data-ref-parent="fig-het-shades" width="288"></p>
+<figcaption class="figure-caption">(b) Heteroscedasticidad</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figura&nbsp;3.2: Dispersión alrededor de la función de regresión poblacional</figcaption><p></p>
+</figure>
+</div>
+<p><strong>Homoscedasticidad</strong>. Todas las observaciones son igual de informativas a la hora de determinar por donde pasa la FRP.</p>
+</section>
+<section id="heteroscedasticidad-i" class="level3">
+<h3 class="anchored" data-anchor-id="heteroscedasticidad-i">Heteroscedasticidad (I)</h3>
+<p><strong>Heteroscedasticidad</strong>. La dispersión alrededor de la FRP cambia con los valores de la explicativa: <span class="math display">
+  \mathop{\mathrm{var}}(u_i | x_i) = \sigma^2_i.
+</span></p>
+</section>
+<section id="heteroscedasticidad-y-ii" class="level3">
+<h3 class="anchored" data-anchor-id="heteroscedasticidad-y-ii">Heteroscedasticidad (y II)</h3>
+<p><strong>Heteroscedasticidad</strong>. Algunas observaciones contienen menos información para estimar la FRP.</p>
+</section>
+</section>
+<section id="consecuencias-de-la-heteroscedasticidad" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="consecuencias-de-la-heteroscedasticidad"><span class="header-section-number">3.2</span> Consecuencias de la heteroscedasticidad</h2>
+<section id="insesgadez-y-consistencia" class="level3">
+<h3 class="anchored" data-anchor-id="insesgadez-y-consistencia">Insesgadez y consistencia</h3>
+<ul>
+<li><p>La heteroscedasticidad no afecta al supuesto <strong>RLM.4</strong>.</p></li>
+<li><p>Si se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong>, el estimador MCO es insesgado y consistente aunque exista heteroscedasticidad.</p></li>
+</ul>
+</section>
+<section id="varianza-de-los-estimadores-de-mco" class="level3">
+<h3 class="anchored" data-anchor-id="varianza-de-los-estimadores-de-mco">Varianza de los estimadores de MCO</h3>
+<p>Cuando hay heteroscedasticidad, las fórmulas usuales de las varianzas de los estimadores de MCO, <span class="math inline">\mathop{\mathrm{var}}(\hat{\beta})</span>, no son válidas incluso en muestras grandes.</p>
+</section>
+<section id="contraste-de-hipótesis" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-hipótesis">Contraste de hipótesis</h3>
+<p>Cuando el término de error es heteroscedástico, los procedimientos habituales de contraste de hipótesis dejan de ser válidos incluso en muestras grandes.</p>
+</section>
+<section id="eficiencia" class="level3">
+<h3 class="anchored" data-anchor-id="eficiencia">Eficiencia</h3>
+<ul>
+<li><p>Con heteroscedasticidad, MCO no es el estimador lineal insesgado óptimo.</p></li>
+<li><p>Si se conoce el patrón de la heteroscedasticidad es posible construir estimadores más eficientes que MCO.</p></li>
+</ul>
+</section>
+</section>
+<section id="inferencia-robusta-a-heteroscedasticidad" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="inferencia-robusta-a-heteroscedasticidad"><span class="header-section-number">3.3</span> Inferencia robusta a heteroscedasticidad</h2>
+<section id="errores-típicos-robustos" class="level3">
+<h3 class="anchored" data-anchor-id="errores-típicos-robustos">Errores típicos robustos</h3>
+<p>Un procedimiento común con datos de corte transversal:</p>
+<ul>
+<li><p>Estimar los parámetros por MCO.</p></li>
+<li><p>Modificar el cálculo de los errores típicos de los estimadores para que sean válidos (asintóticamente) haya o no haya heteroscedasticidad.</p></li>
+</ul>
+</section>
+<section id="varianza-del-estimador-mco" class="level3">
+<h3 class="anchored" data-anchor-id="varianza-del-estimador-mco">Varianza del estimador MCO</h3>
+<ul>
+<li><p>Se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong> en el modelo de regresión simple: <span class="math display">
+  y_i = \beta_0 + \beta_1 x_i + u_i.
+</span></p></li>
+<li><p>Heteroscedasticidad: <span class="math display">
+  \mathop{\mathrm{var}}(u_{i} | x_{1i}) = \sigma^{2}_{i}.
+</span></p></li>
+<li><p>La varianza del estimador MCO es: <span class="math display">
+  \mathop{\mathrm{var}}(\hat{\beta}_{1}) = \frac{\sum(x_{i} - \bar{x})^{2}\sigma^2_{i}}{%
+    \Big[\sum(x_{i} - \bar{x})^{2}\Big]^{2}}.
+</span></p></li>
+</ul>
+</section>
+<section id="estimación-robusta-de-mathopmathrmvarhatbeta" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-robusta-de-mathopmathrmvarhatbeta">Estimación robusta de <span class="math inline">\mathop{\mathrm{var}}(\hat{\beta})</span></h3>
+<ul>
+<li><p><a href="https://en.wikipedia.org/wiki/Halbert_White">Halbert White</a> mostró que se puede obtener una estimación consistente de <span class="math inline">\mathop{\mathrm{var}}(\hat{\beta})</span> exista o no heteroscedasticidad: <span class="math display">
+  \widehat{\mathop{\mathrm{var}}}_R(\hat{\beta}_{1}) =
+  \frac{\sum(x_{i} - \bar{x})^{2} \hat{u}^2_i}{
+    \Big[\sum(x_{i} - \bar{x})^{2}\Big]^{2}}.
+</span></p></li>
+<li><p>Se han descrito alternativas a la propuesta original de White que son equivalentes asintóticamente pero que, bajo ciertas condiciones, son superiores en muestras pequeñas.</p></li>
+</ul>
+</section>
+<section id="contrastes-t-robustos" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-t-robustos">Contrastes <span class="math inline">t</span> robustos</h3>
+<p>Un estadístico asintóticamente válido para contrastar la hipótesis nula <span class="math inline">\beta_j = b</span> se construye con la estimación de MCO, <span class="math inline">\hat{\beta}_j</span>, y el error típico robusto a heteroscedasticidad, <span class="math inline">\mathop{\mathrm{et}}_R(\hat{\beta}_j)</span>: <span class="math display">
+  t_{j} = \frac{\hat{\beta}_{j} - b}{\mathop{\mathrm{et}}_{R}(\hat{\beta}_{j})}.
+</span></p>
+</section>
+<section id="contrastes-de-hipótesis-lineales" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-hipótesis-lineales">Contrastes de hipótesis lineales</h3>
+<ul>
+<li><p>En presencia de heteroscedasticidad no es válido el estadístico <span class="math inline">F</span> que compara las <span class="math inline">\mathop{\mathrm{SCR}}</span> o los <span class="math inline">R^2</span> de los modelos restringido y no restringido. Tampoco existe una versión robusta de este contraste.</p></li>
+<li><p>Para contrastar restricciones lineales generales sobre los parámetros del modelo, utilizamos contrastes de Wald construidos con estimaciones de <span class="math inline">\mathop{\mathrm{var}}(\hat{\boldsymbol{\beta}})</span> robustas a heteroscedasticidad.</p></li>
+</ul>
+</section>
+</section>
+<section id="contrastes-de-heteroscedasticidad" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="contrastes-de-heteroscedasticidad"><span class="header-section-number">3.4</span> Contrastes de heteroscedasticidad</h2>
+<section id="por-qué" class="level3">
+<h3 class="anchored" data-anchor-id="por-qué">¿Por qué?</h3>
+<ul>
+<li><p>Si no hay grandes problemas de heteroscedasticidad no sería necesario usar errores típicos robustos.</p></li>
+<li><p>MCO es el estimador óptimo (en cierto sentido) cuando el término de error es homoscedástico. Si hay heteroscedasticidad quizá queramos emplear estimadores más eficientes que MCO.</p></li>
+</ul>
+</section>
+<section id="contrastes-de-especificación" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-especificación">Contrastes de especificación</h3>
+<ul>
+<li><p>Tratamos de verificar si se cumple alguno de los supuestos sobre el modelo poblacional.</p></li>
+<li><p>Frecuentemente la hipótesis nula afirma que no hay problemas de especificación y el estimador MCO tiene buenas propiedades.</p></li>
+<li><p>A menudo se utiliza un contraste de multiplicadores de Lagrange.</p></li>
+</ul>
+</section>
+<section id="contrastes-de-heteroscedasticidad-1" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-heteroscedasticidad-1">Contrastes de heteroscedasticidad</h3>
+<ul>
+<li><p>La hipótesis nula es el supuesto <strong>RLM.5</strong>: <span class="math display">
+  H_0\!: \mathop{\mathrm{var}}(u_i | x_{1i}, \dots, x_{ki}) = \sigma^2.
+</span></p></li>
+<li><p>Bajo la hipótesis alternativa hay heteroscedasticidad: <span class="math display">
+  H_1\!: \mathop{\mathrm{var}}(u_i | x_{1i}, \dots, x_{ki}) = \sigma^2_i.
+</span></p></li>
+</ul>
+</section>
+<section id="enfoque-general" class="level3">
+<h3 class="anchored" data-anchor-id="enfoque-general">Enfoque general</h3>
+<ul>
+<li><p>Podemos reescribir la hipótesis nula como: <span class="math display">
+  H_0\!: \mathop{\mathrm{E}}(u^2_i | x_{1i}, \dots, x_{ki}) = \sigma^2.
+</span></p></li>
+<li><p>Si no se cumple <span class="math inline">H_0</span> la esperanza condicional de <span class="math inline">u^2</span> depende de los regresores. Si la relación fuera lineal: <span class="math display">
+   u^2  = \delta_0   + \delta_1 x_{1} +  \dots + \delta_k x_{k} + \text{error}.
+</span></p></li>
+<li><p>Si observáramos <span class="math inline">u_i</span> podríamos contrastar homoscedasticidad por medio de la hipótesis nula: <span class="math display">
+  H_0\!: \delta_1 = \delta_2 = \dots = \delta_k = 0
+</span></p></li>
+</ul>
+</section>
+<section id="regresión-auxiliar" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-auxiliar">Regresión auxiliar</h3>
+<ul>
+<li><p>Los contrastes modernos de heteroscedasticidad utilizan una regresión auxiliar cuya variable dependiente es <span class="math inline">\hat{u}^2</span>.</p></li>
+<li><p>Cada contraste se diferencia por los <span class="math inline">k_{aux}</span> regresores que se incluyen.</p></li>
+<li><p>El estadístico <span class="math inline">\mathop{\mathrm{LM}}= n R^2_{aux}</span> se distribuye bajo la <span class="math inline">H_0</span> como una <span class="math inline">\chi^2_{k_{aux}}</span>.</p></li>
+<li><p>También puede usarse el contraste de significación de la regresión: <span class="math display">
+  F = \frac{R^2_{aux} / k_{aux}}{(1 - R^2_{aux}) / (n - k_{aux} - 1)}.
+</span></p></li>
+</ul>
+</section>
+<section id="contraste-de-breusch-pagan" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-breusch-pagan">Contraste de Breusch-Pagan</h3>
+<ul>
+<li><p>En la actualidad, se usa comúnmente la variante, debida a <a href="https://en.wikipedia.org/wiki/Roger_Koenker">Koenker</a>, del contraste que propusieron <a href="https://en.wikipedia.org/wiki/Trevor_S._Breusch">Breusch</a> y <a href="https://en.wikipedia.org/wiki/Adrian_Pagan">Pagan</a>.</p></li>
+<li><p>En la regresión auxiliar se usan como regresores las <span class="math inline">k</span> variables explicativas del modelo de regresión original.</p></li>
+</ul>
+</section>
+<section id="contraste-de-breusch-pagan-ejemplo" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-breusch-pagan-ejemplo">Contraste de Breusch-Pagan: ejemplo</h3>
+<ul>
+<li><p>Modelo de regresión con 3 explicativas: <span class="math display">
+  y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + \beta_3 x_{3i} + u_i.
+</span></p></li>
+<li><p>Después de estimar por MCO se obtienen los residuos <span class="math inline">\hat{u}</span>.</p></li>
+<li><p>Regresión auxiliar: <span class="math display">
+  \hat{u}^2_i = \delta_0 + \delta_1 x_{1i} + \delta_2 x_{2i} + \delta_3 x_{3i} + \text{error}.
+</span></p></li>
+<li><p>Se estima por MCO la regresión auxiliar y se calcula el estadístico <span class="math inline">\mathop{\mathrm{LM}}</span> o el estadístico <span class="math inline">F</span> de la regresión auxiliar.</p></li>
+</ul>
+</section>
+<section id="contraste-de-white-motivación" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-white-motivación">Contraste de White: motivación</h3>
+<p><a href="https://en.wikipedia.org/wiki/Halbert_White">White</a> demuestra que la heteroscedasticidad sólo es problemática si la varianza condicional de <span class="math inline">u</span> depende de:</p>
+<ul>
+<li><p>las variables explicativas: <span class="math inline">x_1, x_2, \dots, x_k</span>;</p></li>
+<li><p>sus cuadrados: <span class="math inline">x^2_1, x^2_2, \dots, x^2_k</span>; o</p></li>
+<li><p>sus productos cruzados: <span class="math inline">x_1 \cdot x_2, x_1 \cdot x_3, \dots</span></p></li>
+</ul>
+</section>
+<section id="contraste-de-white" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-white">Contraste de White</h3>
+<ul>
+<li><p>La regresión auxiliar incluye las explicativas, sus cuadrados y sus productos cruzados.</p></li>
+<li><p>Pueden aparecer problemas de multicolinealidad perfecta en la regresión auxiliar, especialmente si hay variables ficticias. En ese caso, habría que eliminar de la regresión auxiliar los regresores redundantes.</p></li>
+</ul>
+</section>
+<section id="contraste-de-white-ejemplo" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-white-ejemplo">Contraste de White: ejemplo</h3>
+<ul>
+<li><p>Modelo de regresión con 3 explicativas: <span class="math display">
+  y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + \beta_3 x_{3i} + u_i.
+</span></p></li>
+<li><p>Después de estimar por MCO se obtienen los residuos <span class="math inline">\hat{u}</span>.</p></li>
+<li><p>Regresión auxiliar: <span class="math display">
+\begin{align*}
+  \hat{u}^2_i
+  = \delta_0 &amp;+ \delta_1 x_{1i} + \delta_2 x_{2i} + \delta_3 x_{3i}
+  + \delta_4 x^{2}_{1i} + \delta_{5} x^{2}_{2i} + \delta_6 x^{2}_{3i} \\
+  &amp;+ \delta_7 x_{1i} x_{2i} + \delta_8 x_{1i} x_{3i} + \delta_9 x_{2i}x_{3i}
+   +  \text{error}.
+\end{align*}
+</span></p></li>
+<li><p>Se estima por MCO la regresión auxiliar y se calcula el estadístico <span class="math inline">\mathop{\mathrm{LM}}</span> o el estadístico <span class="math inline">F</span> de la regresión auxiliar.</p></li>
+</ul>
+</section>
+<section id="contraste-de-white-alternativas-i" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-white-alternativas-i">Contraste de White: alternativas (I)</h3>
+<ul>
+<li><p>En la regresión auxiliar del contraste de White hay un gran número de parámetros, lo que puede traducirse en baja <strong>potencia</strong> (capacidad de detectar heteroscedasticidad cuando realmente está presente).</p></li>
+<li><p>Para mitigar ese problema, en ocasiones se omiten los productos cruzados en la regresión auxiliar: <span class="math display">
+  \hat{u}^2_i
+  = \delta_0 + \delta_1 x_{1i} + \delta_2 x_{2i} + \delta_3 x_{3i}
+  + \delta_4 x^{2}_{1i} + \delta_{5} x^{2}_{2i} + \delta_6 x^{2}_{3i}
+    +  \text{error}.
+</span></p></li>
+</ul>
+</section>
+<section id="contraste-de-white-alternativas-y-ii" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-white-alternativas-y-ii">Contraste de White: alternativas (y II)</h3>
+<p><a href="https://en.wikipedia.org/wiki/Jeffrey_Wooldridge">Wooldridge</a> propone una variante del contraste de White donde sólo se incluyen en la regresión auxiliar las predicciones de MCO, <span class="math inline">\hat{y}</span>, y sus cuadrados, <span class="math inline">\hat{y}^2</span>: <span class="math display">
+  \hat{u}^2_i = \delta_0 + \delta_1 \hat{y}_{i} + \delta_2 \hat{y}^2_{i} +  \text{error}.
+</span></p>
+</section>
+</section>
+<section id="ineficiencia-de-mco" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="ineficiencia-de-mco"><span class="header-section-number">3.5</span> Ineficiencia de MCO</h2>
+<section id="heteroscedasticidad" class="level3">
+<h3 class="anchored" data-anchor-id="heteroscedasticidad">Heteroscedasticidad</h3>
+<p>Aquí iba la figura <a href="#fig-het-shades-1">Figura&nbsp;<span>3.2 (a)</span></a>.</p>
+<p>Con <strong>heteroscedasticidad</strong> la dispersión alrededor de la FRP cambia con los valores de la explicativa.</p>
+</section>
+<section id="ineficiencia-de-mco-1" class="level3">
+<h3 class="anchored" data-anchor-id="ineficiencia-de-mco-1">Ineficiencia de MCO</h3>
+<p>Aquí iba la figura <a href="#fig-het-shades-2">Figura&nbsp;<span>3.2 (b)</span></a>.</p>
+<p>La <strong>ineficiencia de MCO</strong> se debe a que se tratan por igual todas las observaciones, aunque no todas contienen información igual de precisa para estimar la FRP.</p>
+</section>
+<section id="estimación-eficiente" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-eficiente">Estimación eficiente</h3>
+<p><strong>Estimación eficiente</strong> con heteroscedasticidad:</p>
+<ul>
+<li><p>Se asigna un peso diferente a cada observación.</p></li>
+<li><p>Las observaciones más imprecisas reciben ponderaciones menores.</p></li>
+</ul>
+</section>
+<section id="mínimos-cuadrados-generalizados" class="level3">
+<h3 class="anchored" data-anchor-id="mínimos-cuadrados-generalizados">Mínimos Cuadrados Generalizados</h3>
+<p>El estimador eficiente cuando existe heteroscedasticidad pertenece a la familia de <strong>Mínimos Cuadrados Generalizados</strong> (MCG). Los estimadores MCG consisten en:</p>
+<ol type="1">
+<li><p><strong>Transformar el modelo</strong> de forma que se cumplan los supuestos de Gauss-Markov.</p></li>
+<li><p>Estimar el <strong>modelo transformado por MCO</strong>.</p></li>
+</ol>
+</section>
+</section>
+<section id="mínimos-cuadrados-ponderados" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="mínimos-cuadrados-ponderados"><span class="header-section-number">3.6</span> Mínimos cuadrados ponderados</h2>
+<section id="modelo-de-regresión" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-de-regresión">Modelo de regresión</h3>
+<p>El modelo de regresión cumple los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong>: <span class="math display">
+  y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i}
+  + \dots + \beta_k x_{ki} + u_i.
+</span></p>
+</section>
+<section id="heteroscedasticidad-1" class="level3">
+<h3 class="anchored" data-anchor-id="heteroscedasticidad-1">Heteroscedasticidad</h3>
+<ul>
+<li><p>La varianza del término de error puede expresarse como: <span class="math display">
+  \mathop{\mathrm{var}}(u_i | x_{1i}, x_{2i}, \dots, x_{ki}) =
+  \sigma^2 h(x_{1i}, x_{2i}, \dots, x_{ki}) =
+  \sigma^2 h(\boldsymbol{x}_i).
+</span></p></li>
+<li><p>La función <span class="math inline">h(\boldsymbol{x}_i)</span> toma siempre valores positivos y expresa la relación entre las explicativas y la varianza del término de error.</p></li>
+<li><p>La constante desconocida <span class="math inline">\sigma^2</span> es positiva.</p></li>
+</ul>
+</section>
+<section id="heteroscedasticidad-conocida" class="level3">
+<h3 class="anchored" data-anchor-id="heteroscedasticidad-conocida">Heteroscedasticidad conocida</h3>
+<ul>
+<li>Supondremos que la función <span class="math inline">h(\boldsymbol{x}_i)</span> <strong>es conocida</strong> y no depende de parámetros desconocidos.</li>
+</ul>
+</section>
+<section id="transformación-del-modelo" class="level3">
+<h3 class="anchored" data-anchor-id="transformación-del-modelo">Transformación del modelo</h3>
+<ul>
+<li><p>Si conocemos <span class="math inline">h_i = h(\boldsymbol{x}_i)</span> podemos dividir el modelo original por <span class="math inline">\sqrt{h_i}</span>.</p></li>
+<li><p>El término de error del modelo transformado, <span class="math inline">u^*_i = u_i / \sqrt{h_i}</span>, es homoscedástico: <span class="math display">
+\begin{align*}
+  \mathop{\mathrm{var}}(u_i^*| \boldsymbol{x}_i)
+  &amp;= \mathop{\mathrm{E}}\big((u_i/\sqrt{h_i})^2| \boldsymbol{x}_i\big) \\
+  &amp;= (1/h_{i})\mathop{\mathrm{E}}(u^2| \boldsymbol{x}_i) \\
+  &amp;= (1/h_i) \sigma^2 h_i \\
+  &amp;= \sigma^2.
+\end{align*}
+</span></p></li>
+</ul>
+</section>
+<section id="ejemplo" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo">Ejemplo</h3>
+<ul>
+<li><p>Modelo original. Si <span class="math inline">x_{2i}</span> siempre toma valores positivos y <span class="math inline">h(x_{1i}, x_{2i}) = x_{2i}</span>: <span class="math display">
+\begin{gather*}
+  y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + u_i, \\
+  \mathop{\mathrm{var}}(u_i | x_{1i}, x_{2i}) = \sigma^2 x_{2i}.
+\end{gather*}
+</span></p></li>
+<li><p>Modelo transformado: <span class="math display">
+\begin{gather*}
+  y^*_i = \beta_0 x^*_{0i} + \beta_1 x^*_{1i} + \beta_2 x^*_{2i} + u^*_i, \\
+  \mathop{\mathrm{var}}(u^*_i | x_{1i}, x_{2i}) = \sigma^2.
+\end{gather*}
+</span> donde <span class="math display">
+\begin{equation*}
+  y^*_i = y_i / \sqrt{x_{2i}},\quad
+  x^*_{0i} = 1 / \sqrt{x_{2i}},\quad
+  x^*_{1i} = x_{1i} / \sqrt{x_{2i}},\quad
+  x^*_{2i} = x_{2i} / \sqrt{x_{2i}}.
+\end{equation*}
+</span></p></li>
+</ul>
+</section>
+<section id="mínimos-cuadrados-ponderados-1" class="level3">
+<h3 class="anchored" data-anchor-id="mínimos-cuadrados-ponderados-1">Mínimos Cuadrados Ponderados</h3>
+<p>Estimador de <strong>Mínimos Cuadrados Ponderados</strong>, (MCP):</p>
+<ul>
+<li><p>La varianza del término de error es proporcional a <span class="math inline">h_i</span> que es una función conocida de variables observables: <span class="math display">
+  \mathop{\mathrm{var}}(u_i | x_{1i}, x_{2i}, \dots, x_{ki}) = \sigma^2 h_i.
+</span></p></li>
+<li><p>Se transforma el modelo dividiendo por <span class="math inline">\sqrt{h_i}</span>.</p></li>
+<li><p>Se estima el modelo transformado por MCO.</p></li>
+</ul>
+</section>
+<section id="propiedades-de-mcp" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades-de-mcp">Propiedades de MCP</h3>
+<ul>
+<li><p>Si se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong> el estimador MCP es insesgado y consistente.</p></li>
+<li><p>El modelo transformado cumple con los supuestos de Gauss-Markov, por lo que MCP es el estimador lineal insesgado óptimo.</p></li>
+</ul>
+</section>
+<section id="predicciones-y-residuos" class="level3">
+<h3 class="anchored" data-anchor-id="predicciones-y-residuos">Predicciones y residuos</h3>
+<ul>
+<li><p>El modelo transformado sólo sirve para obtener las estimaciones de MCP de los parámetros: <span class="math inline">\tilde{\beta}_0, \tilde{\beta}_1, \dots, \tilde{\beta}_k</span>.</p></li>
+<li><p>Para calcular las predicciones usamos las variables originales sin transformar: <span class="math display">
+  \tilde{y}_i = \tilde{\beta}_{0}  + \tilde{\beta}_{1} x_{1i} + \dots + \tilde{\beta}_{k} x_{ki}.
+</span></p></li>
+<li><p>También usamos las variables originales para calcular los residuos: <span class="math display">
+  \tilde{u}_i = y_i - \tilde{y}_i = y_i - \tilde{\beta}_{0}  - \tilde{\beta}_{1} x_{1i} - \dots - \tilde{\beta}_{k} x_{ki}.
+</span></p></li>
+</ul>
+</section>
+<section id="suma-ponderada-de-los-cuadrados-de-los-residuos" class="level3">
+<h3 class="anchored" data-anchor-id="suma-ponderada-de-los-cuadrados-de-los-residuos">Suma ponderada de los cuadrados de los residuos</h3>
+<ul>
+<li><p>El estimador MCP minimiza la suma <strong>ponderada de residuos al cuadrado</strong>: <span class="math display">
+  \sum_{i} \tilde{u}^{2}_{i}/h_{i} =
+  \sum_{i} \big(
+  y_{i} - \tilde{\beta}_{0} - \tilde{\beta}_{1} x_{1i} - \dots - \tilde{\beta}_{k} x_{ki}
+  \big)^{2}/h_{i}.
+</span></p></li>
+<li><p>El <strong>peso</strong> o <strong>ponderación</strong>, <span class="math inline">w_i</span>, que se asigna a cada observación es la inversa de <span class="math inline">h_i</span>, <span class="math inline">w_i = 1 / h_i</span>.</p></li>
+</ul>
+</section>
+<section id="bondad-del-ajuste" class="level3">
+<h3 class="anchored" data-anchor-id="bondad-del-ajuste">Bondad del ajuste</h3>
+<p>En general, no es posible comparar el <span class="math inline">R^2</span> obtenido con MCP y el obtenido con MCO:</p>
+<ul>
+<li><p>Diferentes programas informáticos calculan de forma diferente el <span class="math inline">R^2</span> de MCP y los distintos métodos no son equivalentes.</p></li>
+<li><p>Los <span class="math inline">R^2</span> que se calculan para MCP no se pueden interpretar como medidas de bondad del ajuste.</p></li>
+</ul>
+</section>
+</section>
+<section id="mínimos-cuadrados-ponderados-factibles" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="mínimos-cuadrados-ponderados-factibles"><span class="header-section-number">3.7</span> Mínimos cuadrados ponderados factibles</h2>
+<section id="heteroscedasticidad-desconocida" class="level3">
+<h3 class="anchored" data-anchor-id="heteroscedasticidad-desconocida">Heteroscedasticidad desconocida</h3>
+<ul>
+<li><p>Hasta ahora hemos supuesto que conocemos <span class="math inline">h_i</span>. ¿Qué podemos hacer en caso contrario?</p></li>
+<li><p>Aunque no conozcamos la forma exacta de la heteroscedasticidad, con frecuencia sabemos que está relacionada con algunas de las variables del modelo.</p></li>
+<li><p>El estimador de <strong>Mínimos Cuadrados Ponderados Factibles</strong> (MCPF) se obtiene de forma análoga al estimador de MCP salvo que utiliza una estimación de <span class="math inline">h_i</span> para obtener el modelo transformado.</p></li>
+</ul>
+</section>
+<section id="modelización-de-la-heteroscedasticidad" class="level3">
+<h3 class="anchored" data-anchor-id="modelización-de-la-heteroscedasticidad">Modelización de la heteroscedasticidad</h3>
+<p>Especificaremos un modelo para la varianza del término de error que dependa de variables observables y de parámetros desconocidos. Por ejemplo, podemos escribir: <span class="math display">
+  \mathop{\mathrm{var}}(u_i | \boldsymbol{x}_{i}) = \sigma^2 h(\boldsymbol{x}_{i})
+</span> donde <span class="math display">
+  h(\boldsymbol{x}_{i}) = \exp(\delta_{0} + \delta_{1} x_{1i} + \dots + \delta_{k} x_{ki}),
+</span> y <span class="math inline">\delta_0, \delta_1, \dots, \delta_k</span> son parámetros desconocidos. La función exponencial garantiza que <span class="math inline">h(\boldsymbol{x}_{i}) &gt; 0</span> sean cuales sean los valores de los parámetros.</p>
+</section>
+<section id="estimación-de-h_i-i" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-de-h_i-i">Estimación de <span class="math inline">h_i</span> (I)</h3>
+<p>Varianza condicional del término de error: <span class="math display">
+  \mathop{\mathrm{E}}(u_i^2 | \boldsymbol{x}_{i}) = \sigma^2
+  \exp(\delta_{0} + \delta_{1} x_{1i} + \dots + \delta_{k} x_{ki}).
+</span> Si observásemos el término de error, <span class="math inline">u_i</span>, podríamos estimar: <span class="math display">
+  \log(u_i^2) =
+  \alpha_0 + \delta_{1} x_{1i} + \dots +
+  \delta_{k} x_{ki} + \text{error}.
+</span> Para poder estimar los parámetros de la regresión anterior, reemplazamos <span class="math inline">u_i</span> por los residuos de MCO, <span class="math inline">\hat{u}_i</span>.</p>
+</section>
+<section id="estimación-de-h_i-y-ii" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-de-h_i-y-ii">Estimación de <span class="math inline">h_i</span> (y II)</h3>
+<ol type="1">
+<li><p>Estimamos por MCO los parámetros de la función de regresión: <span class="math display">
+\log(\hat{u}_i^2) = \alpha_0 + \delta_{1} x_{1i} +
+\dots + \delta_{k} x_{ki} + \text{error}.
+  </span></p></li>
+<li><p>Obtenemos <span class="math inline">\hat{h}_i</span> a partir de las predicciones de la regresión anterior: <span class="math display">
+  \hat{h}_i = \exp(\hat{\alpha}_0 + \hat{\delta}_{1} x_{1i} + \dots + \hat{\delta}_{k} x_{ki}).
+</span></p></li>
+</ol>
+</section>
+<section id="mínimos-cuadrados-ponderados-factibles-1" class="level3">
+<h3 class="anchored" data-anchor-id="mínimos-cuadrados-ponderados-factibles-1">Mínimos Cuadrados Ponderados Factibles</h3>
+<p>Procedimiento para la estimación por <strong>Mínimos Cuadrados Ponderados Factibles</strong> (MCPF):</p>
+<p>+ATTR_LATEX: :options [label=:, wide=0pt, leftmargin=1em]</p>
+<ol type="1">
+<li><p>Se estima el modelo por MCO y se guardan los residuos <span class="math inline">\hat{u}_i</span>.</p></li>
+<li><p>Se estima por MCO una regresión de <span class="math inline">\log(\hat{u}^2_i)</span> sobre las explicativas.</p></li>
+<li><p>Se obtiene <span class="math inline">\hat{h}_i</span> tomando la exponencial de las predicciones de la regresión del paso anterior.</p></li>
+<li><p>Se estima el modelo por MCP usando <span class="math inline">1/\hat{h}_i</span> como ponderaciones.</p></li>
+</ol>
+</section>
+<section id="propiedades-de-mcpf" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades-de-mcpf">Propiedades de MCPF</h3>
+<ul>
+<li><p>Al usar una estimación de <span class="math inline">h_i</span>, MCPF no es insesgado ni lineal.</p></li>
+<li><p>Si se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong> el estimador de MCPF es consistente.</p></li>
+<li><p>Si la especificación de la heteroscedasticidad es correcta, MCPF es asintóticamente más eficiente que MCO.</p></li>
+</ul>
+</section>
+<section id="especificaciones-alternativas" class="level3">
+<h3 class="anchored" data-anchor-id="especificaciones-alternativas">Especificaciones alternativas</h3>
+<p>Se han usado especificaciones alternativas de la heteroscedasticidad. En consecuencia se modificaría el <strong>Paso 2</strong> del procedimiento para obtener el estimador MCPF descrito antes:</p>
+<ul>
+<li><p>Regresar <span class="math inline">\log(\hat{u}^2_i)</span> sobre un subconjunto de las explicativas.</p></li>
+<li><p>Regresar <span class="math inline">\log(\hat{u}^2_i)</span> sobre las explicativas, sus cuadrados y productos cruzados.</p></li>
+<li><p>Regresar <span class="math inline">\log(\hat{u}^2_i)</span> sobre las predicciones, <span class="math inline">\hat{y}_i</span>, y sus cuadrados, <span class="math inline">\hat{y}^2_i</span>.</p></li>
+</ul>
+<p>Los restantes pasos del procedimiento de estimación no se alterarían.</p>
+</section>
+</section>
+<section id="otras-cuestiones" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="otras-cuestiones"><span class="header-section-number">3.8</span> Otras cuestiones</h2>
+<section id="comparación-con-mco" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-con-mco">Comparación con MCO</h3>
+<ul>
+<li><p>MCO y MCP(F) son estimadores consistentes cuando se cumplen los supuestos <strong>RLM.1</strong> a <strong>RLM.4</strong>.</p></li>
+<li><p>Grandes diferencias en las estimaciones de MCO y de MCP(F) indicarían el posible incumplimiento de otras de las hipótesis de Gauss-Markov.</p></li>
+</ul>
+</section>
+<section id="inferencia-robusta" class="level3">
+<h3 class="anchored" data-anchor-id="inferencia-robusta">Inferencia robusta</h3>
+<ul>
+<li><p>Si el supuesto sobre la naturaleza de la heteroscedasticidad es correcto, los contrastes <span class="math inline">t</span> y <span class="math inline">F</span> calculados a partir de las estimaciones MCP(F) tienen validez asintótica.</p></li>
+<li><p>Si el supuesto no captura toda la heteroscedasticidad, sería necesario usar un estimador robusto de <span class="math inline">\mathop{\mathrm{var}}(\tilde{\beta})</span> después de la estimación MCP(F).</p></li>
+<li><p>En general, es recomendable el uso de métodos de inferencia robustos a heteroscedasticidad con los estimadores de MCO y de MCP(F).</p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./asymp.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./lpm.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ec1027-guide - 7&nbsp; El estimador MCO con series temporales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./regr-ts.html" rel="next">
+<link href="./intro-ts.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ts-part.html">Regresión con datos de series temporales</a></li><li class="breadcrumb-item"><a href="./ols-ts.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">ec1027-guide</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./cs-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de corte transversal</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mcrl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./asymp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./het.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lpm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./other-cs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forma funcional y problemas con los datos</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./ts-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de series temporales</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ols-ts.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regr-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocorr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#modelos-de-regresión-con-series-temporales" id="toc-modelos-de-regresión-con-series-temporales" class="nav-link active" data-scroll-target="#modelos-de-regresión-con-series-temporales"><span class="header-section-number">7.1</span> Modelos de regresión con series temporales</a>
+  <ul class="collapse">
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#modelos-estáticos" id="toc-modelos-estáticos" class="nav-link" data-scroll-target="#modelos-estáticos">Modelos estáticos</a></li>
+  <li><a href="#modelos-de-retardos-distribuidos" id="toc-modelos-de-retardos-distribuidos" class="nav-link" data-scroll-target="#modelos-de-retardos-distribuidos">Modelos de retardos distribuidos</a></li>
+  <li><a href="#equilibrio-dinámico" id="toc-equilibrio-dinámico" class="nav-link" data-scroll-target="#equilibrio-dinámico">Equilibrio dinámico</a></li>
+  <li><a href="#ajuste-a-un-nuevo-equilibrio" id="toc-ajuste-a-un-nuevo-equilibrio" class="nav-link" data-scroll-target="#ajuste-a-un-nuevo-equilibrio">Ajuste a un nuevo equilibrio</a></li>
+  <li><a href="#multiplicadores-dinámicos" id="toc-multiplicadores-dinámicos" class="nav-link" data-scroll-target="#multiplicadores-dinámicos">Multiplicadores dinámicos</a></li>
+  <li><a href="#multiplicadores-acumulativos" id="toc-multiplicadores-acumulativos" class="nav-link" data-scroll-target="#multiplicadores-acumulativos">Multiplicadores acumulativos</a></li>
+  <li><a href="#modelos-autorregresivos" id="toc-modelos-autorregresivos" class="nav-link" data-scroll-target="#modelos-autorregresivos">Modelos autorregresivos</a></li>
+  <li><a href="#modelos-ardl" id="toc-modelos-ardl" class="nav-link" data-scroll-target="#modelos-ardl">Modelos ARDL</a></li>
+  </ul></li>
+  <li><a href="#el-modelo-clásico-de-regresión-con-series-temporales" id="toc-el-modelo-clásico-de-regresión-con-series-temporales" class="nav-link" data-scroll-target="#el-modelo-clásico-de-regresión-con-series-temporales"><span class="header-section-number">7.2</span> El modelo clásico de regresión con series temporales</a>
+  <ul class="collapse">
+  <li><a href="#introducción-1" id="toc-introducción-1" class="nav-link" data-scroll-target="#introducción-1">Introducción</a></li>
+  <li><a href="#supuestos" id="toc-supuestos" class="nav-link" data-scroll-target="#supuestos">Supuestos</a></li>
+  <li><a href="#linealidad-en-los-parámetros" id="toc-linealidad-en-los-parámetros" class="nav-link" data-scroll-target="#linealidad-en-los-parámetros">Linealidad en los parámetros</a></li>
+  <li><a href="#notación" id="toc-notación" class="nav-link" data-scroll-target="#notación">Notación</a></li>
+  <li><a href="#ausencia-de-colinealidad-perfecta" id="toc-ausencia-de-colinealidad-perfecta" class="nav-link" data-scroll-target="#ausencia-de-colinealidad-perfecta">Ausencia de colinealidad perfecta</a></li>
+  <li><a href="#media-condicional-nula" id="toc-media-condicional-nula" class="nav-link" data-scroll-target="#media-condicional-nula">Media condicional nula</a></li>
+  <li><a href="#exogeneidad-estricta" id="toc-exogeneidad-estricta" class="nav-link" data-scroll-target="#exogeneidad-estricta">Exogeneidad estricta</a></li>
+  <li><a href="#restricciones-que-impone-la-exogeneidad-estricta" id="toc-restricciones-que-impone-la-exogeneidad-estricta" class="nav-link" data-scroll-target="#restricciones-que-impone-la-exogeneidad-estricta">Restricciones que impone la exogeneidad estricta</a></li>
+  <li><a href="#homoscedasticidad" id="toc-homoscedasticidad" class="nav-link" data-scroll-target="#homoscedasticidad">Homoscedasticidad</a></li>
+  <li><a href="#ausencia-de-correlación-serial" id="toc-ausencia-de-correlación-serial" class="nav-link" data-scroll-target="#ausencia-de-correlación-serial">Ausencia de correlación serial</a></li>
+  <li><a href="#normalidad" id="toc-normalidad" class="nav-link" data-scroll-target="#normalidad">Normalidad</a></li>
+  <li><a href="#propiedades-de-muestras-finitas" id="toc-propiedades-de-muestras-finitas" class="nav-link" data-scroll-target="#propiedades-de-muestras-finitas">Propiedades de muestras finitas</a></li>
+  <li><a href="#limitaciones-del-modelo-clásico" id="toc-limitaciones-del-modelo-clásico" class="nav-link" data-scroll-target="#limitaciones-del-modelo-clásico">Limitaciones del modelo clásico</a></li>
+  </ul></li>
+  <li><a href="#propiedades-asintóticas-de-mco-con-series-temporales" id="toc-propiedades-asintóticas-de-mco-con-series-temporales" class="nav-link" data-scroll-target="#propiedades-asintóticas-de-mco-con-series-temporales"><span class="header-section-number">7.3</span> Propiedades asintóticas de MCO con series temporales</a>
+  <ul class="collapse">
+  <li><a href="#introducción-2" id="toc-introducción-2" class="nav-link" data-scroll-target="#introducción-2">Introducción</a></li>
+  <li><a href="#supuestos-1" id="toc-supuestos-1" class="nav-link" data-scroll-target="#supuestos-1">Supuestos</a></li>
+  <li><a href="#linealidad-y-dependencia-débil" id="toc-linealidad-y-dependencia-débil" class="nav-link" data-scroll-target="#linealidad-y-dependencia-débil">Linealidad y dependencia débil</a></li>
+  <li><a href="#ausencia-de-colinealidad-perfecta-1" id="toc-ausencia-de-colinealidad-perfecta-1" class="nav-link" data-scroll-target="#ausencia-de-colinealidad-perfecta-1">Ausencia de colinealidad perfecta</a></li>
+  <li><a href="#exogeneidad-contemporánea" id="toc-exogeneidad-contemporánea" class="nav-link" data-scroll-target="#exogeneidad-contemporánea">Exogeneidad contemporánea</a></li>
+  <li><a href="#homoscedasticidad-y-ausencia-de-autocorrelación" id="toc-homoscedasticidad-y-ausencia-de-autocorrelación" class="nav-link" data-scroll-target="#homoscedasticidad-y-ausencia-de-autocorrelación">Homoscedasticidad y ausencia de autocorrelación</a></li>
+  <li><a href="#propiedades-asintóticas" id="toc-propiedades-asintóticas" class="nav-link" data-scroll-target="#propiedades-asintóticas">Propiedades asintóticas</a></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones">Conclusiones</a></li>
+  </ul></li>
+  <li><a href="#inferencia-asintótica" id="toc-inferencia-asintótica" class="nav-link" data-scroll-target="#inferencia-asintótica"><span class="header-section-number">7.4</span> Inferencia asintótica</a>
+  <ul class="collapse">
+  <li><a href="#introducción-3" id="toc-introducción-3" class="nav-link" data-scroll-target="#introducción-3">Introducción</a></li>
+  <li><a href="#inferencia-robusta" id="toc-inferencia-robusta" class="nav-link" data-scroll-target="#inferencia-robusta">Inferencia robusta</a></li>
+  <li><a href="#contrastes-t-robustos" id="toc-contrastes-t-robustos" class="nav-link" data-scroll-target="#contrastes-t-robustos">Contrastes <span class="math inline">t</span> robustos</a></li>
+  <li><a href="#contrastes-de-hipótesis-lineales" id="toc-contrastes-de-hipótesis-lineales" class="nav-link" data-scroll-target="#contrastes-de-hipótesis-lineales">Contrastes de hipótesis lineales</a></li>
+  <li><a href="#estimación-e-inferencia-robusta-con-mco" id="toc-estimación-e-inferencia-robusta-con-mco" class="nav-link" data-scroll-target="#estimación-e-inferencia-robusta-con-mco">Estimación e inferencia robusta con MCO</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="modelos-de-regresión-con-series-temporales" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="modelos-de-regresión-con-series-temporales"><span class="header-section-number">7.1</span> Modelos de regresión con series temporales</h2>
+<section id="introducción" class="level3">
+<h3 class="anchored" data-anchor-id="introducción">Introducción</h3>
+<ul>
+<li><p>Con series temporales es posible investigar las relaciones dinámicas entre variables.</p></li>
+<li><p>En primer lugar, examinaremos algunos modelos comúnmente utilizados.</p></li>
+</ul>
+</section>
+<section id="modelos-estáticos" class="level3">
+<h3 class="anchored" data-anchor-id="modelos-estáticos">Modelos estáticos</h3>
+<ul>
+<li><p>En un <strong>modelo estático</strong>, un cambio en una variable explicativa sólo tiene efectos en el periodo en que se produce y no tiene influencia en los periodos posteriores.</p></li>
+<li><p>Todas las variables del modelo se refieren al mismo periodo temporal: <span class="math display">
+   y_t = \alpha + \beta z_{t} + u_t,
+</span> donde <span class="math inline">y_t</span> es la variable dependiente, <span class="math inline">z_t</span> la variable explicativa, <span class="math inline">\alpha</span> y <span class="math inline">\beta</span> son parámetros desconocidos, <span class="math inline">t = 1,  2, \dots, T</span> y <span class="math inline">u_t</span> es un término de error no observable tal que <span class="math inline">\mathop{\mathrm{E}}(u_t | z_t) = 0</span>.</p></li>
+</ul>
+</section>
+<section id="modelos-de-retardos-distribuidos" class="level3">
+<h3 class="anchored" data-anchor-id="modelos-de-retardos-distribuidos">Modelos de retardos distribuidos</h3>
+<ul>
+<li><p>En un <strong>modelo de retardos distribuidos</strong> los cambios en las variables explicativas tienen efectos en más de un periodo.</p></li>
+<li><p>Estos modelos se caracterizan por incluir retardos de las variables explicativas: <span class="math display">
+  y_t = \alpha + \beta_0 z_{t} + \beta_1 z_{t-1} + \beta_2 z_{t-2} + \dots + \beta_L z_{t-L} + u_t,
+</span> donde <span class="math inline">L</span> es el número de retardos que aparecen en el modelo, y <span class="math inline">\mathop{\mathrm{E}}(u_t | z_t, z_{t-1}, z_{t-2}, \dots) = 0</span>.</p></li>
+</ul>
+</section>
+<section id="equilibrio-dinámico" class="level3">
+<h3 class="anchored" data-anchor-id="equilibrio-dinámico">Equilibrio dinámico</h3>
+<ul>
+<li><p>Utilizaremos como ejemplo un modelo con dos retardos: <span class="math display">
+  y_t = \alpha + \beta_0 z_{t} + \beta_1 z_{t-1} + \beta_2 z_{t-2} + u_t,
+</span></p></li>
+<li><p>En ausencia de perturbaciones, <span class="math inline">u_t = 0</span>, en equilibrio dinámico las variables toman siempre el mismo valor: <span class="math inline">y_t = y^*</span> y <span class="math inline">z_t = z^*</span>.</p></li>
+<li><p>Supongamos que, partiendo de un equilibrio dinámico, la variable <span class="math inline">z</span> aumenta permanentemente en una unidad en el periodo 3. ¿Cómo se ajustarían las variables al nuevo equilibrio?</p></li>
+</ul>
+</section>
+<section id="ajuste-a-un-nuevo-equilibrio" class="level3">
+<h3 class="anchored" data-anchor-id="ajuste-a-un-nuevo-equilibrio">Ajuste a un nuevo equilibrio</h3>
+<p>La tabla muestra como se ajustan las variable dependiente a un cambio unitario permanente de <span class="math inline">z</span>. En el nuevo equilibrio <span class="math inline">z_t = z^* + 1</span> e <span class="math inline">y_t = y^* + \beta_0 + \beta_1 + \beta_2</span>.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="math inline">t</span></th>
+<th style="text-align: left;"><span class="math inline">z_t</span></th>
+<th style="text-align: left;"><span class="math inline">\mathop{}\!\Delta z_t</span></th>
+<th style="text-align: left;"><span class="math inline">\mathop{}\!\Delta z_{t-1}</span></th>
+<th style="text-align: left;"><span class="math inline">\mathop{}\!\Delta z_{t-2}</span></th>
+<th style="text-align: left;"><span class="math inline">\mathop{}\!\Delta y_{t}</span></th>
+<th style="text-align: left;"><span class="math inline">y_t</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">1</span></td>
+<td style="text-align: left;"><span class="math inline">z^*</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">y^*</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">2</span></td>
+<td style="text-align: left;"><span class="math inline">z^*</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">y^*</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">3</span></td>
+<td style="text-align: left;"><span class="math inline">z^* + 1</span></td>
+<td style="text-align: left;"><span class="math inline">1</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">\beta_0</span></td>
+<td style="text-align: left;"><span class="math inline">y^* + \beta_0</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">4</span></td>
+<td style="text-align: left;"><span class="math inline">z^* + 1</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">1</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">\beta_1</span></td>
+<td style="text-align: left;"><span class="math inline">y^* + \beta_0 + \beta_1</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">5</span></td>
+<td style="text-align: left;"><span class="math inline">z^* + 1</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">1</span></td>
+<td style="text-align: left;"><span class="math inline">\beta_2</span></td>
+<td style="text-align: left;"><span class="math inline">y^* + \beta_0 + \beta_1 + \beta_2</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">6</span></td>
+<td style="text-align: left;"><span class="math inline">z^* + 1</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">y^* + \beta_0 + \beta_1 + \beta_2</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">7</span></td>
+<td style="text-align: left;"><span class="math inline">z^* + 1</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">y^* + \beta_0 + \beta_1 + \beta_2</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\vdots</span></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="multiplicadores-dinámicos" class="level3">
+<h3 class="anchored" data-anchor-id="multiplicadores-dinámicos">Multiplicadores dinámicos</h3>
+<ul>
+<li><p>El parámetro <span class="math inline">\beta_0</span> es el <strong>multiplicador de impacto</strong> o <strong>multiplicador de corto plazo</strong>. Es el efecto inmediato o contemporáneo de un cambio unitario de <span class="math inline">z_t</span> sobre <span class="math inline">y_t</span>.</p></li>
+<li><p>Los parámetros <span class="math inline">\beta_h</span>, <span class="math inline">h = 0, 1, \dots</span>, son los <strong>multiplicadores dinámicos</strong> y miden el efecto de <span class="math inline">z</span> sobre <span class="math inline">y</span> después de <span class="math inline">h</span> periodos: <span class="math display">
+  \frac{\mathop{}\!\Delta y_t}{\mathop{}\!\Delta z_{t-h}} = \frac{\mathop{}\!\Delta y_{t+h}}{\mathop{}\!\Delta z_{t}} = \beta_h.
+</span></p></li>
+</ul>
+</section>
+<section id="multiplicadores-acumulativos" class="level3">
+<h3 class="anchored" data-anchor-id="multiplicadores-acumulativos">Multiplicadores acumulativos</h3>
+<ul>
+<li><p>Los <strong>multiplicadores acumulativos</strong>, <span class="math inline">\delta_h</span>, suman los efectos que produce un cambio unitario de <span class="math inline">z</span> sobre la variable dependiente conforme pasa el tiempo:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Periodos transcurridos</th>
+<th style="text-align: left;">Multiplicador acumulativo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline">\delta_0 = \beta_0</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">1</span></td>
+<td style="text-align: left;"><span class="math inline">\delta_1 = \beta_0 + \beta_1</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">2</span></td>
+<td style="text-align: left;"><span class="math inline">\delta_2 = \beta_0 + \beta_1 + \beta_2</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\vdots</span></td>
+<td style="text-align: left;"><span class="math inline">\vdots</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">L</span></td>
+<td style="text-align: left;"><span class="math inline">\delta_L = \sum_{i=0}^L \beta_i</span></td>
+</tr>
+</tbody>
+</table></li>
+<li><p>En la última fila de la tabla aparece el <strong>multiplicador de largo plazo</strong>, <span class="math inline">\delta_L</span>, que es la suma de todos los multiplicadores dinámicos.</p></li>
+</ul>
+</section>
+<section id="modelos-autorregresivos" class="level3">
+<h3 class="anchored" data-anchor-id="modelos-autorregresivos">Modelos autorregresivos</h3>
+<ul>
+<li><p>En un <strong>modelo autorregresivo</strong> las variables explicativas son retardos de la variable dependiente.</p></li>
+<li><p>Modelo autorregresivo de orden p, AR(p): <span class="math display">
+   y_t = \alpha + \rho_1 y_{t-1} + \rho_2 y_{t-2} + \dots +  \rho_p y_{t-p} + u_{t},
+</span> donde <span class="math inline">\mathop{\mathrm{E}}(u_t | y_{t-1}, y_{t-2}, \dots) = 0</span>.</p></li>
+</ul>
+</section>
+<section id="modelos-ardl" class="level3">
+<h3 class="anchored" data-anchor-id="modelos-ardl">Modelos ARDL</h3>
+<ul>
+<li>Un <strong>modelo autorregresivo con retardos distribuidos</strong>, <span class="math inline">\text{ARDL}(p, q)</span>, incluye como variables explicativas <span class="math inline">p</span> retardos de <span class="math inline">y</span> y <span class="math inline">q</span> retardos de <span class="math inline">z</span>: <span class="math display">
+  y_t =
+  \alpha + \rho_1 y_{t-1} +
+  \dots +
+  \rho_p y_{t-p} +
+  \beta_0 z_{t} +
+  \beta_1 z_{t-1} +
+  \dots +
+  \beta_q z_{t-q} +
+  u_{t},
+</span> donde <span class="math inline">\mathop{\mathrm{E}}(u_t | z_t, y_{t-1}, z_{t-1}, y_{t-2}, z_{t-2}, \dots) = 0</span>.</li>
+</ul>
+</section>
+</section>
+<section id="el-modelo-clásico-de-regresión-con-series-temporales" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="el-modelo-clásico-de-regresión-con-series-temporales"><span class="header-section-number">7.2</span> El modelo clásico de regresión con series temporales</h2>
+<section id="introducción-1" class="level3">
+<h3 class="anchored" data-anchor-id="introducción-1">Introducción</h3>
+<ul>
+<li><p>¿Podemos usar MCO para estimar modelos de series temporales?</p></li>
+<li><p>¿Qué tiene que cumplirse para que MCO tenga buenas propiedades exactas?</p></li>
+</ul>
+</section>
+<section id="supuestos" class="level3">
+<h3 class="anchored" data-anchor-id="supuestos">Supuestos</h3>
+<p>Los supuestos del <strong>modelo clásico de regresión lineal con series temporales</strong> son:</p>
+<ul>
+<li><p><strong>ST.1</strong>: Linealidad en los parámetros.</p></li>
+<li><p><strong>ST.2</strong>: Ausencia de colinealidad perfecta.</p></li>
+<li><p><strong>ST.3</strong>: Media condicional nula.</p></li>
+<li><p><strong>ST.4</strong>: Homoscedasticidad.</p></li>
+<li><p><strong>ST.5</strong>: Ausencia de correlación serial.</p></li>
+<li><p><strong>ST.6</strong>: Normalidad.</p></li>
+</ul>
+</section>
+<section id="linealidad-en-los-parámetros" class="level3">
+<h3 class="anchored" data-anchor-id="linealidad-en-los-parámetros">Linealidad en los parámetros</h3>
+<p><strong>ST.1</strong>: <strong>Linealidad en los parámetros</strong>.</p>
+<p>El proceso estocástico <span class="math inline">\{(y_t, x_{1t}, x_{2t}, \dots, x_{kt})\!: t = 1, 2, \dots, T\}</span> sigue el modelo: <span class="math display">
+  y_t = \beta_0 + \beta_1 x_{1t} + \beta_1 x_{2t} + \dots + \beta_1 x_{kt} + u_t
+</span> donde <span class="math inline">\{u_t\!: t = 1, 2, \dots, T\}</span> es una secuencia de perturbaciones aleatorias no observables.</p>
+</section>
+<section id="notación" class="level3">
+<h3 class="anchored" data-anchor-id="notación">Notación</h3>
+<ul>
+<li><p>Nuestra especificación: <span class="math display">
+  y_t = \beta_0 + \beta_1 x_{1t} + \beta_1 x_{2t} + \dots + \beta_1 x_{kt} + u_t,
+</span> admite modelos dinámicos. Por ejemplo, obtenemos un modelo retardos distribuidos si definimos <span class="math inline">x_{1t} = z_t, x_{2t} = z_{t-1}, \dots</span></p></li>
+<li><p><span class="math inline">\boldsymbol{x_t} = (x_{1t}, x_{2t}, \dots, x_{kt})</span>: los valores que toman las explicativas en el periodo <span class="math inline">t</span>.</p></li>
+<li><p><span class="math inline">\boldsymbol{X} = (\boldsymbol{x_1}, \boldsymbol{x_2}, \dots, \boldsymbol{x_T})</span>: los valores de todas las explicativas en todos los periodos de la muestra.</p></li>
+</ul>
+</section>
+<section id="ausencia-de-colinealidad-perfecta" class="level3">
+<h3 class="anchored" data-anchor-id="ausencia-de-colinealidad-perfecta">Ausencia de colinealidad perfecta</h3>
+<p><strong>ST.2</strong>: <strong>Ausencia de colinealidad perfecta</strong>.</p>
+<p>En la muestra ninguna de las variables explicativas es constante ni una combinación lineal perfecta de las otras explicativas.</p>
+</section>
+<section id="media-condicional-nula" class="level3">
+<h3 class="anchored" data-anchor-id="media-condicional-nula">Media condicional nula</h3>
+<p><strong>ST.3</strong>: <strong>Media condicional nula</strong>.</p>
+<p>La media del término de error es <span class="math inline">0</span> condicional a los valores que toman las explicativas en <strong>todos</strong> los periodos de tiempo : <span class="math display">
+  \mathop{\mathrm{E}}(u_t | \boldsymbol{X}) = 0,\quad t = 1, 2, \dots, T.
+</span></p>
+</section>
+<section id="exogeneidad-estricta" class="level3">
+<h3 class="anchored" data-anchor-id="exogeneidad-estricta">Exogeneidad estricta</h3>
+<p><strong>ST.3</strong> implica que las variables explicativas son <strong>estrictamente exógenas</strong>. El término de error <span class="math inline">u_t</span> debe estar incorrelacionado con todas las explicativas en <strong>todos</strong> los periodos de tiempo:</p>
+<ul>
+<li><p><span class="math inline">\mathop{\mathrm{E}}(u_t | \boldsymbol{x_t}) = 0</span>: <strong>exogeneidad contemporánea</strong>.</p></li>
+<li><p><span class="math inline">\mathop{\mathrm{E}}(u_t | \boldsymbol{x_{t-1}}, \boldsymbol{x_{t-2}}, \dots, \boldsymbol{x_{1}}) =  0</span>: incorrelación con valores pasados de <span class="math inline">\boldsymbol{x_t}</span>.</p></li>
+<li><p><span class="math inline">\mathop{\mathrm{E}}(u_t | \boldsymbol{x_{t+1}}, \boldsymbol{x_{t+2}}, \dots, \boldsymbol{x_{T}}) = 0</span>: incorrelación con valores futuros de <span class="math inline">\boldsymbol{x_t}</span>.</p></li>
+</ul>
+</section>
+<section id="restricciones-que-impone-la-exogeneidad-estricta" class="level3">
+<h3 class="anchored" data-anchor-id="restricciones-que-impone-la-exogeneidad-estricta">Restricciones que impone la exogeneidad estricta</h3>
+<p>La exogeneidad estricta es incompatible con algunos casos importantes:</p>
+<ul>
+<li><p>Efectos de <strong>retroalimentación</strong>: los valores que toma <span class="math inline">y_t</span> afectan a los valores futuros de las variables explicativas: <span class="math inline">\boldsymbol{x_{t+1}}, \dots, \boldsymbol{x_{T}}</span>.</p></li>
+<li><p>Modelos autorregresivos.</p></li>
+</ul>
+</section>
+<section id="homoscedasticidad" class="level3">
+<h3 class="anchored" data-anchor-id="homoscedasticidad">Homoscedasticidad</h3>
+<p><strong>ST.4</strong>: <strong>Homoscedasticidad</strong>.</p>
+<p>Condicional a <span class="math inline">\boldsymbol{X}</span>, la varianza de <span class="math inline">u_t</span> es la misma en todos los periodos: <span class="math display">
+  \mathop{\mathrm{var}}(u_t | \boldsymbol{X}) = \sigma^2,\quad t = 1, 2, \dots, T.
+</span></p>
+</section>
+<section id="ausencia-de-correlación-serial" class="level3">
+<h3 class="anchored" data-anchor-id="ausencia-de-correlación-serial">Ausencia de correlación serial</h3>
+<p><strong>ST.5</strong>: <strong>Ausencia de correlación serial</strong>.</p>
+<p>Condicional a <span class="math inline">\boldsymbol{X}</span>, las perturbaciones aleatorias de dos periodos diferentes están incorrelacionadas: <span class="math display">
+  \mathop{\mathrm{corr}}(u_t, u_s | \boldsymbol{X}) = 0,\quad \text{para todo $t \neq s$.}
+</span></p>
+</section>
+<section id="normalidad" class="level3">
+<h3 class="anchored" data-anchor-id="normalidad">Normalidad</h3>
+<p><strong>ST.6</strong>: <strong>Normalidad</strong>.</p>
+<p>El término de error <span class="math inline">u_t</span> es independiente de <span class="math inline">\boldsymbol{X}</span> y se distribuye independiente e idénticamente como <span class="math inline">\mathop{\mathrm{Normal}}(0, \sigma^2)</span>.</p>
+</section>
+<section id="propiedades-de-muestras-finitas" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades-de-muestras-finitas">Propiedades de muestras finitas</h3>
+<p>Los supuestos del modelo clásico de regresión con series temporales garantizan las siguientes propiedades del estimador de MCO:</p>
+<ul>
+<li><p><strong>Insesgadez</strong>: si se cumplen <strong>TS.1</strong>, <strong>TS.2</strong> y <strong>TS.3</strong>.</p></li>
+<li><p><strong>Eficiencia</strong>: si, además, se cumplen <strong>TS.4</strong> y <strong>TS.5</strong>. En este caso, se pueden usar las fórmulas de MCO de los errores típicos de <span class="math inline">\hat{\beta_j}</span>.</p></li>
+<li><p><strong>Normalidad</strong>: si, además, se cumple <strong>TS.6</strong>. Las fórmulas tradicionales de los contrastes <span class="math inline">t</span> y <span class="math inline">F</span> son válidas.</p></li>
+</ul>
+</section>
+<section id="limitaciones-del-modelo-clásico" class="level3">
+<h3 class="anchored" data-anchor-id="limitaciones-del-modelo-clásico">Limitaciones del modelo clásico</h3>
+<ul>
+<li><p>No es posible obtener estimaciones insesgadas de los parámetros de modelos que incluyan retardos de la variable dependiente.</p></li>
+<li><p>El estimador MCO tampoco tienen buenas propiedades exactas en presencia de efectos de retroalimentación.</p></li>
+<li><p>Algunos de los supuestos del modelo clásico son muy restrictivos: normalidad, exogeneidad estricta, ausencia de correlación serial, etc.</p></li>
+</ul>
+</section>
+</section>
+<section id="propiedades-asintóticas-de-mco-con-series-temporales" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="propiedades-asintóticas-de-mco-con-series-temporales"><span class="header-section-number">7.3</span> Propiedades asintóticas de MCO con series temporales</h2>
+<section id="introducción-2" class="level3">
+<h3 class="anchored" data-anchor-id="introducción-2">Introducción</h3>
+<p>¿Qué supuestos son necesarios para que el estimador MCO tenga buenas propiedades asintóticas en modelos de regresión con series temporales?</p>
+</section>
+<section id="supuestos-1" class="level3">
+<h3 class="anchored" data-anchor-id="supuestos-1">Supuestos</h3>
+<ul>
+<li><strong>ST.1'</strong>: Linealidad y dependencia débil.</li>
+<li><strong>ST.2'</strong>: Ausencia de colinealidad perfecta.</li>
+<li><strong>ST.3'</strong>: Exogeneidad (contemporánea).</li>
+<li><strong>ST.4'</strong>: Homoscedasticidad.</li>
+<li><strong>ST.5'</strong>: Ausencia de correlación serial.</li>
+</ul>
+</section>
+<section id="linealidad-y-dependencia-débil" class="level3">
+<h3 class="anchored" data-anchor-id="linealidad-y-dependencia-débil">Linealidad y dependencia débil</h3>
+<p><strong>ST.1'</strong>: <strong>Linealidad y dependencia débil</strong>.</p>
+<p>El proceso estocástico <span class="math inline">\{(y_t, x_{1t}, x_{2t}, \dots, x_{kt})\!: t = 1, 2, \dots, T\}</span> es <strong>estacionario</strong> y <strong>débilmente dependiente</strong> sigue el modelo: <span class="math display">
+  y_t = \beta_0 + \beta_1 x_{1t} + \beta_1 x_{2t} + \dots + \beta_1 x_{kt} + u_t
+</span> donde <span class="math inline">\{u_t\!: t = 1, 2, \dots, T\}</span> es la secuencia de perturbaciones aleatorias.</p>
+</section>
+<section id="ausencia-de-colinealidad-perfecta-1" class="level3">
+<h3 class="anchored" data-anchor-id="ausencia-de-colinealidad-perfecta-1">Ausencia de colinealidad perfecta</h3>
+<p><strong>ST.2'</strong>: <strong>Ausencia de colinealidad perfecta</strong>.</p>
+<p>En la muestra ninguna de las variables explicativas es constante ni una combinación lineal perfecta de las otras explicativas.</p>
+</section>
+<section id="exogeneidad-contemporánea" class="level3">
+<h3 class="anchored" data-anchor-id="exogeneidad-contemporánea">Exogeneidad contemporánea</h3>
+<p><strong>ST.3'</strong>: <strong>Exogeneidad (contemporánea)</strong>.</p>
+<ul>
+<li><p>Las variables explicativas <span class="math inline">\boldsymbol{x}_t</span> son <strong>contemporáneamente exógenas</strong>: <span class="math display">
+  \mathop{\mathrm{E}}(u_{t}|\boldsymbol{x}_{t}) = 0.
+</span></p></li>
+<li><p>Este supuesto no se viola si se dan fenómenos de retroalimentación o si se incluyen retardos de la variable dependiente entre las explicativas.</p></li>
+</ul>
+</section>
+<section id="homoscedasticidad-y-ausencia-de-autocorrelación" class="level3">
+<h3 class="anchored" data-anchor-id="homoscedasticidad-y-ausencia-de-autocorrelación">Homoscedasticidad y ausencia de autocorrelación</h3>
+<p><strong>ST.4'</strong>: <strong>Homoscedasticidad</strong>.</p>
+<p><span class="math display">
+  \mathop{\mathrm{var}}(u_t|\boldsymbol{x}_t) = \sigma^2.
+</span></p>
+<p><strong>ST.5'</strong>: <strong>Ausencia de correlación serial</strong>.</p>
+<p><span class="math display">
+  \mathop{\mathrm{corr}}(u_t, u_s | \boldsymbol{x}_t, \boldsymbol{x}_s) = 0,\quad \text{para todo $t \neq s$.}
+</span></p>
+</section>
+<section id="propiedades-asintóticas" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades-asintóticas">Propiedades asintóticas</h3>
+<ul>
+<li><p><strong>Consistencia</strong>: si se cumplen <strong>TS.1'</strong> a <strong>TS.3'</strong>.</p></li>
+<li><p><strong>Normalidad asintótica</strong>: si además se cumplen <strong>TS.4'</strong> y <strong>TS.5'</strong>.</p></li>
+</ul>
+</section>
+<section id="conclusiones" class="level3">
+<h3 class="anchored" data-anchor-id="conclusiones">Conclusiones</h3>
+<ul>
+<li><p>Con muestras de tamaño moderado o grande, bastan los supuestos <strong>ST.1'</strong> a <strong>ST.5'</strong> para garantizar buenas propiedades del estimador MCO.</p></li>
+<li><p>En particular, no es necesario realizar supuestos muy restrictivos como exogeneidad estricta o normalidad.</p></li>
+<li><p>Por otro lado, el supuesto <strong>ST.1'</strong> requiere estacionariedad y dependencia débil de la variable dependiente y de las variables explicativas.</p></li>
+</ul>
+</section>
+</section>
+<section id="inferencia-asintótica" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="inferencia-asintótica"><span class="header-section-number">7.4</span> Inferencia asintótica</h2>
+<section id="introducción-3" class="level3">
+<h3 class="anchored" data-anchor-id="introducción-3">Introducción</h3>
+<ul>
+<li><p>Para estimar los errores típicos de <span class="math inline">\hat{\beta}_j</span> con las fórmulas tradicionales de MCO es necesario que se cumplan los supuestos <strong>ST.4'</strong> y <strong>ST.5'</strong>.</p></li>
+<li><p>Sin embargo, es frecuente encontrar correlación serial en el término de error.</p></li>
+<li><p>También es frecuente, especialmente en modelos financieros, la presencia de heteroscedasticidad.</p></li>
+</ul>
+</section>
+<section id="inferencia-robusta" class="level3">
+<h3 class="anchored" data-anchor-id="inferencia-robusta">Inferencia robusta</h3>
+<ul>
+<li><p>Las aportaciones de Newey y West, y de autores posteriores, muestran como pueden obtenerse estimaciones de <span class="math inline">\mathop{\mathrm{var}}(\hat{\beta})</span> que sólo requieren los supuestos <strong>ST.1'</strong>, <strong>ST.2'</strong> y <strong>ST.3'</strong> y que son válidas aun en presencia de correlación serial y heteroscedasticidad.</p></li>
+<li><p>Se suele usar el acrónimo <strong>HAC</strong> (<em>heteroskedasticity and autocorrelation consistent</em>) para referirse a esos errores típicos robustos.</p></li>
+</ul>
+</section>
+<section id="contrastes-t-robustos" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-t-robustos">Contrastes <span class="math inline">t</span> robustos</h3>
+<p>La hipótesis nula <span class="math inline">\beta_j = b</span> puede contrastarse usando un cociente <span class="math inline">t</span> robusto que utiliza la estimación MCO, <span class="math inline">\hat{\beta}_j</span>, y un error típico robusto a heteroscedasticidad y autocorrelación, <span class="math inline">\mathop{\mathrm{et}}_{\text{HAC}}(\hat{\beta}_j)</span>: <span class="math display">
+  t_{j} = \frac{\hat{\beta}_{j} - b}{\mathop{\mathrm{et}}_{\text{HAC}}(\hat{\beta}_{j})}.
+</span></p>
+</section>
+<section id="contrastes-de-hipótesis-lineales" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-hipótesis-lineales">Contrastes de hipótesis lineales</h3>
+<ul>
+<li><p>En presencia de autocorrelación y heteroscedasticidad no es válido el estadístico <span class="math inline">F</span> que compara las <span class="math inline">\mathop{\mathrm{SCR}}</span> o los <span class="math inline">R^2</span> de los modelos restringido y no restringido. Tampoco existe una versión robusta de este contraste.</p></li>
+<li><p>Para contrastar restricciones lineales generales sobre los parámetros del modelo, utilizamos contrastes de Wald construidos con estimaciones de <span class="math inline">\mathop{\mathrm{var}}(\hat{\boldsymbol{\beta}})</span> robustas a heteroscedasticidad y autocorrelación.</p></li>
+</ul>
+</section>
+<section id="estimación-e-inferencia-robusta-con-mco" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-e-inferencia-robusta-con-mco">Estimación e inferencia robusta con MCO</h3>
+<ul>
+<li><p>Se estiman por MCO los parámetros del modelo de regresión. MCO es consistente si se cumplen los supuestos <strong>ST.1'</strong>, <strong>ST.2'</strong> y <strong>ST.3'</strong>.</p></li>
+<li><p>Los contrastes de hipótesis se llevan a cabo utilizando una estimación de <span class="math inline">\mathop{\mathrm{var}}(\hat{\boldsymbol{\beta}})</span> robusta a heteroscedasticidad y autocorrelación.</p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./intro-ts.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./regr-ts.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

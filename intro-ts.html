@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ec1027-guide - 6&nbsp; Introducción a las series temporales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ols-ts.html" rel="next">
+<link href="./ts-part.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ts-part.html">Regresión con datos de series temporales</a></li><li class="breadcrumb-item"><a href="./intro-ts.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">ec1027-guide</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./cs-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de corte transversal</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mcrl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./asymp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./het.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lpm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./other-cs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forma funcional y problemas con los datos</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./ts-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de series temporales</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro-ts.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ols-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regr-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocorr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">6.1</span> Introducción</a>
+  <ul class="collapse">
+  <li><a href="#datos-de-series-temporales" id="toc-datos-de-series-temporales" class="nav-link" data-scroll-target="#datos-de-series-temporales">Datos de series temporales</a></li>
+  <li><a href="#comparación-con-datos-de-corte-transversal" id="toc-comparación-con-datos-de-corte-transversal" class="nav-link" data-scroll-target="#comparación-con-datos-de-corte-transversal">Comparación con datos de corte transversal</a></li>
+  <li><a href="#series-temporales-regulares" id="toc-series-temporales-regulares" class="nav-link" data-scroll-target="#series-temporales-regulares">Series temporales regulares</a></li>
+  <li><a href="#ejemplo-inflación-interanual-en-españa" id="toc-ejemplo-inflación-interanual-en-españa" class="nav-link" data-scroll-target="#ejemplo-inflación-interanual-en-españa">Ejemplo: inflación interanual en España</a></li>
+  <li><a href="#gráfico-de-series-temporales" id="toc-gráfico-de-series-temporales" class="nav-link" data-scroll-target="#gráfico-de-series-temporales">Gráfico de series temporales</a></li>
+  <li><a href="#principales-dificultades" id="toc-principales-dificultades" class="nav-link" data-scroll-target="#principales-dificultades">Principales dificultades</a></li>
+  </ul></li>
+  <li><a href="#conceptos-básicos" id="toc-conceptos-básicos" class="nav-link" data-scroll-target="#conceptos-básicos"><span class="header-section-number">6.2</span> Conceptos básicos</a>
+  <ul class="collapse">
+  <li><a href="#notación" id="toc-notación" class="nav-link" data-scroll-target="#notación">Notación</a></li>
+  <li><a href="#retardos" id="toc-retardos" class="nav-link" data-scroll-target="#retardos">Retardos</a></li>
+  <li><a href="#ejemplo-retardos" id="toc-ejemplo-retardos" class="nav-link" data-scroll-target="#ejemplo-retardos">Ejemplo: retardos</a></li>
+  <li><a href="#diferencias" id="toc-diferencias" class="nav-link" data-scroll-target="#diferencias">Diferencias</a></li>
+  <li><a href="#ejemplo-diferencias" id="toc-ejemplo-diferencias" class="nav-link" data-scroll-target="#ejemplo-diferencias">Ejemplo: diferencias</a></li>
+  <li><a href="#logaritmos-y-tasas-de-crecimiento" id="toc-logaritmos-y-tasas-de-crecimiento" class="nav-link" data-scroll-target="#logaritmos-y-tasas-de-crecimiento">Logaritmos y tasas de crecimiento</a></li>
+  <li><a href="#ejemplo-logaritmos-y-tasas-de-crecimiento" id="toc-ejemplo-logaritmos-y-tasas-de-crecimiento" class="nav-link" data-scroll-target="#ejemplo-logaritmos-y-tasas-de-crecimiento">Ejemplo: logaritmos y tasas de crecimiento</a></li>
+  <li><a href="#procesos-estocásticos" id="toc-procesos-estocásticos" class="nav-link" data-scroll-target="#procesos-estocásticos">Procesos estocásticos</a></li>
+  <li><a href="#esperanza" id="toc-esperanza" class="nav-link" data-scroll-target="#esperanza">Esperanza</a></li>
+  <li><a href="#tendencias" id="toc-tendencias" class="nav-link" data-scroll-target="#tendencias">Tendencias</a></li>
+  <li><a href="#estacionalidad" id="toc-estacionalidad" class="nav-link" data-scroll-target="#estacionalidad">Estacionalidad</a></li>
+  <li><a href="#varianza" id="toc-varianza" class="nav-link" data-scroll-target="#varianza">Varianza</a></li>
+  <li><a href="#autocovarianzas" id="toc-autocovarianzas" class="nav-link" data-scroll-target="#autocovarianzas">Autocovarianzas</a></li>
+  <li><a href="#estacionariedad" id="toc-estacionariedad" class="nav-link" data-scroll-target="#estacionariedad">Estacionariedad</a></li>
+  <li><a href="#estacionariedad-débil" id="toc-estacionariedad-débil" class="nav-link" data-scroll-target="#estacionariedad-débil">Estacionariedad débil</a></li>
+  <li><a href="#no-estacionariedad" id="toc-no-estacionariedad" class="nav-link" data-scroll-target="#no-estacionariedad">No estacionariedad</a></li>
+  <li><a href="#coeficientes-de-autocorrelación" id="toc-coeficientes-de-autocorrelación" class="nav-link" data-scroll-target="#coeficientes-de-autocorrelación">Coeficientes de autocorrelación</a></li>
+  <li><a href="#correlación-serial" id="toc-correlación-serial" class="nav-link" data-scroll-target="#correlación-serial">Correlación serial</a></li>
+  <li><a href="#comment-correlograma" id="toc-comment-correlograma" class="nav-link" data-scroll-target="#comment-correlograma">COMMENT Correlograma</a></li>
+  <li><a href="#dependencia-débil" id="toc-dependencia-débil" class="nav-link" data-scroll-target="#dependencia-débil">Dependencia débil</a></li>
+  </ul></li>
+  <li><a href="#algunos-procesos-estocásticos" id="toc-algunos-procesos-estocásticos" class="nav-link" data-scroll-target="#algunos-procesos-estocásticos"><span class="header-section-number">6.3</span> Algunos procesos estocásticos</a>
+  <ul class="collapse">
+  <li><a href="#algunos-procesos-estocásticos-1" id="toc-algunos-procesos-estocásticos-1" class="nav-link" data-scroll-target="#algunos-procesos-estocásticos-1">Algunos procesos estocásticos</a></li>
+  </ul></li>
+  <li><a href="#ruido-blanco" id="toc-ruido-blanco" class="nav-link" data-scroll-target="#ruido-blanco"><span class="header-section-number">6.4</span> Ruido blanco</a>
+  <ul class="collapse">
+  <li><a href="#definición" id="toc-definición" class="nav-link" data-scroll-target="#definición">Definición</a></li>
+  <li><a href="#ejemplo" id="toc-ejemplo" class="nav-link" data-scroll-target="#ejemplo">Ejemplo</a></li>
+  <li><a href="#características" id="toc-características" class="nav-link" data-scroll-target="#características">Características</a></li>
+  <li><a href="#autocorrelación" id="toc-autocorrelación" class="nav-link" data-scroll-target="#autocorrelación">Autocorrelación</a></li>
+  <li><a href="#relación-con-otros-conceptos" id="toc-relación-con-otros-conceptos" class="nav-link" data-scroll-target="#relación-con-otros-conceptos">Relación con otros conceptos</a></li>
+  </ul></li>
+  <li><a href="#procesos-autorregresivos" id="toc-procesos-autorregresivos" class="nav-link" data-scroll-target="#procesos-autorregresivos"><span class="header-section-number">6.5</span> Procesos autorregresivos</a>
+  <ul class="collapse">
+  <li><a href="#procesos-autorregresivos-1" id="toc-procesos-autorregresivos-1" class="nav-link" data-scroll-target="#procesos-autorregresivos-1">Procesos autorregresivos</a></li>
+  <li><a href="#proceso-ar1" id="toc-proceso-ar1" class="nav-link" data-scroll-target="#proceso-ar1">Proceso AR(1)</a></li>
+  <li><a href="#esperanza-de-un-proceso-ar1" id="toc-esperanza-de-un-proceso-ar1" class="nav-link" data-scroll-target="#esperanza-de-un-proceso-ar1">Esperanza de un proceso AR(1)</a></li>
+  <li><a href="#varianza-de-un-proceso-ar1" id="toc-varianza-de-un-proceso-ar1" class="nav-link" data-scroll-target="#varianza-de-un-proceso-ar1">Varianza de un proceso AR(1)</a></li>
+  <li><a href="#autocovarianzas-de-un-proceso-ar1-i" id="toc-autocovarianzas-de-un-proceso-ar1-i" class="nav-link" data-scroll-target="#autocovarianzas-de-un-proceso-ar1-i">Autocovarianzas de un proceso AR(1) (I)</a></li>
+  <li><a href="#autocovarianzas-de-un-proceso-ar1-ii" id="toc-autocovarianzas-de-un-proceso-ar1-ii" class="nav-link" data-scroll-target="#autocovarianzas-de-un-proceso-ar1-ii">Autocovarianzas de un proceso AR(1) (II)</a></li>
+  <li><a href="#autocovarianzas-de-un-proceso-ar1-y-iii" id="toc-autocovarianzas-de-un-proceso-ar1-y-iii" class="nav-link" data-scroll-target="#autocovarianzas-de-un-proceso-ar1-y-iii">Autocovarianzas de un proceso AR(1) (y III)</a></li>
+  <li><a href="#autocorrelaciones-de-un-proceso-ar1" id="toc-autocorrelaciones-de-un-proceso-ar1" class="nav-link" data-scroll-target="#autocorrelaciones-de-un-proceso-ar1">Autocorrelaciones de un proceso AR(1)</a></li>
+  <li><a href="#estacionariedad-y-dependencia-débil" id="toc-estacionariedad-y-dependencia-débil" class="nav-link" data-scroll-target="#estacionariedad-y-dependencia-débil">Estacionariedad y dependencia débil</a></li>
+  <li><a href="#algunos-ejemplos-i" id="toc-algunos-ejemplos-i" class="nav-link" data-scroll-target="#algunos-ejemplos-i">Algunos ejemplos (I)</a></li>
+  <li><a href="#algunos-ejemplos-y-ii" id="toc-algunos-ejemplos-y-ii" class="nav-link" data-scroll-target="#algunos-ejemplos-y-ii">Algunos ejemplos (y II)</a></li>
+  </ul></li>
+  <li><a href="#paseo-aleatorio" id="toc-paseo-aleatorio" class="nav-link" data-scroll-target="#paseo-aleatorio"><span class="header-section-number">6.6</span> Paseo aleatorio</a>
+  <ul class="collapse">
+  <li><a href="#definición-1" id="toc-definición-1" class="nav-link" data-scroll-target="#definición-1">Definición</a></li>
+  <li><a href="#sustitución-recursiva" id="toc-sustitución-recursiva" class="nav-link" data-scroll-target="#sustitución-recursiva">Sustitución recursiva</a></li>
+  <li><a href="#esperanza-y-varianza" id="toc-esperanza-y-varianza" class="nav-link" data-scroll-target="#esperanza-y-varianza">Esperanza y varianza</a></li>
+  <li><a href="#autocovarianzas-y-autocorrelaciones" id="toc-autocovarianzas-y-autocorrelaciones" class="nav-link" data-scroll-target="#autocovarianzas-y-autocorrelaciones">Autocovarianzas y autocorrelaciones</a></li>
+  <li><a href="#no-estacionariedad-1" id="toc-no-estacionariedad-1" class="nav-link" data-scroll-target="#no-estacionariedad-1">No estacionariedad</a></li>
+  <li><a href="#dependencia-fuerte" id="toc-dependencia-fuerte" class="nav-link" data-scroll-target="#dependencia-fuerte">Dependencia fuerte</a></li>
+  <li><a href="#ejemplo-1" id="toc-ejemplo-1" class="nav-link" data-scroll-target="#ejemplo-1">Ejemplo</a></li>
+  </ul></li>
+  <li><a href="#tendencias-1" id="toc-tendencias-1" class="nav-link" data-scroll-target="#tendencias-1"><span class="header-section-number">6.7</span> Tendencias</a>
+  <ul class="collapse">
+  <li><a href="#paseo-aleatorio-con-deriva" id="toc-paseo-aleatorio-con-deriva" class="nav-link" data-scroll-target="#paseo-aleatorio-con-deriva">Paseo aleatorio con deriva</a></li>
+  <li><a href="#ejemplo-2" id="toc-ejemplo-2" class="nav-link" data-scroll-target="#ejemplo-2">Ejemplo</a></li>
+  <li><a href="#procesos-estacionarios-con-tendencia" id="toc-procesos-estacionarios-con-tendencia" class="nav-link" data-scroll-target="#procesos-estacionarios-con-tendencia">Procesos estacionarios con tendencia</a></li>
+  <li><a href="#ejemplo-3" id="toc-ejemplo-3" class="nav-link" data-scroll-target="#ejemplo-3">Ejemplo</a></li>
+  </ul></li>
+  <li><a href="#procesos-integrados" id="toc-procesos-integrados" class="nav-link" data-scroll-target="#procesos-integrados"><span class="header-section-number">6.8</span> Procesos integrados</a>
+  <ul class="collapse">
+  <li><a href="#la-diferencia-de-un-paseo-aleatorio" id="toc-la-diferencia-de-un-paseo-aleatorio" class="nav-link" data-scroll-target="#la-diferencia-de-un-paseo-aleatorio">La diferencia de un paseo aleatorio</a></li>
+  <li><a href="#diferencias-y-dependencia-débil" id="toc-diferencias-y-dependencia-débil" class="nav-link" data-scroll-target="#diferencias-y-dependencia-débil">Diferencias y dependencia débil</a></li>
+  <li><a href="#procesos-integrados-1" id="toc-procesos-integrados-1" class="nav-link" data-scroll-target="#procesos-integrados-1">Procesos integrados</a></li>
+  <li><a href="#ejemplo-ipc-armonizado" id="toc-ejemplo-ipc-armonizado" class="nav-link" data-scroll-target="#ejemplo-ipc-armonizado">Ejemplo: IPC armonizado</a></li>
+  <li><a href="#ejemplo-inflación-interanual" id="toc-ejemplo-inflación-interanual" class="nav-link" data-scroll-target="#ejemplo-inflación-interanual">Ejemplo: Inflación interanual</a></li>
+  <li><a href="#ejemplo-variación-mensual-de-la-inflación" id="toc-ejemplo-variación-mensual-de-la-inflación" class="nav-link" data-scroll-target="#ejemplo-variación-mensual-de-la-inflación">Ejemplo: Variación mensual de la inflación</a></li>
+  <li><a href="#ejemplo-procesos-integrados" id="toc-ejemplo-procesos-integrados" class="nav-link" data-scroll-target="#ejemplo-procesos-integrados">Ejemplo: Procesos integrados</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introducción" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">6.1</span> Introducción</h2>
+<section id="datos-de-series-temporales" class="level3">
+<h3 class="anchored" data-anchor-id="datos-de-series-temporales">Datos de series temporales</h3>
+<ul>
+<li>Una muestra de datos de <strong>series temporales</strong> está formada por observaciones de una o más variables <strong>en periodos de tiempo consecutivos</strong>.</li>
+</ul>
+</section>
+<section id="comparación-con-datos-de-corte-transversal" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-con-datos-de-corte-transversal">Comparación con datos de corte transversal</h3>
+<ul>
+<li><p>Los datos no provienen de un <strong>muestreo aleatorio</strong>.</p></li>
+<li><p>El paso del tiempo proporciona un <strong>orden</strong> natural a las observaciones de series temporales.</p></li>
+</ul>
+</section>
+<section id="series-temporales-regulares" class="level3">
+<h3 class="anchored" data-anchor-id="series-temporales-regulares">Series temporales regulares</h3>
+<ul>
+<li><p><strong>Series temporales regulares</strong>: el intervalo de tiempo que transcurre entre una observación y la siguiente es siempre el mismo: un año, un semestre, un cuatrimestre, un mes, etc.</p></li>
+<li><p>De acuerdo con la <strong>frecuencia</strong> con que se observan los valores de una variable, hablamos de series temporales anuales, trimestrales, mensuales, etc.</p></li>
+</ul>
+</section>
+<section id="ejemplo-inflación-interanual-en-españa" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-inflación-interanual-en-españa">Ejemplo: inflación interanual en España</h3>
+<div id="tbl-infl" class="anchored">
+<table class="table">
+<caption>Tabla&nbsp;6.1: Tasa interanual de inflación calculada a partir del IPC armonizado general de España. Fuente: INE.</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: right;">Ene</th>
+<th style="text-align: right;">Feb</th>
+<th style="text-align: right;">Mar</th>
+<th style="text-align: right;">Abr</th>
+<th style="text-align: right;">May</th>
+<th style="text-align: right;">Jun</th>
+<th style="text-align: right;">Jul</th>
+<th style="text-align: right;">Ago</th>
+<th style="text-align: right;">Sep</th>
+<th style="text-align: right;">Oct</th>
+<th style="text-align: right;">Nov</th>
+<th style="text-align: right;">Dic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2016</td>
+<td style="text-align: right;"><span class="math inline">-0{,}4</span></td>
+<td style="text-align: right;"><span class="math inline">-1{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">-1{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">-1{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">-1{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}5</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}5</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}4</span></td>
+</tr>
+<tr class="even">
+<td>2017</td>
+<td style="text-align: right;"><span class="math inline">2{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">3{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}6</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}6</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}8</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}8</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}2</span></td>
+</tr>
+<tr class="odd">
+<td>2018</td>
+<td style="text-align: right;"><span class="math inline">0{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}2</span></td>
+</tr>
+<tr class="even">
+<td>2019</td>
+<td style="text-align: right;"><span class="math inline">1{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}6</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}6</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}6</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}4</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}5</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}8</span></td>
+</tr>
+<tr class="odd">
+<td>2020</td>
+<td style="text-align: right;"><span class="math inline">1{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">0{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}6</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}6</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}8</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}6</span></td>
+</tr>
+<tr class="even">
+<td>2021</td>
+<td style="text-align: right;"><span class="math inline">0{,}4</span></td>
+<td style="text-align: right;"><span class="math inline">-0{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">1{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}4</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}5</span></td>
+<td style="text-align: right;"><span class="math inline">2{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">3{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">4{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">5{,}4</span></td>
+<td style="text-align: right;"><span class="math inline">5{,}5</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}6</span></td>
+</tr>
+<tr class="odd">
+<td>2022</td>
+<td style="text-align: right;"><span class="math inline">6{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}6</span></td>
+<td style="text-align: right;"><span class="math inline">9{,}8</span></td>
+<td style="text-align: right;"><span class="math inline">8{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">8{,}5</span></td>
+<td style="text-align: right;"><span class="math inline">10{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">10{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">10{,}5</span></td>
+<td style="text-align: right;"><span class="math inline">9{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}3</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}7</span></td>
+<td style="text-align: right;"><span class="math inline">5{,}5</span></td>
+</tr>
+<tr class="even">
+<td>2023</td>
+<td style="text-align: right;"><span class="math inline">5{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}0</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="gráfico-de-series-temporales" class="level3">
+<h3 class="anchored" data-anchor-id="gráfico-de-series-temporales">Gráfico de series temporales</h3>
+<p>Tasa interanual de inflación calculada a partir del IPC armonizado general de España. Fuente: INE.</p>
+<p>&lt;+MATS: fig fig-08a_1027-infl.pdf</p>
+</section>
+<section id="principales-dificultades" class="level3">
+<h3 class="anchored" data-anchor-id="principales-dificultades">Principales dificultades</h3>
+<ul>
+<li><p>Muestras relativamente pequeñas.</p></li>
+<li><p>Los procesos que determinan los valores que toma una serie temporal pueden cambiar con el paso del tiempo.</p></li>
+<li><p>Un hecho que ocurra en un momento del tiempo puede tener influencia en sucesivos periodos, creando dependencia entre observaciones consecutivas de una serie temporal.</p></li>
+</ul>
+</section>
+</section>
+<section id="conceptos-básicos" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="conceptos-básicos"><span class="header-section-number">6.2</span> Conceptos básicos</h2>
+<section id="notación" class="level3">
+<h3 class="anchored" data-anchor-id="notación">Notación</h3>
+<ul>
+<li><p><span class="math inline">y_t</span>: observación de la serie temporal <span class="math inline">y</span> en el periodo <span class="math inline">t</span>.</p></li>
+<li><p>El índice <span class="math inline">t</span> va desde <span class="math inline">1</span>, para el primer periodo en la muestra, hasta <span class="math inline">T</span>, para el último.</p></li>
+</ul>
+</section>
+<section id="retardos" class="level3">
+<h3 class="anchored" data-anchor-id="retardos">Retardos</h3>
+<ul>
+<li><p>El <strong>primer retardo</strong> (<em>first lag</em>) de la serie <span class="math inline">y</span> es <span class="math inline">y_{t-1}</span>, el valor que tomaba la variable el período anterior.</p></li>
+<li><p>De forma análoga, podemos definir el segundo y sucesivos retardos de la serie <span class="math inline">y</span>: <span class="math inline">y_{t-2}, y_{t-3}, \dots</span></p></li>
+</ul>
+</section>
+<section id="ejemplo-retardos" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-retardos">Ejemplo: retardos</h3>
+<p>La serie anual <span class="math inline">Y_t</span> contiene los valores del PIB español a precios de mercado desde el año 2000 hasta el 2008. Se mide en millones de euros.</p>
+<table class="table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Año</th>
+<th style="text-align: right;"><span class="math inline">t</span></th>
+<th style="text-align: right;"><span class="math inline">Y_{t}</span></th>
+<th style="text-align: right;"><span class="math inline">Y_{t-1}</span></th>
+<th style="text-align: right;"><span class="math inline">Y_{t-2}</span></th>
+<th style="text-align: right;"><span class="math inline">Y_{t-3}</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2000</td>
+<td style="text-align: right;"><span class="math inline">1</span></td>
+<td style="text-align: right;"><span class="math inline">647{.}851</span></td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+</tr>
+<tr class="even">
+<td>2001</td>
+<td style="text-align: right;"><span class="math inline">2</span></td>
+<td style="text-align: right;"><span class="math inline">700{.}993</span></td>
+<td style="text-align: right;"><span class="math inline">647{.}851</span></td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+</tr>
+<tr class="odd">
+<td>2002</td>
+<td style="text-align: right;"><span class="math inline">3</span></td>
+<td style="text-align: right;"><span class="math inline">749{.}552</span></td>
+<td style="text-align: right;"><span class="math inline">700{.}993</span></td>
+<td style="text-align: right;"><span class="math inline">647{.}851</span></td>
+<td style="text-align: right;">–</td>
+</tr>
+<tr class="even">
+<td>2003</td>
+<td style="text-align: right;"><span class="math inline">4</span></td>
+<td style="text-align: right;"><span class="math inline">802{.}266</span></td>
+<td style="text-align: right;"><span class="math inline">749{.}552</span></td>
+<td style="text-align: right;"><span class="math inline">700{.}993</span></td>
+<td style="text-align: right;"><span class="math inline">647{.}851</span></td>
+</tr>
+<tr class="odd">
+<td>2004</td>
+<td style="text-align: right;"><span class="math inline">5</span></td>
+<td style="text-align: right;"><span class="math inline">859{.}437</span></td>
+<td style="text-align: right;"><span class="math inline">802{.}266</span></td>
+<td style="text-align: right;"><span class="math inline">749{.}552</span></td>
+<td style="text-align: right;"><span class="math inline">700{.}993</span></td>
+</tr>
+<tr class="even">
+<td>2005</td>
+<td style="text-align: right;"><span class="math inline">6</span></td>
+<td style="text-align: right;"><span class="math inline">927{.}357</span></td>
+<td style="text-align: right;"><span class="math inline">859{.}437</span></td>
+<td style="text-align: right;"><span class="math inline">802{.}266</span></td>
+<td style="text-align: right;"><span class="math inline">749{.}552</span></td>
+</tr>
+<tr class="odd">
+<td>2006</td>
+<td style="text-align: right;"><span class="math inline">7</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}003{.}823</span></td>
+<td style="text-align: right;"><span class="math inline">927{.}357</span></td>
+<td style="text-align: right;"><span class="math inline">859{.}437</span></td>
+<td style="text-align: right;"><span class="math inline">802{.}266</span></td>
+</tr>
+<tr class="even">
+<td>2007</td>
+<td style="text-align: right;"><span class="math inline">8</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}075{.}539</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}003{.}823</span></td>
+<td style="text-align: right;"><span class="math inline">927{.}357</span></td>
+<td style="text-align: right;"><span class="math inline">859{.}437</span></td>
+</tr>
+<tr class="odd">
+<td>2008</td>
+<td style="text-align: right;"><span class="math inline">9</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}109{.}541</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}075{.}539</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}003{.}823</span></td>
+<td style="text-align: right;"><span class="math inline">927{.}357</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="diferencias" class="level3">
+<h3 class="anchored" data-anchor-id="diferencias">Diferencias</h3>
+<ul>
+<li><p>La <strong>diferencia</strong> de la serie <span class="math inline">y_t</span> es <span class="math inline">\mathop{}\!\Delta y_t = y_{t} - y_{t-1}</span>, el incremento de la variable de un periodo a otro.</p></li>
+<li><p>Podemos calcular <span class="math inline">\mathit{gy}_t</span>, la tasa porcentual de crecimiento de <span class="math inline">y_t</span>, a partir de la diferencia y del primer retardo: <span class="math display">
+  \mathit{gy}_t = 100 \frac{\mathop{}\!\Delta y_t}{y_{t-1}}
+</span></p></li>
+</ul>
+</section>
+<section id="ejemplo-diferencias" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-diferencias">Ejemplo: diferencias</h3>
+<p>Diferencia y tasa de crecimiento de <span class="math inline">Y_t</span>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 20%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Año</th>
+<th style="text-align: right;"><span class="math inline">t</span></th>
+<th style="text-align: right;"><span class="math inline">Y_{t}</span></th>
+<th style="text-align: right;"><span class="math inline">Y_{t-1}</span></th>
+<th style="text-align: right;"><span class="math inline">\mathop{}\!\Delta Y_{t}</span></th>
+<th style="text-align: right;"><span class="math inline">gY_{t}</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2000</td>
+<td style="text-align: right;"><span class="math inline">1</span></td>
+<td style="text-align: right;"><span class="math inline">647{.}851</span></td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+</tr>
+<tr class="even">
+<td>2001</td>
+<td style="text-align: right;"><span class="math inline">2</span></td>
+<td style="text-align: right;"><span class="math inline">700{.}993</span></td>
+<td style="text-align: right;"><span class="math inline">647{.}851</span></td>
+<td style="text-align: right;"><span class="math inline">53{.}142</span></td>
+<td style="text-align: right;"><span class="math inline">8{,}2</span></td>
+</tr>
+<tr class="odd">
+<td>2002</td>
+<td style="text-align: right;"><span class="math inline">3</span></td>
+<td style="text-align: right;"><span class="math inline">749{.}552</span></td>
+<td style="text-align: right;"><span class="math inline">700{.}993</span></td>
+<td style="text-align: right;"><span class="math inline">48{.}559</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}9</span></td>
+</tr>
+<tr class="even">
+<td>2003</td>
+<td style="text-align: right;"><span class="math inline">4</span></td>
+<td style="text-align: right;"><span class="math inline">802{.}266</span></td>
+<td style="text-align: right;"><span class="math inline">749{.}552</span></td>
+<td style="text-align: right;"><span class="math inline">52{.}714</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}0</span></td>
+</tr>
+<tr class="odd">
+<td>2004</td>
+<td style="text-align: right;"><span class="math inline">5</span></td>
+<td style="text-align: right;"><span class="math inline">859{.}437</span></td>
+<td style="text-align: right;"><span class="math inline">802{.}266</span></td>
+<td style="text-align: right;"><span class="math inline">57{.}171</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}1</span></td>
+</tr>
+<tr class="even">
+<td>2005</td>
+<td style="text-align: right;"><span class="math inline">6</span></td>
+<td style="text-align: right;"><span class="math inline">927{.}357</span></td>
+<td style="text-align: right;"><span class="math inline">859{.}437</span></td>
+<td style="text-align: right;"><span class="math inline">67{.}920</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}9</span></td>
+</tr>
+<tr class="odd">
+<td>2006</td>
+<td style="text-align: right;"><span class="math inline">7</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}003{.}823</span></td>
+<td style="text-align: right;"><span class="math inline">927{.}357</span></td>
+<td style="text-align: right;"><span class="math inline">76{.}466</span></td>
+<td style="text-align: right;"><span class="math inline">8{,}2</span></td>
+</tr>
+<tr class="even">
+<td>2007</td>
+<td style="text-align: right;"><span class="math inline">8</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}075{.}539</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}003{.}823</span></td>
+<td style="text-align: right;"><span class="math inline">71{.}716</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}1</span></td>
+</tr>
+<tr class="odd">
+<td>2008</td>
+<td style="text-align: right;"><span class="math inline">9</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}109{.}541</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}075{.}539</span></td>
+<td style="text-align: right;"><span class="math inline">34{.}002</span></td>
+<td style="text-align: right;"><span class="math inline">3{,}2</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="logaritmos-y-tasas-de-crecimiento" class="level3">
+<h3 class="anchored" data-anchor-id="logaritmos-y-tasas-de-crecimiento">Logaritmos y tasas de crecimiento</h3>
+<ul>
+<li><p>En el análisis de series temporales es muy común usar las variables en logaritmos.</p></li>
+<li><p>Es muy frecuente calcular la tasa de crecimiento de <span class="math inline">y_t</span> usando la diferencia del logaritmo de <span class="math inline">y_t</span>: <span class="math display">
+  \mathit{gy}_t \approx 100 \mathop{}\!\Delta\log(y_t)
+</span></p></li>
+</ul>
+</section>
+<section id="ejemplo-logaritmos-y-tasas-de-crecimiento" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-logaritmos-y-tasas-de-crecimiento">Ejemplo: logaritmos y tasas de crecimiento</h3>
+<p>No hay grandes diferencias entre las diferentes formas de calcular las tasas de crecimiento.</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 16%">
+<col style="width: 28%">
+<col style="width: 14%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Año</th>
+<th style="text-align: right;"><span class="math inline">t</span></th>
+<th style="text-align: right;"><span class="math inline">Y_{t}</span></th>
+<th style="text-align: right;"><span class="math inline">100 \mathop{}\!\Delta Y_{t} / Y_{t-1}</span></th>
+<th style="text-align: right;"><span class="math inline">\log(Y_{t})</span></th>
+<th style="text-align: right;"><span class="math inline">100 \mathop{}\!\Delta\log(Y_{t})</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2000</td>
+<td style="text-align: right;"><span class="math inline">1</span></td>
+<td style="text-align: right;"><span class="math inline">647{.}851</span></td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;"><span class="math inline">13{,}38</span></td>
+<td style="text-align: right;">–</td>
+</tr>
+<tr class="even">
+<td>2001</td>
+<td style="text-align: right;"><span class="math inline">2</span></td>
+<td style="text-align: right;"><span class="math inline">700{.}993</span></td>
+<td style="text-align: right;"><span class="math inline">8{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">13{,}46</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}9</span></td>
+</tr>
+<tr class="odd">
+<td>2002</td>
+<td style="text-align: right;"><span class="math inline">3</span></td>
+<td style="text-align: right;"><span class="math inline">749{.}552</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">13{,}53</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}7</span></td>
+</tr>
+<tr class="even">
+<td>2003</td>
+<td style="text-align: right;"><span class="math inline">4</span></td>
+<td style="text-align: right;"><span class="math inline">802{.}266</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}0</span></td>
+<td style="text-align: right;"><span class="math inline">13{,}60</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}8</span></td>
+</tr>
+<tr class="odd">
+<td>2004</td>
+<td style="text-align: right;"><span class="math inline">5</span></td>
+<td style="text-align: right;"><span class="math inline">859{.}437</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">13{,}66</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}9</span></td>
+</tr>
+<tr class="even">
+<td>2005</td>
+<td style="text-align: right;"><span class="math inline">6</span></td>
+<td style="text-align: right;"><span class="math inline">927{.}357</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}9</span></td>
+<td style="text-align: right;"><span class="math inline">13{,}74</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}6</span></td>
+</tr>
+<tr class="odd">
+<td>2006</td>
+<td style="text-align: right;"><span class="math inline">7</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}003{.}823</span></td>
+<td style="text-align: right;"><span class="math inline">8{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">13{,}82</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}9</span></td>
+</tr>
+<tr class="even">
+<td>2007</td>
+<td style="text-align: right;"><span class="math inline">8</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}075{.}539</span></td>
+<td style="text-align: right;"><span class="math inline">7{,}1</span></td>
+<td style="text-align: right;"><span class="math inline">13{,}89</span></td>
+<td style="text-align: right;"><span class="math inline">6{,}9</span></td>
+</tr>
+<tr class="odd">
+<td>2008</td>
+<td style="text-align: right;"><span class="math inline">9</span></td>
+<td style="text-align: right;"><span class="math inline">1{.}109{.}541</span></td>
+<td style="text-align: right;"><span class="math inline">3{,}2</span></td>
+<td style="text-align: right;"><span class="math inline">13{,}92</span></td>
+<td style="text-align: right;"><span class="math inline">3{,}1</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="procesos-estocásticos" class="level3">
+<h3 class="anchored" data-anchor-id="procesos-estocásticos">Procesos estocásticos</h3>
+<ul>
+<li><p>Los modelos estadísticos para estudiar series temporales se basan en el concepto de <strong>proceso estocástico</strong>.</p></li>
+<li><p>Un <strong>proceso estocástico</strong> es una secuencia de variables aleatorias observadas en periodos consecutivos de tiempo: <span class="math inline">\{y_1, y_2, \dots, y_T\}</span>.</p></li>
+<li><p>Notación abreviada: <span class="math inline">\{y_t\!: t = 1, 2, \dots, T\}</span>.</p></li>
+</ul>
+</section>
+<section id="esperanza" class="level3">
+<h3 class="anchored" data-anchor-id="esperanza">Esperanza</h3>
+<ul>
+<li><p>En general, la esperanza del proceso estocástico es la secuencia de esperanzas en cada momento del tiempo: <span class="math inline">\{\mathop{\mathrm{E}}(y_t)\!: t = 1, \dots, T\}</span>.</p></li>
+<li><p>La esperanza de un proceso <strong>estacionario en media</strong> es constante: <span class="math display">
+  \mathop{\mathrm{E}}(y_t) = \mu, \quad t = 1, \dots, T.
+</span></p></li>
+</ul>
+<p>&lt;+latex: </p>
+</section>
+<section id="tendencias" class="level3">
+<h3 class="anchored" data-anchor-id="tendencias">Tendencias</h3>
+<ul>
+<li><p>En series económicas, es frecuente encontrar <strong>tendencias</strong>.</p></li>
+<li><p>PIB a precios de mercado de España. Miles de millones de euros. Fuente: INE.</p></li>
+</ul>
+<p>&lt;+MATS: fig fig-08a_1027-gdp.pdf</p>
+</section>
+<section id="estacionalidad" class="level3">
+<h3 class="anchored" data-anchor-id="estacionalidad">Estacionalidad</h3>
+<ul>
+<li>Algunas series con frecuencia superior a la anual presentan <strong>variaciones estacionales</strong>: variaciones cíclicas que se repiten año a año.</li>
+<li>Índice de cifra de negocios del comercio al por menor. Precios corrientes. Base 2015. Fuente: INE.</li>
+</ul>
+<p>&lt;+MATS: fig fig-08a_1027-retail.pdf</p>
+</section>
+<section id="varianza" class="level3">
+<h3 class="anchored" data-anchor-id="varianza">Varianza</h3>
+<ul>
+<li><p>Usamos la varianza para describir la dispersión de <span class="math inline">y_t</span> en cada momento del tiempo: <span class="math inline">\mathop{\mathrm{var}}(y_t) = \sigma^2_t</span>.</p></li>
+<li><p>A menudo las variables económicas que presentan tendencias crecientes también tienen varianzas crecientes. En esos casos, la transformación logarítmica puede estabilizar las varianzas.</p></li>
+</ul>
+</section>
+<section id="autocovarianzas" class="level3">
+<h3 class="anchored" data-anchor-id="autocovarianzas">Autocovarianzas</h3>
+<ul>
+<li><p>Usamos las <strong>autocovarianzas</strong> para medir la dependencia de las variables que forman un proceso estocástico.</p></li>
+<li><p>La autocovarianza de orden <span class="math inline">h</span> se define como <span class="math display">
+  \mathop{\mathrm{cov}}(y_t, y_{t-h}) =
+  \mathop{\mathrm{E}}\!\big[\big(y_{t} - \mathop{\mathrm{E}}(y_{t})\big) \big(y_{t-h} - \mathop{\mathrm{E}}(y_{t-h})\big)\big]
+</span></p></li>
+</ul>
+</section>
+<section id="estacionariedad" class="level3">
+<h3 class="anchored" data-anchor-id="estacionariedad">Estacionariedad</h3>
+<ul>
+<li><p>El concepto de <strong>estacionariedad</strong> se refiere a la estabilidad de la distribución de un proceso estocástico.</p></li>
+<li><p>En su versión estricta requiere que la distribución conjunta de <span class="math inline">\{y_t\}</span> no cambie conforme transcurre el tiempo.</p></li>
+</ul>
+</section>
+<section id="estacionariedad-débil" class="level3">
+<h3 class="anchored" data-anchor-id="estacionariedad-débil">Estacionariedad débil</h3>
+<ul>
+<li><p><strong>Estacionariedad débil</strong> (o <strong>estacionariedad en covarianza</strong>) de <span class="math inline">y_t</span>:</p>
+<ul>
+<li><p>Esperanza constante: <span class="math inline">\mathop{\mathrm{E}}(y_t) = \mu</span>.</p></li>
+<li><p>Varianza constante: <span class="math inline">\mathop{\mathrm{var}}(y_t) = \sigma^2 &lt; \infty</span>.</p></li>
+<li><p>La autocovarianza entre <span class="math inline">y_t</span> e <span class="math inline">y_{t-h}</span> sólo depende de <span class="math inline">h</span> y no cambia con <span class="math inline">t</span>: <span class="math inline">\mathop{\mathrm{cov}}(y_t, y_{t-h}) = \gamma_h</span>, para <span class="math inline">h \geq 1</span> y cualquier <span class="math inline">t</span>.</p></li>
+</ul></li>
+<li><p>La estacionariedad estricta implica la estacionariedad débil, pero no al revés.</p></li>
+</ul>
+</section>
+<section id="no-estacionariedad" class="level3">
+<h3 class="anchored" data-anchor-id="no-estacionariedad">No estacionariedad</h3>
+<p>En economía es frecuente encontrar series <strong>no estacionarias</strong>:</p>
+<ul>
+<li><p>Tendencias.</p></li>
+<li><p>Variaciones estacionales.</p></li>
+<li><p>Alternancia de periodos con alta y baja dispersión.</p></li>
+<li><p><strong>Cambio estructural</strong> (<em>structural breaks</em>).</p></li>
+</ul>
+</section>
+<section id="coeficientes-de-autocorrelación" class="level3">
+<h3 class="anchored" data-anchor-id="coeficientes-de-autocorrelación">Coeficientes de autocorrelación</h3>
+<ul>
+<li><p>Las autocovarianzas dependen de las unidades de <span class="math inline">y_t</span>, lo que dificulta su interpretación.</p></li>
+<li><p>Es más frecuente usar los <strong>coeficientes de autocorrelación</strong> cuyo rango de variación está acotado entre <span class="math inline">-1</span> y <span class="math inline">1</span>.</p></li>
+<li><p>El coeficiente de autocorrelación de orden <span class="math inline">j</span> se define como <span class="math display">
+  \rho_j = \mathop{\mathrm{corr}}(y_t, y_{t-j}) =
+  \frac{\mathop{\mathrm{cov}}(y_t, y_{t-j})}{\sqrt{\mathop{\mathrm{var}}(y_t) \mathop{\mathrm{var}}(y_{t-j})}}
+</span></p></li>
+</ul>
+</section>
+<section id="correlación-serial" class="level3">
+<h3 class="anchored" data-anchor-id="correlación-serial">Correlación serial</h3>
+<ul>
+<li><p>Una serie está <strong>autocorrelacionada</strong> cuando sus coeficientes de autocorrelación son distintos de 0.</p></li>
+<li><p>En economía las variables suelen presentar <strong>autocorrelación positiva</strong>: el valor que toman en un periodo es similar al que tomó en periodos inmediatamente anteriores.</p></li>
+<li><p>En una variable con <strong>autocorrelación negativa</strong> se suelen alternar en periodos consecutivos valores altos con valores bajos.</p></li>
+</ul>
+</section>
+<section id="comment-correlograma" class="level3">
+<h3 class="anchored" data-anchor-id="comment-correlograma">COMMENT Correlograma</h3>
+<ul>
+<li>Un <strong>correlograma</strong> es la representación gráfica de los coeficientes de autocorrelación de una serie temporal.</li>
+</ul>
+</section>
+<section id="dependencia-débil" class="level3">
+<h3 class="anchored" data-anchor-id="dependencia-débil">Dependencia débil</h3>
+<ul>
+<li><p>La <strong>dependencia débil</strong> implica que la dependencia entre <span class="math inline">y_t</span> e <span class="math inline">y_{t+h}</span> decrece conforme aumenta <span class="math inline">h</span> y que decrece a un ritmo rápido.</p></li>
+<li><p>Un proceso débilmente dependiente está <strong>asintóticamente incorrela-cionado</strong> si <span class="math inline">\rho_h \to 0</span> conforme <span class="math inline">h \to \infty</span>. La dependencia débil exige, además, que la convergencia sea lo suficientemente rápida.</p></li>
+</ul>
+</section>
+</section>
+<section id="algunos-procesos-estocásticos" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="algunos-procesos-estocásticos"><span class="header-section-number">6.3</span> Algunos procesos estocásticos</h2>
+<section id="algunos-procesos-estocásticos-1" class="level3">
+<h3 class="anchored" data-anchor-id="algunos-procesos-estocásticos-1">Algunos procesos estocásticos</h3>
+<p>Examinaremos las principales características de algunos procesos estocásticos importantes:</p>
+<ul>
+<li><p>Ruido blanco.</p></li>
+<li><p>Procesos autorregresivos.</p></li>
+<li><p>Paseo aleatorio.</p></li>
+<li><p>Procesos integrados.</p></li>
+</ul>
+</section>
+</section>
+<section id="ruido-blanco" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="ruido-blanco"><span class="header-section-number">6.4</span> Ruido blanco</h2>
+<section id="definición" class="level3">
+<h3 class="anchored" data-anchor-id="definición">Definición</h3>
+<p>El proceso estocástico <span class="math inline">\{e_t\}</span> es un <strong>ruido blanco</strong> si:</p>
+<ul>
+<li><p><span class="math inline">\mathop{\mathrm{E}}(e_t) = 0</span>.</p></li>
+<li><p><span class="math inline">\mathop{\mathrm{var}}(e_t) = \sigma^2_e &lt; \infty</span>.</p></li>
+<li><p><span class="math inline">\mathop{\mathrm{cov}}(e_{t+h}, e_t) = 0</span>, para todo <span class="math inline">h &gt; 0</span>.</p></li>
+</ul>
+</section>
+<section id="ejemplo" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo">Ejemplo</h3>
+<p>Ruido blanco, <span class="math inline">\sigma^2_e = 4</span>, <span class="math inline">T = 60</span>.</p>
+<p>&lt;+MATS: fig fig-08b_1027-wn-ts-*.pdf</p>
+</section>
+<section id="características" class="level3">
+<h3 class="anchored" data-anchor-id="características">Características</h3>
+<ul>
+<li><p>Un ruido blanco es un proceso estacionario y débilmente estacionario.</p></li>
+<li><p>Conocer los valores pasados de un ruido blanco no ayuda a predecir mejor <span class="math inline">e_t</span>: <span class="math display">
+  \mathop{\mathrm{E}}(e_t | e_{t-1}, e_{t-2}, \dots) = \mathop{\mathrm{E}}(e_t) = 0.
+</span></p></li>
+<li><p>Un ruido blanco no tiene <strong>memoria</strong>: el valor que toma en un periodo no tienen ninguna influencia sobre los valores futuros.</p></li>
+</ul>
+</section>
+<section id="autocorrelación" class="level3">
+<h3 class="anchored" data-anchor-id="autocorrelación">Autocorrelación</h3>
+<p>&lt;+MATS: figcol fig-08b_1027-wn-lag-*.pdf 0.5</p>
+<ul>
+<li><p><span class="math inline">e_t</span> no está correlacionado con sus retardos.</p></li>
+<li><p>Los coeficientes de autocorrelación de un ruido blanco son todos iguales a 0: <span class="math inline">\rho_h = 0</span>, para todo <span class="math inline">h &gt; 0</span>.</p></li>
+</ul>
+</section>
+<section id="relación-con-otros-conceptos" class="level3">
+<h3 class="anchored" data-anchor-id="relación-con-otros-conceptos">Relación con otros conceptos</h3>
+<ul>
+<li><p>Un ruido blanco es un proceso <strong>i.i.d.</strong> (independiente e idénticamente distribuido).</p></li>
+<li><p>En algunos campos coincide con el concepto de <strong>innovaciones</strong>.</p></li>
+<li><p>Un <strong>ruido blanco gaussiano</strong>, además de las anteriores, cumple la condición: <span class="math display">
+  e_t \sim \mathop{\mathrm{Normal}}(0, \sigma^2_e)
+</span></p></li>
+</ul>
+</section>
+</section>
+<section id="procesos-autorregresivos" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="procesos-autorregresivos"><span class="header-section-number">6.5</span> Procesos autorregresivos</h2>
+<section id="procesos-autorregresivos-1" class="level3">
+<h3 class="anchored" data-anchor-id="procesos-autorregresivos-1">Procesos autorregresivos</h3>
+<ul>
+<li><p>El valor presente de un <strong>proceso autorregresivo</strong> depende de los valores que tomó el proceso en periodos anteriores.</p></li>
+<li><p>Un proceso autorregresivo de orden <span class="math inline">p</span>, AR(<span class="math inline">p</span>), cumple la siguiente ecuación: <span class="math display">
+  y_{t} = \rho_{1} y_{t-1} + \rho_{2} y_{t-2} + \dots \rho_{p} y_{t-p} + e_{t},
+</span> donde <span class="math inline">\rho_1, \rho_2, \dots, \rho_p</span> son parámetros y <span class="math inline">\{e_t\}</span> es un ruido blanco. El valor inicial de la secuencia es 0: <span class="math inline">y_0 = 0</span>.</p></li>
+</ul>
+</section>
+<section id="proceso-ar1" class="level3">
+<h3 class="anchored" data-anchor-id="proceso-ar1">Proceso AR(1)</h3>
+<ul>
+<li><p>Nos centraremos en el proceso autorregresivo de orden 1, AR(1): <span class="math display">
+  y_{t} = \rho y_{t-1} +  e_{t},
+</span></p></li>
+<li><p>La <strong>condición de estabilidad</strong> de un proceso AR(1) es: <span class="math display">
+  \lvert\rho\rvert &lt; 1
+</span></p></li>
+<li><p>Un <strong>proceso AR estable</strong> es estacionario y débilmente dependiente.</p></li>
+</ul>
+</section>
+<section id="esperanza-de-un-proceso-ar1" class="level3">
+<h3 class="anchored" data-anchor-id="esperanza-de-un-proceso-ar1">Esperanza de un proceso AR(1)</h3>
+<ul>
+<li><p><span class="math inline">y_t</span> sigue un proceso AR(1): <span class="math inline">y_{t} = \rho y_{t-1} + e_{t}</span>.</p></li>
+<li><p>Tomando esperanzas: <span class="math display">
+  \mathop{\mathrm{E}}(y_{t}) = \rho \mathop{\mathrm{E}}(y_{t-1}) +  \mathop{\mathrm{E}}(e_{t}).
+</span></p></li>
+<li><p>Si <span class="math inline">y_t</span> es estacionario: <span class="math inline">\mathop{\mathrm{E}}(y_t) = \mathop{\mathrm{E}}(y_{t-1})œ</span>. Por otro lado, <span class="math inline">\mathop{\mathrm{E}}(e_t) = 0</span>. Por tanto, la expresión anterior se reduce a: <span class="math display">
+   \mathop{\mathrm{E}}(y_{t}) = \rho \mathop{\mathrm{E}}(y_{t}).
+</span></p></li>
+<li><p>Para que la ecuación anterior sea cierta para cualquier <span class="math inline">\rho</span>, se tiene que cumplir que <span class="math inline">\mathop{\mathrm{E}}(y_t) = 0</span>.</p></li>
+</ul>
+</section>
+<section id="varianza-de-un-proceso-ar1" class="level3">
+<h3 class="anchored" data-anchor-id="varianza-de-un-proceso-ar1">Varianza de un proceso AR(1)</h3>
+<ul>
+<li><p><span class="math inline">y_t</span> sigue un proceso AR(1): <span class="math inline">y_{t} = \rho y_{t-1} + e_{t}</span>.</p></li>
+<li><p>La varianza de <span class="math inline">y_t</span> es: <span class="math display">
+   \mathop{\mathrm{var}}(y_{t}) = \rho^2 \mathop{\mathrm{var}}(y_{t-1}) + \mathop{\mathrm{var}}(e_t).
+</span></p></li>
+<li><p>Si <span class="math inline">y_t</span> es estacionario, <span class="math inline">\mathop{\mathrm{var}}(y_{t}) = \mathop{\mathrm{var}}(y_{t-1}) = \sigma^2_y</span>. Podemos escribir la expresión anterior como: <span class="math display">
+   \sigma^2_y = \rho^2 \sigma^2_y + \sigma^2_e.
+</span></p></li>
+<li><p>Finalmente, la varianza de <span class="math inline">y_t</span> es: <span class="math display">
+   \sigma^2_y = \frac{\sigma^2_e}{1 - \rho^2}.
+</span></p></li>
+</ul>
+</section>
+<section id="autocovarianzas-de-un-proceso-ar1-i" class="level3">
+<h3 class="anchored" data-anchor-id="autocovarianzas-de-un-proceso-ar1-i">Autocovarianzas de un proceso AR(1) (I)</h3>
+<ul>
+<li><p>Ya que <span class="math inline">\mathop{\mathrm{E}}(y_t) = 0</span>, la autocovarianza de <span class="math inline">y_{t+h}</span> e <span class="math inline">y_ {t}</span> es: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+h}, y_t) = \mathop{\mathrm{E}}(y_{t+h}  y_t)
+</span></p></li>
+<li><p>Cuando <span class="math inline">h = 1</span>: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+1}, y_t) = \mathop{\mathrm{E}}(y_{t+1}  y_t)
+</span></p></li>
+<li><p>Sustituyendo <span class="math inline">y_{t+1} = \rho y_t + e_{t+1}</span>: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+1}, y_t) =
+  \mathop{\mathrm{E}}\!\big[(\rho y_t + e_{t+1}) y_t\big] =
+  \mathop{\mathrm{E}}\!\big[\rho y^{2}_t + y_t e_{t+1} \big]
+</span></p></li>
+<li><p>Teniendo en cuenta que <span class="math inline">\mathop{\mathrm{E}}(y^2_t) = \sigma^2_y</span> y que <span class="math inline">\mathop{\mathrm{E}}(y_t e_s) = 0</span> para <span class="math inline">t \neq s</span>: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+1}, y_t) = \rho \sigma^2_y.
+</span></p></li>
+</ul>
+</section>
+<section id="autocovarianzas-de-un-proceso-ar1-ii" class="level3">
+<h3 class="anchored" data-anchor-id="autocovarianzas-de-un-proceso-ar1-ii">Autocovarianzas de un proceso AR(1) (II)</h3>
+<ul>
+<li><p>Ahora escribimos el proceso autorregresivo para <span class="math inline">t+2</span>: <span class="math display">
+  y_{t + 2} = \rho y_{t + 1} +  e_{t + 2}.
+</span></p></li>
+<li><p>Sustituimos <span class="math inline">y_{t+1} = \rho y_t + e_{t+1}</span>: <span class="math display">
+  y_{t + 2} = \rho^2 y_{t} + \rho e_{t+1}+  e_{t + 2}.
+</span></p></li>
+<li><p>La autocovarianza de <span class="math inline">y_{t+2}</span> e <span class="math inline">y_ {t}</span> es: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+2}, y_t) = \mathop{\mathrm{E}}(y_{t+2}  y_t) =
+  \mathop{\mathrm{E}}\!\big[(\rho^2 y_{t} + \rho e_{t+1}+  e_{t + 2}) y_t\big].
+</span></p></li>
+<li><p>Finalmente: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+2}, y_t) = \rho^2 \sigma^2_y.
+</span></p></li>
+</ul>
+</section>
+<section id="autocovarianzas-de-un-proceso-ar1-y-iii" class="level3">
+<h3 class="anchored" data-anchor-id="autocovarianzas-de-un-proceso-ar1-y-iii">Autocovarianzas de un proceso AR(1) (y III)</h3>
+<ul>
+<li><p>Mediante sustitución recursiva obtenemos: <span class="math display">
+  y_{t + h} =
+  \rho^h y_{t} +
+  \rho^{h-1} e_{t+1}  +
+  \rho^{h-2} e_{t+2} + \dots +
+  \rho e_{t+h-1} +
+  e_{t + h}.
+</span></p></li>
+<li><p>La autocovarianza de <span class="math inline">y_{t+h}</span> e <span class="math inline">y_ {t}</span> es: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+h}, y_t) =
+  \mathop{\mathrm{E}}\!\big[(\rho^h y_{t} +
+  \rho^{h-1} e_{t+1}  +
+  \dots +
+  e_{t + h})
+  y_t\big].
+</span></p></li>
+<li><p>Dado que <span class="math inline">\mathop{\mathrm{E}}(y^2_t) = \sigma^2_y</span> y que <span class="math inline">\mathop{\mathrm{E}}(y_t e_s) = 0</span> para <span class="math inline">t \neq s</span>: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+h}, y_t) = \rho^h \sigma^2_y.
+</span></p></li>
+</ul>
+</section>
+<section id="autocorrelaciones-de-un-proceso-ar1" class="level3">
+<h3 class="anchored" data-anchor-id="autocorrelaciones-de-un-proceso-ar1">Autocorrelaciones de un proceso AR(1)</h3>
+<ul>
+<li><p>Autocorrelación entre <span class="math inline">y_{t+h}</span> e <span class="math inline">y_ {t}</span>: <span class="math display">
+  \mathop{\mathrm{corr}}(y_{t+h}, y_{t}) = \frac{\mathop{\mathrm{cov}}(y_{t+h}, y_{t})}{
+    \sqrt{\mathop{\mathrm{var}}(y_{t+h})\mathop{\mathrm{var}}(y_{t})}
+  }
+</span></p></li>
+<li><p>Teniendo en cuenta que <span class="math display">
+  \mathop{\mathrm{var}}(y_{t+h}) = \mathop{\mathrm{var}}(y_{t}) = \sigma^2_y, \\
+</span> y que <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+h}, y_{t}) = \rho^h \sigma^2_y, \\
+</span> se obtiene: <span class="math display">
+  \mathop{\mathrm{corr}}(y_{t+h}, y_{t}) = \rho^h.
+</span></p></li>
+</ul>
+</section>
+<section id="estacionariedad-y-dependencia-débil" class="level3">
+<h3 class="anchored" data-anchor-id="estacionariedad-y-dependencia-débil">Estacionariedad y dependencia débil</h3>
+<ul>
+<li><p><span class="math inline">y_t</span> sigue un proceso AR(1): <span class="math display">
+  y_{t} = \rho y_{t-1} +  e_{t},
+</span></p></li>
+<li><p>Si <span class="math inline">\lvert\rho\rvert &lt; 1</span>, <span class="math inline">y_t</span> es un proceso estacionario:</p>
+<ul>
+<li><p><span class="math inline">\mathop{\mathrm{E}}(y_t) = 0</span>.</p></li>
+<li><p><span class="math inline">\mathop{\mathrm{var}}(y_t) = \sigma^2_e / (1 - \rho^2)</span>.</p></li>
+<li><p><span class="math inline">\mathop{\mathrm{cov}}(y_{t+h}, y_{t}) = \rho^h \sigma^2_y</span>, para <span class="math inline">h &gt; 0</span>.</p></li>
+</ul></li>
+<li><p>Si <span class="math inline">\lvert\rho\rvert &lt; 1</span> el proceso AR(1) es débilmente dependiente, puesto que <span class="math inline">\mathop{\mathrm{corr}}(y_{t+h}, y_t) = \rho^h</span> converge a 0 conforme <span class="math inline">h \to \infty</span> y la convergencia es geométrica.</p></li>
+</ul>
+<p>&lt;+latex: </p>
+</section>
+<section id="algunos-ejemplos-i" class="level3">
+<h3 class="anchored" data-anchor-id="algunos-ejemplos-i">Algunos ejemplos (I)</h3>
+<p>Proceso AR(1), <span class="math inline">\rho = 0.8</span>, <span class="math inline">\sigma^2_e = 4</span>, <span class="math inline">T = 60</span>. &lt;+MATS: fig fig-08b_1027-ar8-ts-*.pdf</p>
+<p>Proceso AR(1), <span class="math inline">\rho = 0.2</span>, <span class="math inline">\sigma^2_e = 4</span>, <span class="math inline">T = 60</span>. &lt;+MATS: fig fig-08b_1027-ar2-ts-*.pdf</p>
+</section>
+<section id="algunos-ejemplos-y-ii" class="level3">
+<h3 class="anchored" data-anchor-id="algunos-ejemplos-y-ii">Algunos ejemplos (y II)</h3>
+<p>&lt;+MATS: col 0.5 Proceso AR(1), <span class="math inline">\rho = 0.8</span>, <span class="math inline">\sigma^2_e = 4</span>, <span class="math inline">T = 60</span>. &lt;+MATS: fig fig-08b_1027-ar8-lag-*.pdf</p>
+<p>&lt;+MATS: col 0.5 Proceso AR(1), <span class="math inline">\rho = 0.2</span>, <span class="math inline">\sigma^2_e = 4</span>, <span class="math inline">T = 60</span>. &lt;+MATS: fig fig-08b_1027-ar2-lag-*.pdf</p>
+</section>
+</section>
+<section id="paseo-aleatorio" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="paseo-aleatorio"><span class="header-section-number">6.6</span> Paseo aleatorio</h2>
+<section id="definición-1" class="level3">
+<h3 class="anchored" data-anchor-id="definición-1">Definición</h3>
+<p>Un <strong>paseo aleatorio</strong> es un proceso estocástico que se puede expresar como: <span class="math display">
+   y_t = y_{t-1} + e_t,
+</span> donde <span class="math inline">e_t</span> es un ruido blanco.</p>
+</section>
+<section id="sustitución-recursiva" class="level3">
+<h3 class="anchored" data-anchor-id="sustitución-recursiva">Sustitución recursiva</h3>
+<p>Sustituyendo recursivamente se obtiene: <span class="math display">
+  y_t = e_t + e_{t-1} + \dots + e_1 + y_0,
+</span> donde <span class="math inline">y_0</span> es el valor inicial del proceso. Supondremos que <span class="math inline">y_0 = 0</span>, por lo que: <span class="math display">
+  y_t = e_t + e_{t-1} + \dots + e_1.
+</span></p>
+</section>
+<section id="esperanza-y-varianza" class="level3">
+<h3 class="anchored" data-anchor-id="esperanza-y-varianza">Esperanza y varianza</h3>
+<ul>
+<li><p>La esperanza de un paseo aleatorio es 0: <span class="math display">
+  \mathop{\mathrm{E}}(y_t) =  \mathop{\mathrm{E}}(e_t) +  \mathop{\mathrm{E}}(e_{t-1}) + \dots +  \mathop{\mathrm{E}}(e_1) = 0.
+</span></p></li>
+<li><p>La varianza de un paseo aleatorio es creciente en el tiempo: <span class="math display">
+  \mathop{\mathrm{var}}(y_t) =  \mathop{\mathrm{var}}(e_t) +  \mathop{\mathrm{var}}(e_{t-1}) + \dots +  \mathop{\mathrm{var}}(e_1) = t \sigma^2_e.
+</span></p></li>
+</ul>
+</section>
+<section id="autocovarianzas-y-autocorrelaciones" class="level3">
+<h3 class="anchored" data-anchor-id="autocovarianzas-y-autocorrelaciones">Autocovarianzas y autocorrelaciones</h3>
+<ul>
+<li><p>La autocovarianza entre <span class="math inline">y_{t+h}</span> e <span class="math inline">y_t</span> es: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t+h}, y_t) = \mathop{\mathrm{E}}(y_{t+h} y_t) =
+  \mathop{\mathrm{E}}\!\big[( y_{t} + e_{t+1}  + \dots + e_{t + h}) y_t\big]  = t \sigma^2_e.
+</span></p></li>
+<li><p>La autocorrelación entre <span class="math inline">y_{t+h}</span> e <span class="math inline">y_t</span> es: <span class="math display">
+  \mathop{\mathrm{corr}}(y_{t+h}, y_t) = \sqrt{\frac{t}{t+h}}
+</span></p></li>
+</ul>
+</section>
+<section id="no-estacionariedad-1" class="level3">
+<h3 class="anchored" data-anchor-id="no-estacionariedad-1">No estacionariedad</h3>
+<p>Un paseo aleatorio no cumple las condiciones de la estacionariedad débil:</p>
+<ul>
+<li><p><span class="math inline">\mathop{\mathrm{E}}(y_t) = 0</span>.</p></li>
+<li><p><span class="math inline">\mathop{\mathrm{var}}(y_t) = t \sigma^2_e</span>.</p></li>
+<li><p><span class="math inline">\mathop{\mathrm{cov}}(y_{t+h}, y_{t}) = t \sigma^2_e</span>, para <span class="math inline">h &gt; 0</span>.</p></li>
+</ul>
+</section>
+<section id="dependencia-fuerte" class="level3">
+<h3 class="anchored" data-anchor-id="dependencia-fuerte">Dependencia fuerte</h3>
+<ul>
+<li><p>Las autocorrelaciones de un paseo aleatorio son: <span class="math display">
+  \mathop{\mathrm{corr}}(y_{t+h}, y_t) = \sqrt{\frac{t}{t+h}}
+</span></p></li>
+<li><p><span class="math inline">\mathop{\mathrm{corr}}(y_{t+h}, y_t)</span> converge a 0 conforme <span class="math inline">h \to \infty</span>, pero la convergencia es muy lenta.</p></li>
+</ul>
+</section>
+<section id="ejemplo-1" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-1">Ejemplo</h3>
+<p>Paseo aleatorio, <span class="math inline">\sigma^2_e = 4</span>, <span class="math inline">T = 60</span>.</p>
+<p>&lt;+MATS: fig fig-08b_1027-rw-ts-*.pdf</p>
+</section>
+</section>
+<section id="tendencias-1" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="tendencias-1"><span class="header-section-number">6.7</span> Tendencias</h2>
+<section id="paseo-aleatorio-con-deriva" class="level3">
+<h3 class="anchored" data-anchor-id="paseo-aleatorio-con-deriva">Paseo aleatorio con deriva</h3>
+<ul>
+<li><p>Un <strong>paseo aleatorio con deriva</strong> se puede expresar como: <span class="math display">
+   y_t = \alpha_0 + y_{t-1} + e_t,
+</span> donde <span class="math inline">e_t</span> es un ruido blanco y el parámetro <span class="math inline">\alpha_0</span> es el <strong>término de deriva</strong>.</p></li>
+<li><p>Sustituyendo recursivamente y teniendo en cuenta que <span class="math inline">y_0 = 0</span>: <span class="math display">
+  y_t = \alpha_0 t + e_t + e_{t-1} + \dots + e_1.
+</span></p></li>
+<li><p>El valor esperado de <span class="math inline">y</span> es función de <span class="math inline">t</span>: <span class="math display">
+   \mathop{\mathrm{E}}(y_t) = \alpha_0 t
+</span></p></li>
+</ul>
+</section>
+<section id="ejemplo-2" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-2">Ejemplo</h3>
+<p>Paseo aleatorio con deriva, <span class="math inline">\alpha_0 = 1</span>, <span class="math inline">\sigma^2_e = 4</span>, <span class="math inline">T = 60</span>.</p>
+<p>&lt;+MATS: fig fig-08b_1027-rwd-ts-*.pdf</p>
+</section>
+<section id="procesos-estacionarios-con-tendencia" class="level3">
+<h3 class="anchored" data-anchor-id="procesos-estacionarios-con-tendencia">Procesos estacionarios con tendencia</h3>
+<ul>
+<li><p>Los paseos aleatorios con deriva no son los únicos procesos que presentan tendencias.</p></li>
+<li><p>Un <strong>proceso estacionario con tendencia</strong> puede escribirse como: <span class="math display">
+  y_t = \beta_0 + \beta_1 t + u_t,
+</span> donde <span class="math inline">u_t</span> es un proceso estacionario y débilmente dependiente.</p></li>
+</ul>
+</section>
+<section id="ejemplo-3" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-3">Ejemplo</h3>
+<p><span class="math inline">y_t = \beta_0 + \beta_1 t + u_t</span>, <span class="math inline">\beta_1 = 1</span>, <span class="math inline">u_t \sim AR(1)</span>, <span class="math inline">T = 60</span>.</p>
+<p>&lt;+MATS: fig fig-08b_1027-tst-ts-*.pdf</p>
+</section>
+</section>
+<section id="procesos-integrados" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="procesos-integrados"><span class="header-section-number">6.8</span> Procesos integrados</h2>
+<section id="la-diferencia-de-un-paseo-aleatorio" class="level3">
+<h3 class="anchored" data-anchor-id="la-diferencia-de-un-paseo-aleatorio">La diferencia de un paseo aleatorio</h3>
+<ul>
+<li><p>Un paseo aleatorio puede escribirse como: <span class="math display">
+  y_t = y_{t-1} + e_t
+</span></p></li>
+<li><p>Restando <span class="math inline">y_{t-1}</span> de ambos lados: <span class="math display">
+  y_t - y_{t-1} = e_t
+</span></p></li>
+<li><p>La diferencia de un paseo aleatorio es un ruido blanco: <span class="math display">
+   \mathop{}\!\Delta y_t = e_t
+</span></p></li>
+</ul>
+</section>
+<section id="diferencias-y-dependencia-débil" class="level3">
+<h3 class="anchored" data-anchor-id="diferencias-y-dependencia-débil">Diferencias y dependencia débil</h3>
+<ul>
+<li><p>La diferencia de un paseo aleatorio es un ruido blanco, un proceso débilmente dependiente.</p></li>
+<li><p>Existen otros procesos estocásticos que, después de diferenciarlos, son débilmente dependientes.</p></li>
+</ul>
+</section>
+<section id="procesos-integrados-1" class="level3">
+<h3 class="anchored" data-anchor-id="procesos-integrados-1">Procesos integrados</h3>
+<ul>
+<li><p>El proceso <span class="math inline">y_t</span> es <strong>integrado de orden 1</strong>, I(1), si <span class="math inline">y_t</span> es un proceso altamente persistente, pero su diferencia, <span class="math inline">\mathop{}\!\Delta y_t</span>, es débilmente dependiente.</p></li>
+<li><p>Si es necesario diferenciar dos veces para obtener un proceso débilmente dependiente, el proceso <span class="math inline">y_t</span> es <strong>integrado de orden 2</strong>, I(2).</p></li>
+<li><p>Un proceso débilmente dependiente es <strong>integrado de orden 0</strong>, I(0), puesto que no es necesario aplicar ninguna diferencia.</p></li>
+</ul>
+</section>
+<section id="ejemplo-ipc-armonizado" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-ipc-armonizado">Ejemplo: IPC armonizado</h3>
+<p>Logaritmo del IPC armonizado de España, febrero de 1998 hasta febrero de 2023. Fuente: INE.</p>
+<p>&lt;+MATS: fig fig-08b_1027-lp-ts-*.pdf</p>
+</section>
+<section id="ejemplo-inflación-interanual" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-inflación-interanual">Ejemplo: Inflación interanual</h3>
+<p>Tasa de inflación interanual: <span class="math display">
+  \pi_t = 100 \mathop{}\!\Delta_{12} \log(p_t) = 100 \big(\log(p_t) - \log(p_{t-12})\big).
+</span> &lt;+MATS: fig fig-08b_1027-infl-ts-*.pdf</p>
+</section>
+<section id="ejemplo-variación-mensual-de-la-inflación" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-variación-mensual-de-la-inflación">Ejemplo: Variación mensual de la inflación</h3>
+<p>Variación mensual de la inflación: <span class="math display">
+  \mathop{}\!\Delta\pi_t = \pi_t - \pi_{t-1}.
+</span> &lt;+MATS: fig fig-08b_1027-dinfl-ts-*.pdf</p>
+</section>
+<section id="ejemplo-procesos-integrados" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-procesos-integrados">Ejemplo: Procesos integrados</h3>
+<ul>
+<li><p>El índice de precios es altamente persistente. Al tomar diferencias se obtiene la tasa de inflación que también es altamente persistente. La variación de la tasa de inflación se comporta como un proceso débilmente dependiente.</p></li>
+<li><p>Las tres series tienen diferentes órdenes de integración: <span class="math display">
+\begin{gather*}
+  \log(p_{t}) \sim \text{I}(2), \\
+  \pi_{t} \sim \text{I}(1), \\
+  \mathop{}\!\Delta\pi_{t} \sim \text{I}(0).
+\end{gather*}
+</span></p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ts-part.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Regresión con datos de series temporales</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ols-ts.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ec1027-guide - 9&nbsp; Autocorrelación</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./regr-ts.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ts-part.html">Regresión con datos de series temporales</a></li><li class="breadcrumb-item"><a href="./autocorr.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">ec1027-guide</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./cs-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de corte transversal</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mcrl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">El modelo clásico de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./asymp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Propiedades asintóticas del estimador MCO</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./het.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Heteroscedasticidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lpm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">El modelo de probabilidad lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./other-cs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forma funcional y problemas con los datos</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./ts-part.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regresión con datos de series temporales</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción a las series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ols-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">El estimador MCO con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regr-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocorr.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#propiedades-de-mco-y-autocorrelación-del-término-de-error" id="toc-propiedades-de-mco-y-autocorrelación-del-término-de-error" class="nav-link active" data-scroll-target="#propiedades-de-mco-y-autocorrelación-del-término-de-error"><span class="header-section-number">9.1</span> Propiedades de MCO y autocorrelación del término de error</a>
+  <ul class="collapse">
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#insesgadez-y-consistencia" id="toc-insesgadez-y-consistencia" class="nav-link" data-scroll-target="#insesgadez-y-consistencia">Insesgadez y consistencia</a></li>
+  <li><a href="#eficiencia" id="toc-eficiencia" class="nav-link" data-scroll-target="#eficiencia">Eficiencia</a></li>
+  <li><a href="#inferencia" id="toc-inferencia" class="nav-link" data-scroll-target="#inferencia">Inferencia</a></li>
+  <li><a href="#estimación-e-inferencia-robusta-con-mco" id="toc-estimación-e-inferencia-robusta-con-mco" class="nav-link" data-scroll-target="#estimación-e-inferencia-robusta-con-mco">Estimación e inferencia robusta con MCO</a></li>
+  <li><a href="#variable-dependiente-retardada-i" id="toc-variable-dependiente-retardada-i" class="nav-link" data-scroll-target="#variable-dependiente-retardada-i">Variable dependiente retardada (I)</a></li>
+  <li><a href="#variable-dependiente-retardada-ii" id="toc-variable-dependiente-retardada-ii" class="nav-link" data-scroll-target="#variable-dependiente-retardada-ii">Variable dependiente retardada (II)</a></li>
+  <li><a href="#variable-dependiente-retardada-iii" id="toc-variable-dependiente-retardada-iii" class="nav-link" data-scroll-target="#variable-dependiente-retardada-iii">Variable dependiente retardada (III)</a></li>
+  <li><a href="#variable-dependiente-retardada-y-iv" id="toc-variable-dependiente-retardada-y-iv" class="nav-link" data-scroll-target="#variable-dependiente-retardada-y-iv">Variable dependiente retardada (y IV)</a></li>
+  </ul></li>
+  <li><a href="#contrastes-de-autocorrelación" id="toc-contrastes-de-autocorrelación" class="nav-link" data-scroll-target="#contrastes-de-autocorrelación"><span class="header-section-number">9.2</span> Contrastes de autocorrelación</a>
+  <ul class="collapse">
+  <li><a href="#introducción-1" id="toc-introducción-1" class="nav-link" data-scroll-target="#introducción-1">Introducción</a></li>
+  <li><a href="#autocorrelación-de-orden-1" id="toc-autocorrelación-de-orden-1" class="nav-link" data-scroll-target="#autocorrelación-de-orden-1">Autocorrelación de orden 1</a></li>
+  <li><a href="#contraste-de-breusch-godfrey" id="toc-contraste-de-breusch-godfrey" class="nav-link" data-scroll-target="#contraste-de-breusch-godfrey">Contraste de Breusch-Godfrey</a></li>
+  <li><a href="#extensiones-del-contraste-de-breusch-godfrey" id="toc-extensiones-del-contraste-de-breusch-godfrey" class="nav-link" data-scroll-target="#extensiones-del-contraste-de-breusch-godfrey">Extensiones del contraste de Breusch-Godfrey</a></li>
+  <li><a href="#contrastes-de-breusch-godfrey-y-heteroscedasticidad" id="toc-contrastes-de-breusch-godfrey-y-heteroscedasticidad" class="nav-link" data-scroll-target="#contrastes-de-breusch-godfrey-y-heteroscedasticidad">Contrastes de Breusch-Godfrey y heteroscedasticidad</a></li>
+  <li><a href="#otros-contrastes-de-autocorrelación" id="toc-otros-contrastes-de-autocorrelación" class="nav-link" data-scroll-target="#otros-contrastes-de-autocorrelación">Otros contrastes de autocorrelación</a></li>
+  <li><a href="#el-contraste-de-durbin-watson" id="toc-el-contraste-de-durbin-watson" class="nav-link" data-scroll-target="#el-contraste-de-durbin-watson">El contraste de Durbin-Watson</a></li>
+  <li><a href="#la-distribución-del-contraste-durbin-watson" id="toc-la-distribución-del-contraste-durbin-watson" class="nav-link" data-scroll-target="#la-distribución-del-contraste-durbin-watson">La distribución del contraste Durbin-Watson</a></li>
+  </ul></li>
+  <li><a href="#estimación-eficiente" id="toc-estimación-eficiente" class="nav-link" data-scroll-target="#estimación-eficiente"><span class="header-section-number">9.3</span> Estimación eficiente</a>
+  <ul class="collapse">
+  <li><a href="#ineficiencia-de-mínimos-cuadrados-ordinarios" id="toc-ineficiencia-de-mínimos-cuadrados-ordinarios" class="nav-link" data-scroll-target="#ineficiencia-de-mínimos-cuadrados-ordinarios">Ineficiencia de Mínimos Cuadrados Ordinarios</a></li>
+  <li><a href="#regresión-con-término-de-error-ar1" id="toc-regresión-con-término-de-error-ar1" class="nav-link" data-scroll-target="#regresión-con-término-de-error-ar1">Regresión con término de error AR(1)</a></li>
+  <li><a href="#transformación-del-modelo-de-regresión" id="toc-transformación-del-modelo-de-regresión" class="nav-link" data-scroll-target="#transformación-del-modelo-de-regresión">Transformación del modelo de regresión</a></li>
+  <li><a href="#mínimos-cuadrados-generalizados" id="toc-mínimos-cuadrados-generalizados" class="nav-link" data-scroll-target="#mínimos-cuadrados-generalizados">Mínimos Cuadrados Generalizados</a></li>
+  <li><a href="#extensiones" id="toc-extensiones" class="nav-link" data-scroll-target="#extensiones">Extensiones</a></li>
+  <li><a href="#mínimos-cuadrados-generalizados-factibles" id="toc-mínimos-cuadrados-generalizados-factibles" class="nav-link" data-scroll-target="#mínimos-cuadrados-generalizados-factibles">Mínimos Cuadrados Generalizados Factibles</a></li>
+  <li><a href="#aplicación-de-mcgf-a-errores-ar1" id="toc-aplicación-de-mcgf-a-errores-ar1" class="nav-link" data-scroll-target="#aplicación-de-mcgf-a-errores-ar1">Aplicación de MCGF a errores AR(1)</a></li>
+  <li><a href="#extensiones-del-estimador-mcgf" id="toc-extensiones-del-estimador-mcgf" class="nav-link" data-scroll-target="#extensiones-del-estimador-mcgf">Extensiones del estimador MCGF</a></li>
+  <li><a href="#comparación-de-mco-y-mcgf" id="toc-comparación-de-mco-y-mcgf" class="nav-link" data-scroll-target="#comparación-de-mco-y-mcgf">Comparación de MCO y MCGF</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Autocorrelación</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="propiedades-de-mco-y-autocorrelación-del-término-de-error" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="propiedades-de-mco-y-autocorrelación-del-término-de-error"><span class="header-section-number">9.1</span> Propiedades de MCO y autocorrelación del término de error</h2>
+<section id="introducción" class="level3">
+<h3 class="anchored" data-anchor-id="introducción">Introducción</h3>
+<ul>
+<li><p>El supuesto <strong>ST.5'</strong> requiere que el término de error no esté correlacionado consigo mismo y que se cumpla: <span class="math display">
+  \mathop{\mathrm{cov}}(u_{t}, u_{s} | \boldsymbol{x_{t}}, \boldsymbol{x_{s}}) = 0, \quad t \neq s.
+</span></p></li>
+<li><p>¿Qué consecuencias tiene el incumplimiento de este supuesto? ¿Cómo se puede detectar? ¿Cómo se debe proceder en presencia de autocorrelación?</p></li>
+</ul>
+</section>
+<section id="insesgadez-y-consistencia" class="level3">
+<h3 class="anchored" data-anchor-id="insesgadez-y-consistencia">Insesgadez y consistencia</h3>
+<p>Las propiedades de insesgadez y consistencia no dependen del supuesto de no correlación serial.</p>
+</section>
+<section id="eficiencia" class="level3">
+<h3 class="anchored" data-anchor-id="eficiencia">Eficiencia</h3>
+<ul>
+<li><p>El teorema de Gauss-Markov requiere que el término de error no presente correlación serial.</p></li>
+<li><p>Con autocorrelación MCO no es eficiente.</p></li>
+</ul>
+</section>
+<section id="inferencia" class="level3">
+<h3 class="anchored" data-anchor-id="inferencia">Inferencia</h3>
+<ul>
+<li><p>Las fórmulas de MCO para estimar los errores típicos de <span class="math inline">\hat{\beta}_j</span> no son válidas en presencia de autocorrelación.</p></li>
+<li><p>Las fórmulas de MCO frecuentemente subestiman los errores típicos y las estimaciones parecen ser más precisas de lo que realmente son.</p></li>
+<li><p>Las fórmulas tradicionales de los contrastes <span class="math inline">t</span> y <span class="math inline">F</span> no son válidas con autocorrelación del término de error.</p></li>
+</ul>
+</section>
+<section id="estimación-e-inferencia-robusta-con-mco" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-e-inferencia-robusta-con-mco">Estimación e inferencia robusta con MCO</h3>
+<ul>
+<li><p>Se estiman por MCO los parámetros del modelo de regresión. MCO es consistente si se cumplen los supuestos <strong>ST.1'</strong>, <strong>ST.2'</strong> y <strong>ST.3'</strong>.</p></li>
+<li><p>Los contrastes de hipótesis sobre los parámetros del modelo de regresión se llevan a cabo utilizando una estimación de <span class="math inline">\mathop{\mathrm{var}}(\hat{\boldsymbol{\beta}})</span> robusta a heteroscedasticidad y autocorrelación.</p></li>
+</ul>
+</section>
+<section id="variable-dependiente-retardada-i" class="level3">
+<h3 class="anchored" data-anchor-id="variable-dependiente-retardada-i">Variable dependiente retardada (I)</h3>
+<ul>
+<li><p>Algunos autores señalan que MCO es inconsistente cuando hay autocorrelación en modelos con variable dependiente retardada.</p></li>
+<li><p>Sin embargo, esta conclusión no es válida en modelos cuya especificación dinámica es correcta.</p></li>
+</ul>
+</section>
+<section id="variable-dependiente-retardada-ii" class="level3">
+<h3 class="anchored" data-anchor-id="variable-dependiente-retardada-ii">Variable dependiente retardada (II)</h3>
+<ul>
+<li><p>Modelo autorregresivo donde el término de error sigue un proceso AR(1): <span class="math display">
+\begin{gather*}
+  y_{t} = \beta_{0} + \beta_{1} y _{t-1} + u_{t}, \\
+  u_{t} = \rho u_{t-1} + e_{t},
+\end{gather*}
+</span> donde <span class="math inline">\lvert\beta_1\rvert &lt; 1</span>, <span class="math inline">\lvert\rho\rvert &lt; 1</span> y <span class="math inline">e_t</span> es un ruido blanco.</p></li>
+<li><p>La condición de esperanza condicional nula requiere que <span class="math inline">\mathop{\mathrm{cov}}(y_{t-1}, u_t) = 0</span>, pero: <span class="math display">
+  \mathop{\mathrm{cov}}(y_{t-1}, u_t) = \mathop{\mathrm{cov}}(y_{t-1}, \rho u_{t-1} + e_{t}) = \rho
+  \mathop{\mathrm{cov}}(y_{t-1}, u_{t-1}) \neq 0.
+</span></p></li>
+</ul>
+</section>
+<section id="variable-dependiente-retardada-iii" class="level3">
+<h3 class="anchored" data-anchor-id="variable-dependiente-retardada-iii">Variable dependiente retardada (III)</h3>
+<ul>
+<li><p>El modelo anterior puede reescribirse como: <span class="math display">
+  y_{t} = \phi_{0} + \phi_{1} y_{t-1} + \phi_{2} y_{t-2} + e_{t},
+</span> donde <span class="math inline">\phi_0 = \beta_0 (1 - \rho)</span>, <span class="math inline">\phi_1 = \beta_1 + \rho</span> y <span class="math inline">\phi_2 = -\beta_1 \rho</span>.</p></li>
+<li><p>Por tantos, el valor esperado de <span class="math inline">y_t</span> condicional a sus valores pasados depende de <strong>dos</strong> retardos: <span class="math display">
+  \mathop{\mathrm{E}}(y_t | y_{t-1}, y_{t-2}, y_{t-3}, \dots ) =
+  \mathop{\mathrm{E}}(y_t | y_{t-1}, y_{t-2}) =
+  \phi_{0} + \phi_{1} y_{t-1} + \phi_{2} y_{t-2}
+</span></p></li>
+</ul>
+</section>
+<section id="variable-dependiente-retardada-y-iv" class="level3">
+<h3 class="anchored" data-anchor-id="variable-dependiente-retardada-y-iv">Variable dependiente retardada (y IV)</h3>
+<p>En general, la correlación serial de los errores de un modelo con variable dependiente retardada es una indicación de que la especificación dinámica es incompleta.</p>
+</section>
+</section>
+<section id="contrastes-de-autocorrelación" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="contrastes-de-autocorrelación"><span class="header-section-number">9.2</span> Contrastes de autocorrelación</h2>
+<section id="introducción-1" class="level3">
+<h3 class="anchored" data-anchor-id="introducción-1">Introducción</h3>
+<ul>
+<li><p>Se han propuesto diferentes métodos para detectar la autocorrelación del término de error.</p></li>
+<li><p>La hipótesis nula de estos contrastes es que no existe correlación serial en el término de error.</p></li>
+<li><p>Algunas de las propuestas más conocidas sólo son válidas bajo supuestos restrictivos.</p></li>
+</ul>
+</section>
+<section id="autocorrelación-de-orden-1" class="level3">
+<h3 class="anchored" data-anchor-id="autocorrelación-de-orden-1">Autocorrelación de orden 1</h3>
+<ul>
+<li><p>Modelo de regresión: <span class="math display">
+  y_{t} = \beta_{0} + \beta_{1} x_{1t} + \dots + \beta_{k} x_{tk} + u_{t}.
+</span></p></li>
+<li><p>El término de error sigue un proceso AR(1): <span class="math display">
+   u_{t} = \rho u_{t-1} + e_{t}.
+</span></p></li>
+</ul>
+</section>
+<section id="contraste-de-breusch-godfrey" class="level3">
+<h3 class="anchored" data-anchor-id="contraste-de-breusch-godfrey">Contraste de Breusch-Godfrey</h3>
+<ul>
+<li><p>Se estiman los parámetros del modelo de regresión por MCO y se obtienen los residuos <span class="math inline">\hat{u}_t</span>.</p></li>
+<li><p>Se estima por MCO la regresión auxiliar: <span class="math display">
+  \hat{u}_{t} = \theta_{0} + \theta_{1} x_{1t} + \dots + \theta_{k} x_{kt} + \rho \hat{u}_{t-1}
+  + \text{error}.
+</span></p></li>
+<li><p>Bajo la hipótesis nula de que <span class="math inline">\rho = 0</span>, el estadístico de multiplicadores de Lagrange, <span class="math inline">LM = n_\text{aux} R^2_\text{aux}</span>, se distribuye como una <span class="math inline">\chi^2</span> con un grado de libertad.</p></li>
+<li><p>También se puede usar un contraste <span class="math inline">F</span> o un contraste <span class="math inline">t</span> de la hipótesis <span class="math inline">\rho = 0</span> en la regresión auxiliar.</p></li>
+</ul>
+</section>
+<section id="extensiones-del-contraste-de-breusch-godfrey" class="level3">
+<h3 class="anchored" data-anchor-id="extensiones-del-contraste-de-breusch-godfrey">Extensiones del contraste de Breusch-Godfrey</h3>
+<ul>
+<li><p>Se puede extender el contraste a órdenes superiores de autocorrelación incluyendo <span class="math inline">p</span> retardos de los residuos en la regresión auxiliar: <span class="math display">
+  \hat{u}_{t} = \theta_{0} + \theta_{1} x_{1t} + \dots + \theta_{k} x_{kt} +
+  \rho_1 \hat{u}_{t-1} + \dots + \rho_p \hat{u}_{t-p}
+  + \text{error}.
+</span></p></li>
+<li><p>Bajo la hipótesis nula de no autocorrelación, <span class="math inline">\rho_1 = \dots =  \rho_p = 0</span>, el estadístico <span class="math inline">LM = n_\text{aux} R^2_\text{aux}</span>, se distribuye como una <span class="math inline">\chi^2</span> con <span class="math inline">p</span> grados de libertad.</p></li>
+<li><p>También se puede usar un contraste <span class="math inline">F</span> de significación conjunta de los retardos de los residuos en la regresión auxiliar.</p></li>
+</ul>
+</section>
+<section id="contrastes-de-breusch-godfrey-y-heteroscedasticidad" class="level3">
+<h3 class="anchored" data-anchor-id="contrastes-de-breusch-godfrey-y-heteroscedasticidad">Contrastes de Breusch-Godfrey y heteroscedasticidad</h3>
+<p>Pueden obtenerse contrastes de autocorrelación que son validos aun un presencia de heteroscedasticidad usando estimaciones de <span class="math inline">\mathop{\mathrm{var}}(\hat{\beta})</span> robustas a heteroscedasticidad en la regresión auxiliar.</p>
+</section>
+<section id="otros-contrastes-de-autocorrelación" class="level3">
+<h3 class="anchored" data-anchor-id="otros-contrastes-de-autocorrelación">Otros contrastes de autocorrelación</h3>
+<ul>
+<li><p>El contraste de Breusch-Godfrey sólo requiere la exogeneidad contemporánea de los regresores y es fácil hacerlo robusto a heteroscedasticidad.</p></li>
+<li><p>Si los <strong>regresores son estrictamente exógenos</strong> se pueden omitir las variables explicativas de la regresión auxiliar y basar el contraste en la regresión auxiliar: <span class="math display">
+  \hat{u}_{t} = \theta_{0} +
+  \rho_1 \hat{u}_{t-1} + \dots + \rho_p \hat{u}_{t-p}
+  + \text{error}.
+</span></p></li>
+</ul>
+</section>
+<section id="el-contraste-de-durbin-watson" class="level3">
+<h3 class="anchored" data-anchor-id="el-contraste-de-durbin-watson">El contraste de Durbin-Watson</h3>
+<ul>
+<li><p>El estadístico de <strong>Durbin y Watson</strong> se ha usado tradicionalmente para contrastar la hipótesis de no autocorrelación frente a la alternativa de que <span class="math inline">u_t</span> sigue un AR(1): <span class="math display">
+  DW = \frac{%
+    \sum_{t=2}^{T}(\hat{u}_{t} - \hat{u}_{t-1})^{2}}{%
+    \sum_{t=1}^{T} \hat{u}_{t-1}^{2}}.
+</span></p></li>
+<li><p>Se puede expresar aproximadamente usando <span class="math inline">\hat{\rho}</span> la estimación de la pendiente de la regresión de <span class="math inline">\hat{u}_t</span> sobre <span class="math inline">\hat{u}_{t-1}</span>: <span class="math display">
+  DW \approx 2 (1 - \hat{\rho}).
+</span></p></li>
+</ul>
+</section>
+<section id="la-distribución-del-contraste-durbin-watson" class="level3">
+<h3 class="anchored" data-anchor-id="la-distribución-del-contraste-durbin-watson">La distribución del contraste Durbin-Watson</h3>
+<ul>
+<li><p>El estadístico de Durbin-Watson toma valores entre 0 y 4. Bajo la hipótesis nula de no autocorrelación <span class="math inline">DW \approx 2</span>. Valores cercanos a <span class="math inline">0</span> indican autocorrelación positiva, mientras que valores próximos a 4 señalan la existencia de correlación serial negativa.</p></li>
+<li><p>Durbin y Watson dedujeron la distribución exacta de <span class="math inline">DW</span> bajo los supuestos del <strong>modelo clásico</strong>. Además, la distribución depende de los valores de las explicativas en la muestra, del número de regresores, del tamaño muestral y de la inclusión de un término constante.</p></li>
+<li><p>En general, no es recomendable el uso del Durbin-Watson.</p></li>
+</ul>
+</section>
+</section>
+<section id="estimación-eficiente" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="estimación-eficiente"><span class="header-section-number">9.3</span> Estimación eficiente</h2>
+<section id="ineficiencia-de-mínimos-cuadrados-ordinarios" class="level3">
+<h3 class="anchored" data-anchor-id="ineficiencia-de-mínimos-cuadrados-ordinarios">Ineficiencia de Mínimos Cuadrados Ordinarios</h3>
+<ul>
+<li><p>El estimador MCO puede ser muy ineficiente en presencia de correlación serial.</p></li>
+<li><p>Si los regresores son estrictamente exógenos es posible usar estimadores más eficientes pertenecientes a la familia de Mínimos Cuadrados Generalizados, MCG.</p></li>
+</ul>
+</section>
+<section id="regresión-con-término-de-error-ar1" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-con-término-de-error-ar1">Regresión con término de error AR(1)</h3>
+<ul>
+<li><p>Modelo de regresión simple: <span class="math display">
+  y_{t} = \beta_{0} + \beta_{1} x_{t} + u_{t}.
+</span></p></li>
+<li><p>El término de error sigue un AR(1): <span class="math display">
+  u_{t} = \rho u_{t-1} + e_t,
+</span> donde <span class="math inline">e_t</span> es un ruido blanco.</p></li>
+</ul>
+</section>
+<section id="transformación-del-modelo-de-regresión" class="level3">
+<h3 class="anchored" data-anchor-id="transformación-del-modelo-de-regresión">Transformación del modelo de regresión</h3>
+<ul>
+<li><p>Escribimos el modelo de regresión para <span class="math inline">t-1</span> y multiplicamos por <span class="math inline">\rho</span> para obtener: <span class="math display">
+  \rho y_{t - 1} = \rho \beta_{0} + \beta_{1} \rho x_{t - 1} + \rho u_{t - 1}.
+</span></p></li>
+<li><p>Restamos la ecuación anterior al modelo de regresión: <span class="math display">
+  y_{t} - \rho y_{t} =
+  \beta_{0} (1 - \rho)  +
+  \beta_{1} (x_{t} - \rho x_{t - 1}) +
+  u_{t} - \rho u_{t - 1}.
+</span></p></li>
+</ul>
+</section>
+<section id="mínimos-cuadrados-generalizados" class="level3">
+<h3 class="anchored" data-anchor-id="mínimos-cuadrados-generalizados">Mínimos Cuadrados Generalizados</h3>
+<ul>
+<li><p>Finalmente escribimos el modelo transformado como: <span class="math display">
+  \tilde{y}_{t} =
+  \beta_{0} \tilde{x}_{0t}+
+  \beta_{1} \tilde{x}_{t} +
+  e_{t},
+</span> donde <span class="math inline">\tilde{y}_{t} = y_{t} - \rho y_{t-1}</span> y <span class="math inline">\tilde{x}_{t} =  x_{t} - \rho x_{t - 1}</span> son las variables en <strong>cuasi diferencias</strong> y <span class="math inline">\tilde{x}_{0t} = (1 - \rho)</span>.</p></li>
+<li><p>El estimador MCG consiste en aplicar MCO al modelo transformado donde las variables aparecen en cuasi diferencias.</p></li>
+</ul>
+</section>
+<section id="extensiones" class="level3">
+<h3 class="anchored" data-anchor-id="extensiones">Extensiones</h3>
+<ul>
+<li><p>MCG se puede aplicar a modelos de regresión con más de una variable explicativa. En el modelo transformado todos los regresores se cuasi diferencian: <span class="math display">
+  \tilde{y}_{t} =
+  \beta_{0} \tilde{x}_{0t}+
+  \beta_{1} \tilde{x}_{1t} +
+  \dots +
+  \beta_{k} \tilde{x}_{kt} +
+  e_{t},
+</span></p></li>
+<li><p>Al calcular las cuasi diferencias se pierde una observación. <strong>Prais y Winsten</strong> proponen una transformación que permite conservar la primera observación en la estimación MCG.</p></li>
+</ul>
+</section>
+<section id="mínimos-cuadrados-generalizados-factibles" class="level3">
+<h3 class="anchored" data-anchor-id="mínimos-cuadrados-generalizados-factibles">Mínimos Cuadrados Generalizados Factibles</h3>
+<ul>
+<li><p>Para calcular las cuasi diferencias de las variables sería necesario conocer el valor de <span class="math inline">\rho</span>.</p></li>
+<li><p>El estimador de Mínimos Cuadrados Generalizados Factibles, MCGF, reemplaza el parámetro desconocido <span class="math inline">\rho</span> por una estimación, <span class="math inline">\hat{\rho}</span>.</p></li>
+</ul>
+</section>
+<section id="aplicación-de-mcgf-a-errores-ar1" class="level3">
+<h3 class="anchored" data-anchor-id="aplicación-de-mcgf-a-errores-ar1">Aplicación de MCGF a errores AR(1)</h3>
+<ul>
+<li><p>Se estiman los parámetros del modelo de regresión por MCO y se obtienen los residuos, <span class="math inline">\hat{u}_t</span>.</p></li>
+<li><p>Se obtiene <span class="math inline">\hat{\rho}</span> estimando por MCO una autorregresión con los residuos: <span class="math display">
+  \hat{u}_t = \mu + \rho \hat{u}_{t-1} + \text{error}.
+</span></p></li>
+<li><p>Se construyen las cuasi diferencias de las variables utilizando <span class="math inline">\hat{\rho}</span> y se estima por MCO el modelo transformado.</p></li>
+</ul>
+</section>
+<section id="extensiones-del-estimador-mcgf" class="level3">
+<h3 class="anchored" data-anchor-id="extensiones-del-estimador-mcgf">Extensiones del estimador MCGF</h3>
+<ul>
+<li><p>El procedimiento descrito anteriormente se denomina <strong>método de Cochrane-Orcutt</strong>. Es posible utilizar la propuesta de Prais-Winsten para conservar la primera observación.</p></li>
+<li><p>El estimador MCGF se suele iterar: a partir de los residuos MCGF se calcula una nueva estimación de <span class="math inline">\rho</span> y se repite el proceso hasta que las estimaciones se estabilizan.</p></li>
+<li><p>Es posible extender el método para considerar esquemas de autocorrelación más complejos que un AR(1).</p></li>
+</ul>
+</section>
+<section id="comparación-de-mco-y-mcgf" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-de-mco-y-mcgf">Comparación de MCO y MCGF</h3>
+<ul>
+<li><p>La consistencia de MCO sólo requiere exogeneidad contemporánea.</p></li>
+<li><p>La consistencia de MCGF requiere exogeneidad estricta y no es consistente si el modelo de regresión incorpora retardos de la variable dependiente o si hay retroalimentación.</p></li>
+<li><p>En el caso en que MCO y MCGF proporciones resultados similares, serían preferibles las estimaciones de MCGF. Si hay grandes diferencias en las estimaciones de ambos métodos, MCO sería preferible al ser consistente en condiciones menos exigentes.</p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./regr-ts.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regresión con series temporales</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">Bibliografía</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
