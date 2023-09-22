@@ -11,6 +11,10 @@
 \DeclarePairedDelimiter\Math@eval{.}{\rvert}
 \newcommand{\eval}[2]{#1\rvert_{#2}}
 
+\newcommand{\formatse}[1]{\mathllap{(}#1\mathrlap{)}}
+\newcommand{\cse}[2]{\underset{\displaystyle \formatse{#2}}{#1}}
+
+
 \DeclareMathOperator{\SCT}{SCT}
 \DeclareMathOperator{\SCE}{SCE}
 \DeclareMathOperator{\SCR}{SCR}

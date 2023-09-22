@@ -1,11 +1,23 @@
 # Prefacio {.unnumbered}
 
-Hola, esto es una pequeña prueba.
+{{< include _macros.qmd >}}
 
+Hola, esto es una pequeña prueba.
 
 ```{r}
 1 + 1
 ```
+
+Ecuación (7.5) en la página 250 de Stock y Watson (2020):
+$$
+  \widehat{\Var{TestScore}}_i =
+  \cse{686.0}{8.7}
+  - \cse{1.10}{0.43}\, \Var{STR}_i
+  - \cse{0.650}{0.031}\, \Var{PctEL}_i
+  \\[1ex]
+  N = 156;\quad \Rsq = 0.89;\quad \SER = 1.78.
+$$
+
 
 <!--
 Local Variables:
