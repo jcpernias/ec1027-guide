@@ -4,9 +4,13 @@
 
 Hola, esto es una pequeña prueba.
 
+## Un cálculo
+
 ```{r}
 1 + 1
 ```
+
+## Una regresión
 
 Ecuación (7.5) en la página 250 de Stock y Watson (2020):
 $$
@@ -18,6 +22,35 @@ $$
   N = 156;\quad \Rsq = 0.89;\quad \SER = 1.78.
 $$
 
+
+## Un diagrama
+
+```{tikz}
+#| label: fig-tikz-ex
+#| fig.cap: "Funky tikz"
+#| fig.ext: 'svg'
+#| fig.width: 3.5
+#| engine.opts:
+#|   template: "fig-template.tex"
+#|   extra.preamble: "\\input{external.tex}"
+
+\usetikzlibrary{arrows}
+\begin{tikzpicture}[node distance=2cm, auto,>=latex', thick, scale = 0.5]
+\node (P) {$P$};
+\node (B) [right of=P] {$B$};
+\node (A) [below of=P] {$A$};
+\node (C) [below of=B] {$C$};
+\node (H) [below of=C] {\hello};
+\node (P1) [node distance=1.4cm, left of=P, above of=P] {$\hat{P}$};
+\draw[->] (P) to node {$f$} (B);
+\draw[->] (P) to node [swap] {$g$} (A);
+\draw[->] (A) to node [swap] {$f$} (C);
+\draw[->] (B) to node {$g$} (C);
+\draw[->, bend right] (P1) to node [swap] {$\hat{g}$} (A);
+\draw[->, bend left] (P1) to node {$\hat{f}$} (B);
+\draw[->, dashed] (P1) to node {$k$} (P);
+\end{tikzpicture}
+```
 
 <!--
 Local Variables:
