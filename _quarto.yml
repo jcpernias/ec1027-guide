@@ -32,7 +32,7 @@ format:
     number-depth: 2
     html-math-method: katex
 
-editor: visual
+editor: source
 
 execute:
   freeze: auto
