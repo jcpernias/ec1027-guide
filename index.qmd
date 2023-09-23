@@ -2,7 +2,8 @@
 
 {{< include _macros.qmd >}}
 
-Hola, esto es una pequeña prueba.
+Hola, esto es una pequeña prueba. Más. Otra. ¿Quizás ahora?
+
 
 ## Un cálculo
 
@@ -12,7 +13,7 @@ Hola, esto es una pequeña prueba.
 
 ## Una regresión
 
-Ecuación (7.5) en la página 250 de Stock y Watson (2020):
+Ecuación (7.5) en la página 250 de @stockIntroduccionEconometria2012:
 $$
   \widehat{\Var{TestScore}}_i =
   \cse{686.0}{8.7}
@@ -21,7 +22,6 @@ $$
   \\[1ex]
   N = 156;\quad \Rsq = 0.89;\quad \SER = 1.78.
 $$
-
 
 ## Un diagrama
 
